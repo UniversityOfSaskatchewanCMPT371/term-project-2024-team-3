@@ -20,4 +20,3 @@ jobs:
         run: |
             cd frontend
             yarn run test
-            

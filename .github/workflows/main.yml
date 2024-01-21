@@ -1,4 +1,4 @@
-name: Build and Test
+name: CI
 on:
     push:
       branches:
@@ -16,7 +16,11 @@ jobs:
         run: |
             cd frontend
             yarn install
-      - name: Frontend Unit and Integration Tests
+      - name: Build Frontend
+        run: |
+            cd frontend
+            yarn run build
+      - name: Run Unit and Integration Tests
         run: |
             cd frontend
             yarn run test

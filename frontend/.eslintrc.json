@@ -15,6 +15,6 @@
         "class-methods-use-this": "off"
     },
     "parserOptions": {
-        "project": "./tsconfig.json"
+        "project": "./frontend/tsconfig.json"
     }
 }

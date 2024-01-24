@@ -1,59 +1,26 @@
-import React from "react";
+/* eslint-disable react/jsx-props-no-spreading */
+import React, { ReactElement } from "react";
 import Dropzone from "react-dropzone";
-import {
-  Button,
-  FormControl,
-  FormControlLabel,
-  RadioGroup,
-  Radio,
-} from "@mui/material";
-import styles from "./FileUpload.module.css";
+import styles from "../FileUpload.module.css";
+import FileDropZoneControls from "./FileDropzoneControls";
 
-function FileDropZone() {
+function FileDropZone(): ReactElement {
   return (
-    <Dropzone>
-      {({ getRootProps, getInputProps }) => (
-        <section className={styles.dzContainer}>
-          <div className={styles.fd_header}>
-            <span>Select File Type: </span>
-            <FormControl component="fieldset" className={styles.f_radio}>
-              <RadioGroup>
-                <FormControlLabel
-                  value="fitbit"
-                  control={<Radio color="primary" />}
-                  label="Fitbit"
-                  labelPlacement="start"
-                />
-                <FormControlLabel
-                  value="apple"
-                  control={<Radio color="primary" />}
-                  label="Apple Watch"
-                  labelPlacement="start"
-                />
-              </RadioGroup>
-            </FormControl>
-            <div>
-              <Button variant="contained" className={styles.delete_btn}>
-                Delete All
-              </Button>
+    <div className={styles.main}>
+      <Dropzone>
+        {({ getRootProps, getInputProps }) => (
+          <section className={styles.dzContainer}>
+            <FileDropZoneControls />
+            <div {...getRootProps()} className={styles.dropzone}>
+              <input {...getInputProps()} />
+              <p style={{ fontWeight: "bold", fontSize: "22px" }}>
+                Drop files here, or click to select files
+              </p>
             </div>
-          </div>
-          <div {...getRootProps({ style: dropzoneStyle })}>
-            <input {...getInputProps()} />
-            <p style={{ fontWeight: "bold", fontSize: "22px" }}>
-              Drop files here, or click to select files
-            </p>
-            <span style={{ fontWeight: "bold" }}>Files:</span>
-            <div
-              className={styles.acceptedFiles}
-              {...getRootProps({
-                onClick: (event) => event.stopPropagation(),
-              })}
-            />
-          </div>
-        </section>
-      )}
-    </Dropzone>
+          </section>
+        )}
+      </Dropzone>
+    </div>
   );
 }
 

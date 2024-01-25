@@ -11,14 +11,14 @@ import ProcessedDataPage from "./processedDataPage";
 // );
 
 test("Renders ProcessDataPage", () => {
-  const { getByText } = render(<ProcessedDataPage />);
+  const { getByText, getAllByText } = render(<ProcessedDataPage />);
   getByText("Step 2 - Data prediction and download:");
   getByText("In this step you can either download the");
   getByText(".csv");
   getByText(
     "of your Apple Watch or Fitbit data or, use our machine learning methods to predict lying, sitting, and walking at difference intensities. Select the file you want to predict, select the machine learning model for the prediction (we recommend Random Forrest) and click the",
   );
-  // getByText("Predicted Files");
+  expect(getAllByText("Predict File")).toHaveLength(2);
   getByText(
     "button. Once prediction is complete, move to the predicted files page.",
   );

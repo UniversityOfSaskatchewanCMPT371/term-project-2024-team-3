@@ -1,13 +1,13 @@
 import React from "react";
 import { createBrowserRouter } from "react-router-dom";
 import App from "../App";
-import TestPage from "../pages/TestPage";
+import ProcessedData from "../Components/ProcessDataPage/processedDataPage";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
-    children: [{ path: "testPage", element: <TestPage /> }],
+    children: [{ path: "processed_data", element: <ProcessedData /> }],
   },
 ]);
 export default router;

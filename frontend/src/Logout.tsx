@@ -1,5 +1,11 @@
 import React from "react";
 
-const Logout: React.FC = () => <h1>This is the logout Page</h1>
+function Logout(): React.ReactElement {
+  return (
+    <div>
+      <h1>This is the Logout page</h1>
+    </div>
+  );
+}
 
 export default Logout;

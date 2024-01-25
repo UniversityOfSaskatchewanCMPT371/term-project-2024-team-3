@@ -11,7 +11,7 @@ import ProcessedDataPage from "./processedDataPage";
 // );
 
 test("Renders ProcessDataPage", () => {
-  const { getByText, getByRole } = render(<ProcessedDataPage />);
+  const { getByText } = render(<ProcessedDataPage />);
   getByText("Step 2 - Data prediction and download:");
   getByText("In this step you can either download the");
   getByText(".csv");

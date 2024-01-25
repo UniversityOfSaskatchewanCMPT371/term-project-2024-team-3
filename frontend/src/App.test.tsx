@@ -1,13 +1,13 @@
-import React from 'react';
-import { render, screen } from '@testing-library/react';
-import { BrowserRouter as Router } from 'react-router-dom';
-import Navbar from './components/navbar';
+import React from "react";
+import { render, screen } from "@testing-library/react";
+import { BrowserRouter as Router } from "react-router-dom";
+import Navbar from "./components/navbar";
 
-test('renders all links', () => {
+test("renders all links", () => {
   render(
     <Router>
       <Navbar />
-    </Router>
+    </Router>,
   );
 
   const homeLink = screen.getByText(/HOME/i);

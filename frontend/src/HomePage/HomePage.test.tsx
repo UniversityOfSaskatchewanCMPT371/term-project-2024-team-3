@@ -6,4 +6,6 @@ test("renders learn react link", () => {
   const { getByText } = render(<HomePage />);
   getByText("BEAP ENGINE");
   getByText("Accurately Process Your Fitness Data");
+  getByText("How To Contribute Data");
+  getByText("Dr. Daniel Fuller");
 });

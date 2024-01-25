@@ -12,21 +12,26 @@ import {
 } from "@mui/material";
 import styles from "./processedDataPage.module.css";
 
-const processedDataPage = function () {
+const ProcessedDataPage = function () {
   // let processedData =
   return (
     <div>
       <Container className={styles.containerDiv}>
         <div className={styles.bannerinfo}>
+          <strong>Step 2 - Data prediction and download: </strong>
+          <span>In this step you can either download the</span>
+          <strong>.csv</strong>
           <span>
-            <strong>Step 2 - Data prediction and download: </strong>
-            In this step you can either download the <strong>.csv</strong> of
-            your Apple Watch or Fitbit data or, use our machine learning methods
-            to predict lying, sitting, and walking at difference intensities.
-            Select the file you want to predict, select the machine learning
-            model for the prediction (we recommend Random Forrest) and click the{" "}
-            <strong>Predict File</strong> button. Once prediction is complete,
-            move to the predicted files page.
+            of your Apple Watch or Fitbit data or, use our machine learning
+            methods to predict lying, sitting, and walking at difference
+            intensities. Select the file you want to predict, select the machine
+            learning model for the prediction (we recommend Random Forrest) and
+            click the
+          </span>
+          <strong> Predict File </strong>
+          <span>
+            button. Once prediction is complete, move to the predicted files
+            page.
           </span>
         </div>
         <div className={styles.action_bar}>
@@ -76,4 +81,4 @@ const processedDataPage = function () {
     </div>
   );
 };
-export default processedDataPage;
+export default ProcessedDataPage;

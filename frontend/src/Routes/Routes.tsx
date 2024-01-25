@@ -1,7 +1,7 @@
 import React from "react";
 import { createBrowserRouter } from "react-router-dom";
 import App from "../App";
-import ProcessedData from "../Components/ProcessDataPage/processedDataPage";
+import ProcessedData from "../pages/ProcessDataPage/processedDataPage";
 
 const router = createBrowserRouter([
   {

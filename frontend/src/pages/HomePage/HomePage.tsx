@@ -1,10 +1,10 @@
 import React, { ReactElement } from "react";
 import { Button, Icon } from "@mui/material";
 import style from "./HomePage.module.css";
-import AppleWatchPdf from "../assets/AppleWatch.pdf";
-import FitbitPdf from "../assets/Fitbit.pdf";
-import beapLogo from "../assets/beap_lab_hex_small.jpg";
-import engineOverview from "../assets/engine-overview.png";
+import AppleWatchPdf from "../../assets/AppleWatch.pdf";
+import FitbitPdf from "../../assets/Fitbit.pdf";
+import beapLogo from "../../assets/beap_lab_hex_small.jpg";
+import engineOverview from "../../assets/engine-overview.png";
 
 function HomePage(): ReactElement {
   return (

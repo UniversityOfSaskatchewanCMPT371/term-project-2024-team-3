@@ -10,7 +10,7 @@ import {
   List,
   Container,
 } from "@mui/material";
-import styles from "./processedDataPage.module.css";
+import styles from "./ProcessedDataPage.module.css";
 
 const ProcessedDataPage = function () {
   // let processedData =

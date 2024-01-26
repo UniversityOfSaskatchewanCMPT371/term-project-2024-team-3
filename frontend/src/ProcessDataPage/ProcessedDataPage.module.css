@@ -1,0 +1,59 @@
+.containerDiv {
+    display: flex;
+    flex-direction: column;
+    /* justify-content: flex-start; */
+    /* align-items: center; */
+    width: 100%;
+    height: 100%;
+}
+
+.containerDiv > .bannerinfo {
+    margin: 10px 0px;
+    border: 2px solid;
+    border-radius: 10px;
+    padding: 15px;
+    box-sizing: border-box;
+    border-color: #FFD980;
+    background-color: #FFF9EB;
+    word-spacing: 2px;
+}
+
+.action_bar {
+    display: flex;
+    /* align-items: center; */
+    width: 60%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* position: fixed; */
+    /* top: auto; */
+    /* left: 0; */
+    /* transform: translateX(50px); */
+    z-index: 200;
+    background-color: #FFFFFF;
+    padding: 13px 0px 0px;
+    position: fixed;
+    top: auto;
+
+}
+
+.action_bar > .predictBtn {
+    color: #FFF; 
+    background-color: #FFB41A;
+    margin-left: auto;
+}
+
+.action_bar > .downloadBtn {
+    color: #FFF; 
+    background-color: #36BDC4;
+    margin-left: 15px;
+}
+
+.action_bar > .goToPredicted {
+    background-color: powderblue;
+    margin-left: 15px;
+}
+
+.list {
+    overflow: scroll;
+}

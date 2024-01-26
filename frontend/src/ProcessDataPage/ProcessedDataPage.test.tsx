@@ -1,14 +1,6 @@
 import React from "react";
 import { render } from "@testing-library/react";
-import ProcessedDataPage from "./processedDataPage";
-
-// jest.mock(
-//   "./processDataPage",
-//   () =>
-//     function () {
-//       return <span>ProcessedDataPage</span>;
-//     },
-// );
+import ProcessedDataPage from "./ProcessedDataPage";
 
 test("Renders ProcessDataPage", () => {
   const { getByText, getAllByText } = render(<ProcessedDataPage />);

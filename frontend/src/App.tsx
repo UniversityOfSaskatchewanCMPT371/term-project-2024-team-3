@@ -1,12 +1,12 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Navbar from "./navbar/Navbar";
-import Home from "./Home";
+import Navbar from "./components/Navbar/Navbar";
 import Logout from "./Logout";
-import ProcessedDataPage from "./ProcessDataPage/ProcessedDataPage";
+import ProcessedDataPage from "./pages/ProcessDataPage/ProcessedDataPage";
 import PredictedFiles from "./PredictedFiles";
-import FileUploadPage from "./FileUploadPage/FileUploadPage";
+import FileUploadPage from "./pages/FileUploadPage/FileUploadPage";
 import "./App.css";
+import HomePage from "./pages/HomePage/HomePage";
 
 function App(): React.ReactElement<typeof Router> {
   return (
@@ -14,7 +14,7 @@ function App(): React.ReactElement<typeof Router> {
       <Navbar />
       <Routes>
         {/* Public Routes */}
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<HomePage />} />
         <Route path="/Logout" element={<Logout />} />
         <Route path="/FileUpload" element={<FileUploadPage />} />
 

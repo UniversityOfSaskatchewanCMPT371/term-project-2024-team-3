@@ -10,7 +10,7 @@ jest.mock(
     },
 );
 
-test("Renders FileDropzone components", () => {
+test(" TID 1.6. Renders FileDropzone components", () => {
   const { getByText } = render(<FileDropzone />);
   getByText("FileDropzoneControls");
   getByText("Drop files here, or click to select files");

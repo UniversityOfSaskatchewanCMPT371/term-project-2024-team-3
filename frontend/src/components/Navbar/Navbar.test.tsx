@@ -3,7 +3,7 @@ import { render, screen } from "@testing-library/react";
 import { BrowserRouter as Router } from "react-router-dom";
 import Navbar from "./Navbar";
 
-test("renders all links", () => {
+test(" TID 1.5. renders all links", () => {
   render(
     <Router>
       <Navbar />

@@ -25,6 +25,9 @@
     "typeRoots": ["./src/global.d.ts"]
   },
   "include": [
-    "src"
+    "src",
+    "playwright.config.ts",
+    "tests_end2end/example.spec.ts"
+
   ]
 }

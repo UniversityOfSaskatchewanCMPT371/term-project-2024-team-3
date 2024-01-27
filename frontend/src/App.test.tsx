@@ -3,7 +3,7 @@ import { render, screen } from "@testing-library/react";
 import { BrowserRouter as Router } from "react-router-dom";
 import Navbar from "./components/Navbar/Navbar";
 
-test("renders all links", () => {
+test("Render Navigation Bar", () => {
   render(
     <Router>
       <Navbar />

@@ -2,7 +2,7 @@ import React from "react";
 import { render } from "@testing-library/react";
 import HomePage from "./HomePage";
 
-test("Render Home Page components", () => {
+test(" TID 1.2. Render Home Page components", () => {
   const { getByText } = render(<HomePage />);
   getByText("BEAP ENGINE");
   getByText("Accurately Process Your Fitness Data");

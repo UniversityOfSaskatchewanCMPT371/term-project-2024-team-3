@@ -2,7 +2,7 @@ import React from "react";
 import { render } from "@testing-library/react";
 import ProcessedDataPage from "./ProcessedDataPage";
 
-test("Render ProcessDataPage Components", () => {
+test("TID 1.3. Render ProcessDataPage Components", () => {
   const { getByText, getAllByText } = render(<ProcessedDataPage />);
   getByText("Step 2 - Data prediction and download:");
   getByText("In this step you can either download the");

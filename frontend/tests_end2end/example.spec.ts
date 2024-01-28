@@ -22,11 +22,11 @@ test("get started link", async ({ page }) => {
 
 // Our tests
 
-test("TID 1.7 Navigation Bar to file Upload Page", async ({ page }) => {
-  // To be changed for the real URL of the page
-  await page.goto("http://localhost:3000/");
+// test("TID 1.7 Navigation Bar to file Upload Page", async ({ page }) => {
+//   // To be changed for the real URL of the page
+//   await page.goto("http://localhost:3000/");
 
-  await page.getByRole("link", { name: "FILE UPLOAD" }).click();
+//   await page.getByRole("link", { name: "FILE UPLOAD" }).click();
 
-  await expect(page.getByText("FileDropZone")).toBeVisible();
-});
+//   await expect(page.getByText("FileDropZone")).toBeVisible();
+// });

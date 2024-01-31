@@ -32,6 +32,7 @@ services:
       - 5432:5432
     volumes:
       - postgres-db:/var/lib/postgresql/data
+      - ./backend/db-scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
     environment:
       - POSTGRES_PASSWORD=root
       - POSTGRES_USER=root
@@ -67,5 +68,3 @@ volumes:
 networks:
   spring:
     external: true
-
-#docker network create spring

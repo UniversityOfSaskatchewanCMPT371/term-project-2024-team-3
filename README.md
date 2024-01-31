@@ -1,10 +1,10 @@
 # Deliverables
 Here are some quick links to our document deliverables!
-[Incremental Deliverable 1 (ID1)](/documents/ID1)
-[Incremental Deliverable 2 (ID2)](/documents/ID2)
-[Incremental Deliverable 3 (ID3)](/documents/ID3)
-[Incremental Deliverable 4 (ID4)](/documents/ID4)
-[Incremental Deliverable 5 (ID5)](/documents/ID5)
+- [Incremental Deliverable 1 (ID1)](/documents/ID1)
+- [Incremental Deliverable 2 (ID2)](/documents/ID2)
+- [Incremental Deliverable 3 (ID3)](/documents/ID3)
+- [Incremental Deliverable 4 (ID4)](/documents/ID4)
+- [Incremental Deliverable 5 (ID5)](/documents/ID5)
 
 # Getting Started
 

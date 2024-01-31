@@ -14,9 +14,58 @@ services:
     environment:
        - WATCHPACK_POLLING=true
 
+  cache:
+    image: redis:6.2-alpine
+    restart: always
+    ports:
+      - 6379:6379
+    command: [ "redis-server", "--protected-mode", "no" ]
+    volumes: 
+      - cache:/data
+    networks:
+      - spring
+
+  postgres-db:
+    image: postgres:15-alpine
+    restart: always
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres-db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_USER=root
+      - POSTGRES_DB=beapengine
+    networks:
+      - spring
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8082:8080
+    depends_on:
+      - postgres-db
+  
   backend:
     container_name: backend-dev
     build:
       context: ./backend
     ports:
       - 8080:8080
+    networks:
+      - spring
+    depends_on:
+      - cache
+      - postgres-db
+  
+volumes:
+  cache:
+  postgres-db:
+    driver: local
+
+networks:
+  spring:
+    external: true
+
+#docker network create spring

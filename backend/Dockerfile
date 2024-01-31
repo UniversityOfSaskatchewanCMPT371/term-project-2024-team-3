@@ -16,3 +16,5 @@ RUN rm -rf ROOT
 EXPOSE 8080
 
 COPY --from=build /app/target/BeaplabEngine-0.0.1-SNAPSHOT.war ROOT.war
+
+CMD ["catalina.sh", "run"]

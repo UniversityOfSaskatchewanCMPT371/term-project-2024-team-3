@@ -50,13 +50,13 @@ You can use adminer to check what data is stored inside our database. As well as
 ```
     System: PostgreSQL
     
-    Server: **postgres-db**
+    Server: postgres-db
     
-    Username: **root**
+    Username: root
     
-    Password: **root**
+    Password: root
     
-    Database: **beapengine**
+    Database: beapengine
 ```
 **cache**: [http://localhost:6379](http://localhost:6379/)
 

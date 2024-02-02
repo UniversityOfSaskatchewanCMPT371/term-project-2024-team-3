@@ -1,8 +1,7 @@
-name: CI
+name: frontend
 on:
     push:
       branches:
-        - development
         - master
     pull_request:
 
@@ -11,11 +10,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Install frontend dependencies     
         run: |
             cd frontend
             yarn install
+      - name: Run lint
+        run: |
+            cd frontend
+            yarn lint
       - name: Build Frontend
         run: |
             cd frontend

@@ -9,7 +9,7 @@ function Navbar(): React.ReactElement {
     { path: "/", name: "HOME" },
     { path: "/FileUpload", name: "FILE UPLOAD" },
     { path: "/ProcessedDataPage", name: "PROCESSED FILES" },
-    { path: "/pages/PredictedFiles", name: "PREDICTED FILES" },
+    { path: "/PredictedDataPage", name: "PREDICTED FILES" },
     { path: "/Logout", name: "LOGOUT", className: "logout-link" },
   ];
 

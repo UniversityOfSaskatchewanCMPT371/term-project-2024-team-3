@@ -10,10 +10,14 @@ import {
   List,
   Container,
 } from "@mui/material";
+import { useRollbar } from "@rollbar/react";
+
 import styles from "./ProcessedDataPage.module.css";
 
 const ProcessedDataPage = function () {
-  // let processedData =
+  const rollbar = useRollbar();
+  rollbar.log("This is a log test on processed data page.");
+
   return (
     <div>
       <Container className={styles.containerDiv}>

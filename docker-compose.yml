@@ -54,6 +54,8 @@ services:
     container_name: backend-dev
     build:
       context: ./backend
+    volumes:
+      - ./services/ml-service:/app/ml-service
     ports:
       - 8080:8080
     networks:

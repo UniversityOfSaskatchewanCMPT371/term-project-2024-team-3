@@ -22,7 +22,7 @@ test("Navbar Test", async ({ page }) => {
   await page
     .getByRole("link", { name: "PREDICTED FILES", exact: true })
     .click();
-  await expect(page).toHaveURL("./PredictedFiles");
+  await expect(page).toHaveURL("./PredictedDataPage");
 
   await page.getByRole("link", { name: "LOGOUT" }).click();
   await expect(page).toHaveURL("./Logout");

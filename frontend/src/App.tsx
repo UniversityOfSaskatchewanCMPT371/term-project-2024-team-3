@@ -34,6 +34,8 @@ function App(): React.ReactElement<typeof Router> {
             <Route path="/PredictedDataPage" element={<PredictedDataPage />} />
           </Routes>
         </Router>
+      </ErrorBoundary>
+    </Provider>
   );
 }
 

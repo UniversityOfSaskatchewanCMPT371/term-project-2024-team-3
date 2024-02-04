@@ -1,9 +1,0 @@
-r-cran-plumber
-r-cran-quanteda
-r-cran-irlba
-r-cran-lsa
-r-cran-caret
-r-cran-stringr
-r-cran-dplyr
-r-cran-magrittr
-r-cran-randomforest

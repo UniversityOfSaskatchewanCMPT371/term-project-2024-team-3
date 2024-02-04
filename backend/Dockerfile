@@ -9,32 +9,35 @@ RUN mvn clean install
 
 FROM rocker/r-apt:bionic
 
+WORKDIR /app
+
 # Install R and necessary dependencies
 RUN apt-get update && \
     apt-get install -y r-base && \
-    apt-get install -y libssl-dev libxml2-dev libcurl4-openssl-dev && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
-# Set write permission to R library path
-RUN chmod -R 777 /usr/local/lib/R
+    apt-get install -y r-cran-rjava && \
+    apt-get install -y libssl-dev libxml2-dev
 
 # Install R packages from precompiled binaries
-COPY ./services/ml-service/requirements-bin.txt .
-RUN cat requirements-bin.txt | xargs apt-get install -y -qq
+RUN apt-get update && \
+    apt-get install -y -qq \
+        r-cran-stringi \
+        r-cran-lubridate \
+        r-cran-xml2 \
+        r-cran-dplyr \
+        r-cran-lubridate \
+        r-cran-dplyr \
+        r-cran-tm \
+        r-cran-mice \
+        r-cran-zoo \
+        r-cran-mlbench \
+        r-cran-e1071 \
+        r-cran-caret \
+        r-cran-rpart
 
-# Install remaining packages from source using Rscript
-COPY ./services/ml-service/requirements-src.R .
+COPY ./r-requirements/requirements-src.R .
 RUN Rscript requirements-src.R
 
-# Install rJava
-RUN apt-get update && \
-    apt-get install -y r-cran-rjava && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
-# Set LD_LIBRARY_PATH for rJava
-ENV LD_LIBRARY_PATH /usr/lib/jvm/java-8-openjdk-amd64/jre/lib/amd64/server
+RUN rm -rf /var/lib/apt/lists/*
 
 FROM tomcat:9.0-jre11
 
@@ -42,14 +45,6 @@ WORKDIR /usr/local/tomcat/webapps
 
 # Remove default Tomcat webapp
 RUN rm -rf ROOT
-
-# Create required directories for R repo
-RUN mkdir -p /zips \
-             /tmp \
-             /fitbit/data/output \
-             /fitbit/data/raw \
-             /applewatch/data/output \
-             /applewatch/data/raw
 
 # Deploy your WAR file
 COPY --from=build /app/target/BeaplabEngine-0.0.1-SNAPSHOT.war ROOT.war

@@ -10,10 +10,10 @@ import {
   List,
   Container,
 } from "@mui/material";
+
 import styles from "./ProcessedDataPage.module.css";
 
 const ProcessedDataPage = function () {
-  // let processedData =
   return (
     <div>
       <Container className={styles.containerDiv}>

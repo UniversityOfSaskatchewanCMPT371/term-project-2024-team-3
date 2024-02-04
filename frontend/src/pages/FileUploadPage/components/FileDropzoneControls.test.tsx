@@ -10,7 +10,7 @@ test("Renders FileDropzoneControls components", () => {
   getByText("Select File Type:");
 });
 
-test("Should be able to click Fitbit or Apple Watch radio", () => {
+test(" TID 1.7. Should be able to click Fitbit or Apple Watch radio", () => {
   const { getByLabelText } = render(<FileDropzoneControls />);
   const fitbit = getByLabelText("Fitbit");
   const apple = getByLabelText("Apple Watch");

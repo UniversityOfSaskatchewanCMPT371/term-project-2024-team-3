@@ -10,7 +10,7 @@ jest.mock(
     },
 );
 
-test("Renders FileUploadPage components", () => {
+test("TID 1.1. Renders FileUploadPage components", () => {
   const { getByText } = render(<FileUploadPage />);
   getByText("FileDropZone");
   getByText("Step 1:");

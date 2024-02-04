@@ -1,0 +1,6 @@
+Archive/*
+.DS_Store
+.Rhistory
+
+fitbit/data/
+applewatch/data/

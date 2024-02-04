@@ -1,33 +1,33 @@
-.container {                                                                    
-    width: 65%;                                                                 
-    display: flex;                                                              
-    justify-content: space-between;                                             
-    align-items: center;                                                        
-    /* top: auto; */                                                            
-    /* position: fixed; */                                                      
-    z-index: 200;                                                               
-    background-color: #FFFFFF;                                                  
-    /* position: fixed; */                                                      
-    top: auto;                                                                  
-}                                                                               
-                                                                                
-.bannerinfo {                                                                   
-    margin: 10px 0px;                                                           
-    border: 2px solid;                                                          
-    border-radius: 10px;                                                        
-    padding: 15px;                                                              
-    box-sizing: border-box;                                                     
-    border-color: #FFD980;                                                      
-    background-color: #FFF9EB;                                                  
-    word-spacing: 2px;                                                          
-}                                                                               
-                                                                                
-.container > .downloadBtn {                                                     
-    color: #FFF;                                                                
-    background-color: #36BDC4;                                                  
-    max-height: 40px;                                                           
-}                                                                               
-                                                                                
-.list {                                                                         
-    overflow: scroll;                                                           
+.container {
+  width: 65%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* top: auto; */
+  /* position: fixed; */
+  z-index: 200;
+  background-color: #ffffff;
+  /* position: fixed; */
+  top: auto;
+}
+
+.bannerinfo {
+  margin: 10px 0px;
+  border: 2px solid;
+  border-radius: 10px;
+  padding: 15px;
+  box-sizing: border-box;
+  border-color: #ffd980;
+  background-color: #fff9eb;
+  word-spacing: 2px;
+}
+
+.container > .downloadBtn {
+  color: #fff;
+  background-color: #36bdc4;
+  max-height: 40px;
+}
+
+.list {
+  overflow: scroll;
 }

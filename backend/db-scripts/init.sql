@@ -1,3 +1,5 @@
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
 CREATE OR REPLACE FUNCTION query_tbl_test_crypto(sym_key varchar(50)) RETURNS TABLE (id bigint, firstname varchar(50), lastname varchar(50), creditcardnumber varchar(50) )
 AS $$
 select id, firstname, lastname, pgp_sym_decrypt(creditcardnumber::bytea, sym_key) as creditcardnumber from tbl_test_crypto

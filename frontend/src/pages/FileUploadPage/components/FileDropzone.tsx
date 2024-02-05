@@ -17,7 +17,7 @@ function FileDropZone(): ReactElement {
     }
   }, []);
 
-  const { acceptedFiles, getRootProps, getInputProps, isDragActive } =
+  const { acceptedFiles, getRootProps, open, getInputProps, isDragActive } =
     useDropzone({
       onDrop,
       accept: {
@@ -43,7 +43,12 @@ function FileDropZone(): ReactElement {
               {isDragActive ? (
                 <p style={pstyle}>Drop the files here...</p>
               ) : (
-                <p style={pstyle}>Drop files here, or click to select files</p>
+                <>
+                  <p style={pstyle}>Drop files here, or </p>
+                  <button type="button" onClick={open}>
+                    Open File Dialog
+                  </button>
+                </>
               )}
             </div>
           </section>

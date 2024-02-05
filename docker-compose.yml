@@ -31,7 +31,6 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - postgres-db:/var/lib/postgresql/data
       - ./backend/db-scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
     environment:
       - POSTGRES_PASSWORD=root
@@ -54,6 +53,8 @@ services:
     container_name: backend-dev
     build:
       context: ./backend
+    volumes:
+      - ./services/ml-service:/usr/local/tomcat/webapps/ml-service
     ports:
       - 8080:8080
     networks:
@@ -61,11 +62,13 @@ services:
     depends_on:
       - cache
       - postgres-db
+    ulimits:
+      nofile:
+        soft: 1000
+        hard: 2000
   
 volumes:
   cache:
-  postgres-db:
-    driver: local
 
 networks:
   spring:

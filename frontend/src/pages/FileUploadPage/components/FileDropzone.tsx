@@ -1,33 +1,59 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { ReactElement, useCallback } from "react";
-import { useDropzone } from "react-dropzone";
+import React, { ReactElement, useCallback, useState } from "react";
+import { useDropzone, FileWithPath } from "react-dropzone";
 import styles from "../FileUpload.module.css";
 import FileDropZoneControls from "./FileDropzoneControls";
 
 function FileDropZone(): ReactElement {
-  const pstyle = { fontWeight: "bold", fontSize: "22px" };
-  const onDrop = useCallback((acceptedFiles: any) => {
-    // Do something with the files
+  const [files, setFiles] = useState<FileWithPath[]>([]); // eslint-disable-line
+
+  const pstyle = { fontWeight: "bold", fontSize: "22px" }; // add to style sheet
+
+  const onDrop = useCallback((acceptedFiles: FileWithPath[]) => {
     console.log(acceptedFiles);
-    console.log("okay");
+
+    if (acceptedFiles?.length) {
+      setFiles((previousFiles) => [...previousFiles, ...acceptedFiles]);
+    }
   }, []);
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+  const { acceptedFiles, getRootProps, getInputProps, isDragActive } =
+    useDropzone({
+      onDrop,
+      accept: {
+        "application/json": [".json"],
+        "application/xml": ["xml"],
+      },
+    });
+
+  const acceptedFileItems = acceptedFiles.map((file: FileWithPath) => (
+    <li key={file.path}>
+      {file.path} - {file.size} bytes
+    </li>
+  ));
 
   return (
-    <div {...getRootProps()} className={styles.main}>
-      <section className={styles.dzContainer}>
-        <FileDropZoneControls />
-        <div className={styles.dropzone}>
-          <input {...getInputProps()} />
-          {isDragActive ? (
-            <p style={pstyle}>Drop the files here...</p>
-          ) : (
-            <p style={pstyle}>Drop files here, or click to select files</p>
-          )}
+    <>
+      <FileDropZoneControls />
+      <div {...getRootProps()}>
+        <div className={styles.main}>
+          <section className={styles.dzContainer}>
+            <div className={styles.dropzone}>
+              <input {...getInputProps()} />
+              {isDragActive ? (
+                <p style={pstyle}>Drop the files here...</p>
+              ) : (
+                <p style={pstyle}>Drop files here, or click to select files</p>
+              )}
+            </div>
+          </section>
         </div>
-      </section>
-    </div>
+      </div>
+      <aside>
+        <h4>Accepted Files</h4>
+        <ul>{acceptedFileItems}</ul>
+      </aside>
+    </>
   );
 }
 

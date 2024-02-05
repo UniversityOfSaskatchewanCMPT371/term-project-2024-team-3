@@ -7,17 +7,21 @@ COPY src src
 
 RUN mvn clean install
 
-FROM rocker/r-apt:bionic
+FROM tomcat:9.0-jre11
 
-WORKDIR /app
+WORKDIR /usr/local/tomcat/webapps
 
-# Install R and necessary dependencies
+# Remove default Tomcat webapp
+RUN rm -rf ROOT
+
+# Deploy your WAR file
+COPY --from=build /app/target/BeaplabEngine-0.0.1-SNAPSHOT.war ROOT.war
+
 RUN apt-get update && \
     apt-get install -y r-base && \
     apt-get install -y r-cran-rjava && \
     apt-get install -y libssl-dev libxml2-dev
 
-# Install R packages from precompiled binaries
 RUN apt-get update && \
     apt-get install -y -qq \
         r-cran-stringi \
@@ -32,22 +36,11 @@ RUN apt-get update && \
         r-cran-mlbench \
         r-cran-e1071 \
         r-cran-caret \
-        r-cran-rpart
+        r-cran-rpart \
+        r-cran-tidyverse
 
 COPY ./r-requirements/requirements-src.R .
 RUN Rscript requirements-src.R
-
-RUN rm -rf /var/lib/apt/lists/*
-
-FROM tomcat:9.0-jre11
-
-WORKDIR /usr/local/tomcat/webapps
-
-# Remove default Tomcat webapp
-RUN rm -rf ROOT
-
-# Deploy your WAR file
-COPY --from=build /app/target/BeaplabEngine-0.0.1-SNAPSHOT.war ROOT.war
 
 EXPOSE 8080
 

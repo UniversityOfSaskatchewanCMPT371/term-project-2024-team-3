@@ -34,7 +34,8 @@ public class RawDataService {
         logger.info("in RawDataService: save");
 
         Date date = new Date();
-        RawData rawData = new RawData(data, type, Long.valueOf(-1), new Timestamp(date.getTime()));
+        // TODO: Pass in the year to constructor
+        RawData rawData = new RawData(data, type, Long.valueOf(-1), new Timestamp(date.getTime()), "2024");
 
         return rawDataDao.save(rawData, userId);
     }

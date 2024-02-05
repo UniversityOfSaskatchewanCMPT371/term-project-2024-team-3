@@ -13,6 +13,7 @@ public class RawDataIndex {
     private BigInteger id;
     private java.sql.Timestamp datetime;
     private BigInteger processed_data_id;
+    private String year;
 
     public RawDataIndex() {
     }
@@ -21,6 +22,8 @@ public class RawDataIndex {
         this.id = id;
         this.datetime = datetime;
         this.processed_data_id = processedDataId;
+        // TODO: Replace with proper passing
+        this.year = "2024";
     }
 
     public BigInteger getId() {
@@ -38,6 +41,14 @@ public class RawDataIndex {
     public void setDateTime(Timestamp datetime) {
         this.datetime = datetime;
     }
+    
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
+    }
 
     public BigInteger getProcessed_data_id() {
         return processed_data_id;
@@ -48,7 +59,8 @@ public class RawDataIndex {
     }
 
     public RawData toRawData() {
-        return new RawData(this.id.longValue(), null, null, this.processed_data_id.longValue() , this.datetime);
+        // TODO: Pass in the year to constructor
+        return new RawData(this.id.longValue(), null, null, this.processed_data_id.longValue() , this.datetime, "2024");
     }
 
 

@@ -17,6 +17,7 @@ public class ProcessedDataIndex {
     private java.sql.Timestamp datetime;
     private BigInteger predicted_data_id;
     private String prediction_type;
+    private String year;
 
     public ProcessedDataIndex() {
     }
@@ -26,6 +27,8 @@ public class ProcessedDataIndex {
         this.datetime = datetime;
         this.predicted_data_id = predicted_data_id;
         this.prediction_type = prediction_type;
+        // TODO: Implement passing of the year
+        this.year = "2024";
     }
 
     public BigInteger getId() {
@@ -58,6 +61,14 @@ public class ProcessedDataIndex {
 
     public void setPrediction_type(String prediction_type) {
         this.prediction_type = prediction_type;
+    }
+    
+    public void setYear(String year) {
+        this.year = year;
+    }
+
+    public String getYear() {
+        return year;
     }
 
     public ProcessedData toProcessedData() {

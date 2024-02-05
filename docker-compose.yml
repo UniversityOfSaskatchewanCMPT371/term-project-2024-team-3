@@ -1,18 +1,18 @@
 version: "3.8"
 
 services:
-  webapp:
-    container_name: webapp-dev
-    image: webapp-dev
-    build:
-      context: ./frontend
-      target: development
-    volumes:
-      - ./frontend/src:/app/src
-    ports:
-      - 3000:3000
-    environment:
-       - WATCHPACK_POLLING=true
+  # webapp:
+  #   container_name: webapp-dev
+  #   image: webapp-dev
+  #   build:
+  #     context: ./frontend
+  #     target: development
+  #   volumes:
+  #     - ./frontend/src:/app/src
+  #   ports:
+  #     - 3000:3000
+  #   environment:
+  #      - WATCHPACK_POLLING=true
 
   cache:
     image: redis:6.2-alpine
@@ -54,7 +54,7 @@ services:
     build:
       context: ./backend
     volumes:
-      - ./services/ml-service:/app/ml-service
+      - ./services/ml-service:/usr/local/tomcat/webapps/ml-service
     ports:
       - 8080:8080
     networks:
@@ -62,6 +62,10 @@ services:
     depends_on:
       - cache
       - postgres-db
+    ulimits:
+      nofile:
+        soft: 1000
+        hard: 2000
   
 volumes:
   cache:

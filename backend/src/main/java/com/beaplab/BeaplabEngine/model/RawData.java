@@ -43,24 +43,27 @@ public class RawData {
     @Column
     private java.sql.Timestamp dateTime;
 
-
+    @Column
+    private String year;
 
     public RawData() {
     }
 
-    public RawData(byte[] data, dataType type, Long processedDataID, Timestamp dateTime) {
+    public RawData(byte[] data, dataType type, Long processedDataID, Timestamp dateTime, String year) {
         this.data = data;
         this.type = type;
         this.processedDataID = processedDataID;
         this.dateTime = dateTime;
+        this.year = year;
     }
 
-    public RawData(Long id, byte[] data, dataType type, Long processedDataID, Timestamp dateTime) {
+    public RawData(Long id, byte[] data, dataType type, Long processedDataID, Timestamp dateTime, String year) {
         this.id = id;
         this.data = data;
         this.type = type;
         this.processedDataID = processedDataID;
         this.dateTime = dateTime;
+        this.year = year;
     }
 
     public Long getId() {
@@ -114,6 +117,13 @@ public class RawData {
         return "";
     }
 
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
+    }
 
     @Override
     public String toString() {
@@ -123,6 +133,7 @@ public class RawData {
                 ", type=" + type +
                 ", processedDataID=" + processedDataID +
                 ", dateTime=" + dateTime +
+                ", year=" + year +
                 '}';
     }
 }

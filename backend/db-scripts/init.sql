@@ -510,3 +510,14 @@ ALTER TABLE ONLY public.tbl_processed_data_tbl_predicted_data
 
 REVOKE USAGE ON SCHEMA public FROM PUBLIC;
 GRANT ALL ON SCHEMA public TO PUBLIC;
+
+-- Initial required data for tables
+INSERT INTO public.tbl_access_group (id, access_group_name, created_date, description, last_modified_date)
+VALUES
+   (3, 'ADMIN', '2020-05-28 00:00:00', 'Admin', '2020-05-28 00:00:00'),
+   (4, 'USER', '2020-05-28 00:00:00', 'Regular Users', '2020-05-28 00:00:00');
+
+INSERT INTO public.tbl_role (id, description, role_name)
+VALUES
+   (4, 'Administrator role', 'ROLE_ADMIN'),
+   (5, 'User role', 'ROLE_USER');

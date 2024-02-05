@@ -13,6 +13,7 @@ public class PredictedDataIndex {
     private BigInteger id;
     private java.sql.Timestamp datetime;
     private String predictiontype;
+    private String year;
 
     public PredictedDataIndex() {
     }
@@ -21,6 +22,8 @@ public class PredictedDataIndex {
         this.id = id;
         this.datetime = datetime;
         this.predictiontype = predictiontype;
+        // TODO: Implement passing of the year
+        this.year = "2024";
     }
 
     public BigInteger getId() {
@@ -47,6 +50,13 @@ public class PredictedDataIndex {
         this.predictiontype = predictiontype;
     }
 
+    public void setYear(String year) {
+        this.year = year;
+    }
+
+    public String getYear() {
+        return year;
+    }
 
     public PredictedData toPredictedData() {
         return new PredictedData(this.id.longValue(), null, PredictedData.predictionType.valueOf(this.predictiontype), this.datetime);

@@ -38,7 +38,7 @@ function FileDropZone(): ReactElement {
   return (
     <>
       <FileDropZoneControls onRadioChange={clearAcceptedFiles} />
-      <div {...getRootProps()}>
+      <div {...getRootProps()} data-testid="dropZone">
         <div className={styles.main}>
           <section className={styles.dzContainer}>
             <div className={styles.dropzone}>

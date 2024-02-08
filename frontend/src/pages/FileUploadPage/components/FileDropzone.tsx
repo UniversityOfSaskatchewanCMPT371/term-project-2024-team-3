@@ -5,7 +5,7 @@ import styles from "../FileUpload.module.css";
 import FileDropZoneControls from "./FileDropzoneControls";
 
 function FileDropZone(): ReactElement {
-  const [files, setFiles] = useState<FileWithPath[]>([]); // eslint-disable-line
+  const [files, setFiles] = useState<FileWithPath[]>([]);
 
   const pstyle = { fontWeight: "bold", fontSize: "22px" }; // add to style sheet
 
@@ -21,14 +21,13 @@ function FileDropZone(): ReactElement {
     }
   }, []);
 
-  const { acceptedFiles, getRootProps, open, getInputProps, isDragActive } = // eslint-disable-line
-    useDropzone({
-      onDrop,
-      accept: {
-        "application/json": [".json"],
-        "application/xml": [".xml"],
-      },
-    });
+  const { getRootProps, open, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: {
+      "application/json": [".json"],
+      "application/xml": [".xml"],
+    },
+  });
 
   const acceptedFileItems = files.map((file: FileWithPath) => (
     <li key={file.path}>

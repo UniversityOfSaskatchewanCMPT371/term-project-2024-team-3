@@ -17,7 +17,7 @@ function FileDropZone(): ReactElement {
     }
   }, []);
 
-  const { acceptedFiles, getRootProps, open, getInputProps, isDragActive } =
+  const { acceptedFiles, getRootProps, open, getInputProps, isDragActive } = // eslint-disable-line
     useDropzone({
       onDrop,
       accept: {
@@ -26,7 +26,7 @@ function FileDropZone(): ReactElement {
       },
     });
 
-  const acceptedFileItems = acceptedFiles.map((file: FileWithPath) => (
+  const acceptedFileItems = files.map((file: FileWithPath) => (
     <li key={file.path}>
       {file.path} - {file.size} bytes
     </li>
@@ -53,6 +53,9 @@ function FileDropZone(): ReactElement {
             </div>
           </section>
         </div>
+      </div>
+      <div>
+        <button type="submit">Upload</button>
       </div>
       <aside>
         <h4>Accepted Files</h4>

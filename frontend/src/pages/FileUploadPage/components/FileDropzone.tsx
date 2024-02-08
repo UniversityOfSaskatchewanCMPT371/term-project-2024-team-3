@@ -9,6 +9,10 @@ function FileDropZone(): ReactElement {
 
   const pstyle = { fontWeight: "bold", fontSize: "22px" }; // add to style sheet
 
+  const clearAcceptedFiles = () => {
+    setFiles([]);
+  };
+
   const onDrop = useCallback((acceptedFiles: FileWithPath[]) => {
     console.log(acceptedFiles);
 
@@ -34,7 +38,7 @@ function FileDropZone(): ReactElement {
 
   return (
     <>
-      <FileDropZoneControls />
+      <FileDropZoneControls onRadioChange={clearAcceptedFiles} />
       <div {...getRootProps()}>
         <div className={styles.main}>
           <section className={styles.dzContainer}>

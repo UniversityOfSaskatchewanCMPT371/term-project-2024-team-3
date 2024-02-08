@@ -1,26 +1,70 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { ReactElement } from "react";
-import Dropzone from "react-dropzone";
+import React, { ReactElement, useCallback, useState } from "react";
+import { useDropzone, FileWithPath } from "react-dropzone";
 import styles from "../FileUpload.module.css";
 import FileDropZoneControls from "./FileDropzoneControls";
 
 function FileDropZone(): ReactElement {
+  const [files, setFiles] = useState<FileWithPath[]>([]);
+
+  const pstyle = { fontWeight: "bold", fontSize: "22px" }; // add to style sheet
+
+  const clearAcceptedFiles = () => {
+    setFiles([]);
+  };
+
+  const onDrop = useCallback((acceptedFiles: FileWithPath[]) => {
+    console.log(acceptedFiles);
+
+    if (acceptedFiles?.length) {
+      setFiles((previousFiles) => [...previousFiles, ...acceptedFiles]);
+    }
+  }, []);
+
+  const { getRootProps, open, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: {
+      "application/json": [".json"],
+      "application/xml": [".xml"],
+    },
+  });
+
+  const acceptedFileItems = files.map((file: FileWithPath) => (
+    <li key={file.path}>
+      {file.path} - {file.size} bytes
+    </li>
+  ));
+
   return (
-    <div className={styles.main}>
-      <Dropzone>
-        {({ getRootProps, getInputProps }) => (
+    <>
+      <FileDropZoneControls onRadioChange={clearAcceptedFiles} />
+      <div {...getRootProps()} data-testid="dropZone">
+        <div className={styles.main}>
           <section className={styles.dzContainer}>
-            <FileDropZoneControls />
-            <div {...getRootProps()} className={styles.dropzone}>
+            <div className={styles.dropzone}>
               <input {...getInputProps()} />
-              <p style={{ fontWeight: "bold", fontSize: "22px" }}>
-                Drop files here, or click to select files
-              </p>
+              {isDragActive ? (
+                <p style={pstyle}>Drop the files here...</p>
+              ) : (
+                <>
+                  <p style={pstyle}>Drop files here, or </p>
+                  <button type="button" onClick={open}>
+                    Open File Dialog
+                  </button>
+                </>
+              )}
             </div>
           </section>
-        )}
-      </Dropzone>
-    </div>
+        </div>
+      </div>
+      <div>
+        <button type="submit">Upload</button>
+      </div>
+      <aside>
+        <h4>Accepted Files</h4>
+        <ul>{acceptedFileItems}</ul>
+      </aside>
+    </>
   );
 }
 

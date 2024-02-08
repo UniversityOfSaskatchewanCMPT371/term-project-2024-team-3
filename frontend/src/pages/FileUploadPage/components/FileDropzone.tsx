@@ -22,7 +22,7 @@ function FileDropZone(): ReactElement {
       onDrop,
       accept: {
         "application/json": [".json"],
-        "application/xml": ["xml"],
+        "application/xml": [".xml"],
       },
     });
 

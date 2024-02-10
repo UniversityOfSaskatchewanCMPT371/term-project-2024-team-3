@@ -67,7 +67,7 @@ const ProcessedDataPage = function () {
           <Button
             className={styles.goToPredicted}
             variant="contained"
-            href="/predicted-data"
+            href="/PredictedDataPage"
           >
             Go To Predicted Files{" "}
           </Button>

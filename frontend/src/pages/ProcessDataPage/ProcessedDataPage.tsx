@@ -1,4 +1,5 @@
 import React from "react";
+import Rollbar from "rollbar";
 import {
   RadioGroup,
   FormControl,
@@ -14,6 +15,13 @@ import {
 import styles from "./ProcessedDataPage.module.css";
 
 const ProcessedDataPage = function () {
+  const rollbarConfig = {
+    accessToken: "dbfced96b5df42d295242681f0560764",
+    environment: "production",
+  };
+  const rollbar = new Rollbar(rollbarConfig);
+  rollbar.debug("Reached Processed Data page");
+
   return (
     <div>
       <Container className={styles.containerDiv}>

@@ -49,7 +49,7 @@ function FileDropZone(): ReactElement {
                 <>
                   <p style={pstyle}>Drop files here, or </p>
                   <button type="button" onClick={open}>
-                    Open File Dialog
+                    Open File Dialogue
                   </button>
                 </>
               )}
@@ -58,10 +58,9 @@ function FileDropZone(): ReactElement {
         </div>
       </div>
       <div>
-        <button type="submit">Upload</button>
+        <button type="submit">Upload HERE THIS IS AN INTENTIONAL TYPO</button>
       </div>
       <aside>
-        <h4>Accepted Files</h4>
         <ul>{acceptedFileItems}</ul>
       </aside>
     </>

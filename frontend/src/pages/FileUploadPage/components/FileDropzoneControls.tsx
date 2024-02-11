@@ -7,12 +7,18 @@ import {
 } from "@mui/material";
 import styles from "../FileUpload.module.css";
 
-function FileDropZoneControls(): ReactElement {
+interface FileDropZoneControlsProps {
+  onRadioChange: () => void;
+}
+
+function FileDropZoneControls({
+  onRadioChange,
+}: FileDropZoneControlsProps): ReactElement {
   return (
     <div className={styles.fd_header}>
       <span>Select File Type: </span>
       <FormControl component="fieldset" className={styles.f_radio}>
-        <RadioGroup>
+        <RadioGroup onChange={onRadioChange}>
           <FormControlLabel
             value="fitbit"
             control={<Radio color="primary" />}

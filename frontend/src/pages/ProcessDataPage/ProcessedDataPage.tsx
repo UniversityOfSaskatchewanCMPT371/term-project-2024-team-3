@@ -1,4 +1,5 @@
 import React from "react";
+import Rollbar from "rollbar";
 import {
   RadioGroup,
   FormControl,
@@ -10,10 +11,17 @@ import {
   List,
   Container,
 } from "@mui/material";
+
 import styles from "./ProcessedDataPage.module.css";
 
 const ProcessedDataPage = function () {
-  // let processedData =
+  const rollbarConfig = {
+    accessToken: "dbfced96b5df42d295242681f0560764",
+    environment: "production",
+  };
+  const rollbar = new Rollbar(rollbarConfig);
+  rollbar.debug("Reached Processed Data page");
+
   return (
     <div>
       <Container className={styles.containerDiv}>
@@ -67,7 +75,7 @@ const ProcessedDataPage = function () {
           <Button
             className={styles.goToPredicted}
             variant="contained"
-            href="/predicted-data"
+            href="/PredictedDataPage"
           >
             Go To Predicted Files{" "}
           </Button>

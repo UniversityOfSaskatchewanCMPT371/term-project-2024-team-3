@@ -27,7 +27,7 @@
   "include": [
     "src",
     "playwright.config.ts",
-    "tests_end2end/example.spec.ts"
+    "tests_end2end/*"
 
   ]
 }

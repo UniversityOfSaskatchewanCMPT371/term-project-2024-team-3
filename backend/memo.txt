@@ -1,0 +1,9 @@
+Postgres local pass on mac: 123
+
+set an environment variable for R repo path: r_repo.path
+set an environment variable for postgres sym key: pg_crypto.key
+
+
+Redis path: /Users/dfuller/Desktop/Arastoo/Spring/dev/redis-stable
+    run redis: redis-server
+

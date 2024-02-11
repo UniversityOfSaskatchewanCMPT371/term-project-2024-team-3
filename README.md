@@ -106,6 +106,8 @@ Issue types currently known:
 
 - release
 
+- qa
+
   
   
 

@@ -1,4 +1,5 @@
 import React, { ReactElement } from "react";
+import Rollbar from "rollbar";
 import { Button, Icon } from "@mui/material";
 import style from "./HomePage.module.css";
 import AppleWatchPdf from "../../assets/AppleWatch.pdf";
@@ -7,6 +8,13 @@ import beapLogo from "../../assets/beap_lab_hex_small.jpg";
 import engineOverview from "../../assets/engine-overview.png";
 
 function HomePage(): ReactElement {
+  const rollbarConfig = {
+    accessToken: "dbfced96b5df42d295242681f0560764",
+    environment: "production",
+  };
+  const rollbar = new Rollbar(rollbarConfig);
+  rollbar.debug("Reached Home page");
+
   return (
     <div className={style.home}>
       <section className={style.main_page}>

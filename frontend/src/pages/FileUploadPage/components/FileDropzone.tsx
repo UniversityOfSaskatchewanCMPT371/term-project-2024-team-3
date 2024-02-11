@@ -1,10 +1,17 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { ReactElement, useCallback, useState } from "react";
+import Rollbar from "rollbar";
 import { useDropzone, FileWithPath } from "react-dropzone";
 import styles from "../FileUpload.module.css";
 import FileDropZoneControls from "./FileDropzoneControls";
 
 function FileDropZone(): ReactElement {
+  const rollbarConfig = {
+    accessToken: "dbfced96b5df42d295242681f0560764",
+    environment: "production",
+  };
+  const rollbar = new Rollbar(rollbarConfig);
+
   const [files, setFiles] = useState<FileWithPath[]>([]);
 
   const pstyle = { fontWeight: "bold", fontSize: "22px" }; // add to style sheet
@@ -14,7 +21,7 @@ function FileDropZone(): ReactElement {
   };
 
   const onDrop = useCallback((acceptedFiles: FileWithPath[]) => {
-    console.log(acceptedFiles);
+    rollbar.debug(acceptedFiles);
 
     if (acceptedFiles?.length) {
       setFiles((previousFiles) => [...previousFiles, ...acceptedFiles]);

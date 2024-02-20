@@ -32,4 +32,3 @@ volumes:
 
 networks:
   spring:
-    external: true

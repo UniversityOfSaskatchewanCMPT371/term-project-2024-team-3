@@ -1,17 +1,18 @@
 name: deploy-digital-ocean
 on:
-    workflow_run:
-        workflows: [frontend, playwright]
-        branches: [master]
-        types:
-            - completed
+    pull_request:
+        branches:
+          - master
+        types: [closed]
 
 jobs:
   build-and-deploy:
-    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.pull_request.merged }}
+    if: github.event.pull_request.merged && github.event.pull_request.base.ref == 'master' && github.event_name == 'pull_request' && github.event.workflow_run.conclusion == 'success'
     runs-on: self-hosted
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Build and run app     
-        run: docker-compose -f docker-compose-prod.yml up -d --build
+      - name: Build containers     
+        run: docker-compose -f docker-compose-prod.yml build
+      - name: Run app    
+        run: docker-compose -f docker-compose-prod.yml up -d

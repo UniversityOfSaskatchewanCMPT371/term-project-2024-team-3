@@ -1,13 +1,14 @@
 name: deploy-digital-ocean
 on:
-    pull_request:
-        branches:
-          - master
-        types: [closed]
+    workflow_run:
+        workflows: [frontend, playwright]
+        branches: [master]
+        types:
+            - completed
 
 jobs:
   build-and-deploy:
-    if: github.event.pull_request.merged && github.event.pull_request.base.ref == 'master' && github.event_name == 'pull_request' && github.event.workflow_run.conclusion == 'success'
+    if: ${{ github.event.workflow_run.conclusion == 'success'}}
     runs-on: self-hosted
     steps:
       - name: Checkout

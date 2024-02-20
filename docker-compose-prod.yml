@@ -1,0 +1,35 @@
+version: "3.8"
+
+services:
+  cache:
+    image: redis:6.2-alpine
+    restart: always
+    ports:
+      - 6379:6379
+    command: [ "redis-server", "--protected-mode", "no" ]
+    volumes: 
+      - cache:/data
+    networks:
+      - spring
+
+  backend:
+    container_name: backend-prod
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    volumes:
+      - ./services/ml-service:/usr/local/tomcat/webapps/ml-service
+    ports:
+      - 8080:8080
+    networks:
+      - spring
+    depends_on:
+      - cache
+  
+volumes:
+  cache:
+
+networks:
+  spring:
+    external: true

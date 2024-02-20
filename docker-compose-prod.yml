@@ -12,8 +12,8 @@ services:
     networks:
       - spring
 
-  beapEngineApp:
-    container_name: beapEngineApp-prod
+  beapengineapp:
+    container_name: beapengineapp-prod
     restart: always
     build:
       context: .

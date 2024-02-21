@@ -1,59 +1,117 @@
 .containerDiv {
-    display: flex;
-    flex-direction: column;
-    /* justify-content: flex-start; */
-    /* align-items: center; */
-    width: 100%;
-    height: 100%;
+  display: flex;
+  flex-direction: column;
+  /* justify-content: flex-start; */
+  /* align-items: center; */
+  width: 100%;
+  height: 100%;
 }
 
 .containerDiv > .bannerinfo {
-    margin: 10px 0px;
-    border: 2px solid;
-    border-radius: 10px;
-    padding: 15px;
-    box-sizing: border-box;
-    border-color: #FFD980;
-    background-color: #FFF9EB;
-    word-spacing: 2px;
+  margin: 10px 0px;
+  border: 2px solid;
+  border-radius: 10px;
+  padding: 15px;
+  box-sizing: border-box;
+  border-color: #ffd980;
+  background-color: #fff9eb;
+  word-spacing: 2px;
 }
 
 .action_bar {
-    display: flex;
-    /* align-items: center; */
-    width: 60%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    /* position: fixed; */
-    /* top: auto; */
-    /* left: 0; */
-    /* transform: translateX(50px); */
-    z-index: 200;
-    background-color: #FFFFFF;
-    padding: 13px 0px 0px;
-    position: fixed;
-    top: auto;
-
+  /* background-color: gray; */
+  display: flex;
+  /* align-items: center; */
+  width: 100%;
+  height: 5%;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 200;
+  float: left;
+  padding: 0px 0px 0px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  float: left;
+  /* position: fixed; */
+  /* top: auto;
+  left: 10%; */
 }
 
-.action_bar > .predictBtn {
-    color: #FFF; 
-    background-color: #FFB41A;
-    margin-left: auto;
+.columnDiv {
+  display: inline-block;
+  flex-direction: row;
+  width: 100%;
 }
 
-.action_bar > .downloadBtn {
-    color: #FFF; 
-    background-color: #36BDC4;
-    margin-left: 15px;
+.buttonControl {
+  width: 20%;
+  float: right;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: left;
 }
 
-.action_bar > .goToPredicted {
-    background-color: powderblue;
-    margin-left: 15px;
+.buttonControl > .predictBtn {
+  color: #fff;
+  background-color: #ffd172;
+  margin-left: 15px;
+  margin-bottom: 10px;
+  filter: drop-shadow(0px 2px 2px gainsboro);
 }
 
-.list {
-    overflow: scroll;
+.buttonControl > .downloadBtn {
+  color: #fff;
+  background-color: #36bdc4;
+  margin-left: 15px;
+  margin-bottom: 10px;
+  filter: drop-shadow(0px 2px 2px gainsboro);
+}
+
+.buttonControl > .goToPredicted {
+  background-color: #ff7572;
+  margin-left: 15px;
+  filter: drop-shadow(0px 2px 2px gainsboro);
+}
+
+.listDiv {
+  display: flex;
+  background-color: #f8f8f8;
+  filter: drop-shadow(0px 5px 5px gray);
+  width: 80%;
+  min-height: 400px;
+  float: left;
+  border-radius: 10px;
+  padding-top: 10px;
+}
+
+.fileSelector {
+  display: inline-block;
+  padding-left: 30px;
+  padding-right: 30px;
+  padding-top: 10px;
+  /* background-color: antiquewhite; */
+  /* border: black; */
+  /* border-style: solid; */
+  vertical-align: middle;
+}
+
+.fileSelectorRad {
+  width: 100%;
+}
+
+.fileDate {
+  float: right;
+  display: flex;
+  padding-right: 10px;
+  vertical-align: middle;
+}
+
+.fileTextBox {
+  /* background-color: #ffd980; */
+  display: inline-block;
+  float: right;
+  translate: (-50%, -50%);
+  text-align: center;
+  vertical-align: middle;
 }

@@ -1,23 +1,18 @@
 // Importing necessary libraries and hooks
 import React, { FormEvent, useState } from "react";
-import { login } from "../../../hooks/Api";
+import useLogin from "../../../shared/hooks/useLogin";
 
 // LoginForm component
 export default function LoginForm(): React.ReactElement {
   // State hooks to store the username and password
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const { handleLogin } = useLogin();
 
   // Function to handle the form submission
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
-    try {
-      // Attempt to login with the provided username and password
-      const data = await login({ username, password });
-      console.log("Login successful", data); // Log success message
-    } catch (error) {
-      console.error("Login failed", error); // Log error message
-    }
+    await handleLogin(username, password);
   };
 
   // Render the login form

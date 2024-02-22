@@ -1,6 +1,6 @@
 /* eslint-disable prefer-arrow-callback */
 
-import React from "react";
+import React, { useState } from "react";
 import Rollbar from "rollbar";
 import {
   RadioGroup,
@@ -13,7 +13,7 @@ import {
   // List,
   Container,
 } from "@mui/material";
-
+import { FileWithPath } from "react-dropzone";
 import styles from "./ProcessedDataPage.module.css";
 
 const ProcessedDataPage = function () {
@@ -24,13 +24,22 @@ const ProcessedDataPage = function () {
   const rollbar = new Rollbar(rollbarConfig);
   rollbar.debug("Reached Processed Data page");
 
-  const getRendersOfFiles = (listOfFiles: Array<String>) => {
-    const renders = listOfFiles.map(function (i: String) {
-      console.log(i);
+  const [files, setFiles] = useState<FileWithPath[]>([]);
+
+  // the list of radial selectors for the file list
+  let renders;
+
+  /**
+   *  Maps the list of files to a list of radial selectors for the files list
+   */
+  const getRendersOfFiles = () => {
+    renders = files.map(function (i: FileWithPath) {
+      const date = new Date(i.lastModified);
+
       return (
         <div className={styles.fileSelector}>
           <FormControlLabel
-            value={i}
+            value={i.name}
             control={
               <Radio
                 color="primary"
@@ -41,25 +50,30 @@ const ProcessedDataPage = function () {
                 }}
               />
             }
-            label={i}
+            label={i.name}
             labelPlacement="end"
           />
           <div className={styles.fileTextBox}>
-            <text className={styles.fileDate}>{i}</text>
-            <text className={styles.fileDate}>{i}</text>
+            <div className={styles.fileDate}>{date.toDateString()}</div>
           </div>
         </div>
       );
     });
-    return renders;
   };
 
-  const renders = getRendersOfFiles([
-    "String 1",
-    "String 2",
-    "String 3",
-    "This is also a string",
-  ]);
+  // TEST DATA //
+  const file = new File([], "../ProcessedDataPage.test.tsx");
+  const file2 = new File([], "../ProcessedDataPage.tsx");
+  const file3 = new File(
+    [],
+    "../../PredictedDataPage/PredoctedDataPage.module.css",
+  );
+
+  if (files.length === 0) {
+    setFiles([file, file2, file3]);
+  }
+
+  getRendersOfFiles();
 
   return (
     <div>

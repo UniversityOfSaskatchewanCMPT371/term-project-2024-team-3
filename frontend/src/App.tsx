@@ -8,6 +8,7 @@ import PredictedDataPage from "./pages/PredictedDataPage/PredictedDataPage";
 import FileUploadPage from "./pages/FileUploadPage/FileUploadPage";
 import "./App.css";
 import HomePage from "./pages/HomePage/HomePage";
+import HelpPopup from "./components/HelpPopup/HelpPopup";
 
 const rollbarConfig = {
   accessToken: "dbfced96b5df42d295242681f0560764",
@@ -22,6 +23,7 @@ function App(): React.ReactElement<typeof Router> {
       <ErrorBoundary>
         <Router>
           <Navbar />
+          <HelpPopup />
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<HomePage />} />

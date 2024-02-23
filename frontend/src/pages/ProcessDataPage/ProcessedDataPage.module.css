@@ -60,6 +60,10 @@
   filter: drop-shadow(0px 2px 2px gainsboro);
 }
 
+.buttonControl > .predictBtn:hover {
+  background-color: #d1aa5d;
+}
+
 .buttonControl > .downloadBtn {
   color: #fff;
   background-color: #36bdc4;
@@ -68,10 +72,18 @@
   filter: drop-shadow(0px 2px 2px gainsboro);
 }
 
+.buttonControl > .downloadBtn:hover {
+  background-color: #2e9ca1;
+}
+
 .buttonControl > .goToPredicted {
   background-color: #ff7572;
   margin-left: 15px;
   filter: drop-shadow(0px 2px 2px gainsboro);
+}
+
+.buttonControl > .goToPredicted:hover {
+  background-color: #c75958;
 }
 
 .listDiv {

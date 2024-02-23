@@ -82,6 +82,7 @@ function HelpPopup(): React.ReactElement {
             className={styles.paragraph}
             id={`Paragraph ${j}`}
             values="closed"
+            data-testid={`Paragraph ${j}`}
           >
             {listOfDescriptions[j]}
           </text>

@@ -73,6 +73,7 @@ function HelpPopup(): React.ReactElement {
               onClick={toggleTextDisplay}
               value={j}
               id={`button ${j}`}
+              data-testid={`button ${j}`}
             >
               v
             </button>
@@ -120,15 +121,17 @@ function HelpPopup(): React.ReactElement {
         type="button"
         onClick={openPopup}
         id="popupButton"
+        data-testid="popupButton"
       >
         ? Help
       </button>
-      <div className={styles.popup} id="popup">
+      <div className={styles.popup} id="popup" data-testid="popup">
         {renders}
         <button
           className={styles.closePopupButton}
           type="button"
           onClick={closePopup}
+          data-testid="closePopupButton"
         >
           &#x2197;
         </button>

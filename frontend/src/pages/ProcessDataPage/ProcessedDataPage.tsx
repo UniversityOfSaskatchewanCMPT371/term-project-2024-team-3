@@ -25,7 +25,8 @@ const ProcessedDataPage = function () {
   rollbar.debug("Reached Processed Data page");
 
   const [files, setFiles] = useState<FileWithPath[]>([]);
-
+  const [currentFile, setCurrentFile] = useState<FileWithPath>();
+  const [selectedModel, setSelectedModel] = useState<String>("svm");
   // the list of radial selectors for the file list
   let renders;
 
@@ -33,13 +34,14 @@ const ProcessedDataPage = function () {
    *  Maps the list of files to a list of radial selectors for the files list
    */
   const getRendersOfFiles = () => {
-    renders = files.map(function (i: FileWithPath) {
-      const date = new Date(i.lastModified);
+    renders = files.map(function (file: FileWithPath) {
+      const date = new Date(file.lastModified);
 
       return (
         <div className={styles.fileSelector}>
           <FormControlLabel
-            value={i.name}
+            value={file.name}
+            onClick={() => setCurrentFile(file)}
             control={
               <Radio
                 color="primary"
@@ -50,7 +52,7 @@ const ProcessedDataPage = function () {
                 }}
               />
             }
-            label={i.name}
+            label={file.name}
             labelPlacement="end"
           />
           <div className={styles.fileTextBox}>
@@ -59,6 +61,14 @@ const ProcessedDataPage = function () {
         </div>
       );
     });
+  };
+
+  /**
+   *
+   */
+  const predictFile = () => {
+    console.log(selectedModel);
+    console.log(currentFile);
   };
 
   // TEST DATA //
@@ -83,6 +93,7 @@ const ProcessedDataPage = function () {
             <RadioGroup row defaultValue="svm">
               <FormControlLabel
                 value="svm"
+                onClick={() => setSelectedModel("svm")}
                 control={
                   <Radio
                     color="primary"
@@ -98,6 +109,7 @@ const ProcessedDataPage = function () {
               />
               <FormControlLabel
                 value="randomForest"
+                onClick={() => setSelectedModel("randomForest")}
                 control={
                   <Radio
                     color="primary"
@@ -113,6 +125,7 @@ const ProcessedDataPage = function () {
               />
               <FormControlLabel
                 value="decissionTree"
+                onClick={() => setSelectedModel("decisionTree")}
                 control={
                   <Radio
                     color="primary"
@@ -139,7 +152,11 @@ const ProcessedDataPage = function () {
             </FormControl>
           </div>
           <div className={styles.buttonControl}>
-            <Button variant="contained" className={styles.predictBtn}>
+            <Button
+              variant="contained"
+              className={styles.predictBtn}
+              onClick={() => predictFile()}
+            >
               Predict File
             </Button>
             <Button variant="contained" className={styles.downloadBtn}>

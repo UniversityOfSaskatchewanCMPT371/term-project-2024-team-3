@@ -12,7 +12,7 @@ test("File Upload Page Test", async ({ page }) => {
     page
       .locator("div")
       .filter({ hasText: "Step 1: Drag and drop your" })
-      .nth(3),
+      .nth(4),
   ).toBeVisible();
   await expect(page.locator("#root")).toContainText(
     "section on the right. You can select the file you want to process and click the process button. Once you have processed your data it will be saved. You do not need to process it again. Click",

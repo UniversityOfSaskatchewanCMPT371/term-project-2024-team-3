@@ -1,6 +1,6 @@
 import { renderHook } from "@testing-library/react-hooks";
 import moment from "moment";
-import useLogin from "./useLogin"; // Assuming this is the path to your useLogin hook
+import useLogin from "./useLogin";
 import * as API from "../api";
 
 const mockLoginData = {

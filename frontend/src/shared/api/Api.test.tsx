@@ -1,4 +1,4 @@
-import { login, logout } from "./Api";
+import { login, logout, signUp } from "./Api";
 
 describe("API Tests", () => {
   beforeEach(() => {
@@ -82,5 +82,64 @@ describe("API Tests", () => {
         method: "GET",
       },
     );
+  });
+
+  it("should sign up successfully", async () => {
+    jest.spyOn(global, "fetch").mockResolvedValueOnce({
+      ok: true,
+    } as Response);
+    const username = "testuser";
+    const password = "testpassword";
+    const firstName = "Test";
+    const lastName = "User";
+
+    await expect(
+      signUp(username, password, firstName, lastName),
+    ).resolves.not.toThrow();
+    expect(global.fetch).toHaveBeenCalledWith("/user", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+      },
+      body: JSON.stringify({
+        firstName,
+        lastName,
+        username,
+        password,
+        accessGroup: [{ id: "4" }],
+        role: [{ id: "5" }],
+        rawData: [],
+      }),
+    });
+  });
+
+  it("should throw an error if sign up fails", async () => {
+    jest.spyOn(global, "fetch").mockResolvedValueOnce({
+      ok: false,
+    } as Response);
+
+    const username = "testuser";
+    const password = "testpassword";
+    const firstName = "Test";
+    const lastName = "User";
+
+    await expect(
+      signUp(username, password, firstName, lastName),
+    ).rejects.toThrow("Signup failed");
+    expect(global.fetch).toHaveBeenCalledWith("/user", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+      },
+      body: JSON.stringify({
+        firstName,
+        lastName,
+        username,
+        password,
+        accessGroup: [{ id: "4" }],
+        role: [{ id: "5" }],
+        rawData: [],
+      }),
+    });
   });
 });

@@ -1,5 +1,3 @@
-/* eslint-disable prefer-arrow-callback */
-
 import React from "react";
 import Rollbar from "rollbar";
 import styles from "./HelpPopup.module.css";
@@ -10,9 +8,45 @@ function HelpPopup(): React.ReactElement {
     environment: "production",
   };
   const rollbar = new Rollbar(rollbarConfig);
-  rollbar.debug("Reached Processed Data page");
 
   let renders;
+  /**
+   * toggles the display of the paragraph for each sub-section
+   * modifies display of paragraph, and innerHTML of the button
+   * @param e an event from the button click
+   */
+  function toggleTextDisplay(e: React.FormEvent<EventTarget>) {
+    const target = e.target as HTMLInputElement;
+    if (target == null) {
+      rollbar.error("Button Error on pop up");
+    } else {
+      const paragraph = document.getElementById(`Paragraph ${target.value}`);
+      const button = document.getElementById(`button ${target.value}`);
+      if (paragraph == null) {
+        rollbar.error("Paragraph not found in help popup");
+      } else if (button == null) {
+        rollbar.error("Expansion button not found in help popup");
+      } else {
+        console.log("EXPAND");
+
+        if (paragraph.getAttribute("values") === "closed") {
+          paragraph.style.display = "block";
+          button.innerHTML = "^";
+          paragraph.setAttribute("values", "opened");
+
+          console.assert(button.innerHTML === "^");
+          console.assert(paragraph.getAttribute("values") === "opened");
+        } else if (paragraph.getAttribute("values") === "opened") {
+          paragraph.style.display = "none";
+          button.innerHTML = "v";
+          paragraph.setAttribute("values", "closed");
+
+          console.assert(button.innerHTML === "v");
+          console.assert(paragraph.getAttribute("values") === "closed");
+        }
+      }
+    }
+  }
 
   /**
    * gets the list of renders
@@ -26,17 +60,30 @@ function HelpPopup(): React.ReactElement {
     ];
 
     let j = -1;
-    renders = listOfTitles.map(function (i) {
+    renders = listOfTitles.map((i) => {
       j += 1;
+
       return (
         <div className={styles.textGroup}>
           <div className={styles.dropDownTitle}>
             <text>{i}</text>
-            <button className={styles.dropDownButton} type="button">
-              V
+            <button
+              className={styles.dropDownButton}
+              type="button"
+              onClick={toggleTextDisplay}
+              value={j}
+              id={`button ${j}`}
+            >
+              v
             </button>
           </div>
-          <text className={styles.paragraph}>{listOfDescriptions[j]}</text>
+          <text
+            className={styles.paragraph}
+            id={`Paragraph ${j}`}
+            values="closed"
+          >
+            {listOfDescriptions[j]}
+          </text>
         </div>
       );
     });
@@ -45,7 +92,7 @@ function HelpPopup(): React.ReactElement {
   function openPopup() {
     const popup = document.getElementById("popup");
 
-    // assert(popup != null);
+    // console.assert(popup != null);
     if (popup == null) {
       rollbar.error("Help popup element does not exist in document");
     } else {
@@ -56,7 +103,7 @@ function HelpPopup(): React.ReactElement {
   function closePopup() {
     const popup = document.getElementById("popup");
 
-    // assert(popup != null);
+    // console.assert(popup != null);
     if (popup == null) {
       rollbar.error("Help popup element does not exist in document");
     } else {
@@ -68,7 +115,12 @@ function HelpPopup(): React.ReactElement {
 
   return (
     <div>
-      <button className={styles.helpButton} type="button" onClick={openPopup}>
+      <button
+        className={styles.helpButton}
+        type="button"
+        onClick={openPopup}
+        id="popupButton"
+      >
         ? Help
       </button>
       <div className={styles.popup} id="popup">
@@ -78,7 +130,7 @@ function HelpPopup(): React.ReactElement {
           type="button"
           onClick={closePopup}
         >
-          X
+          &#x2197;
         </button>
       </div>
     </div>

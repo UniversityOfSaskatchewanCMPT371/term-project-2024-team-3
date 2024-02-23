@@ -32,11 +32,12 @@
   position: absolute;
   right: 0;
   background-color: #5fced3;
-  max-width: 800px;
+  width: 800px;
   float: right;
   border-bottom-left-radius: 20px;
   padding-top: 10px;
   overflow: scroll;
+  z-index: 2147483647;
 }
 
 .textGroup {
@@ -53,6 +54,8 @@
   color: white;
   font-weight: bold;
   padding: 10px;
+  max-height: 25px;
+  text-decoration-line: underline;
 }
 
 .paragraph {
@@ -61,18 +64,18 @@
   color: white;
   padding: 10px;
   overflow-wrap: normal;
+  display: none;
 }
 
 .closePopupButton {
   background-color: rgb(255, 255, 255, 0.3);
-  /* opacity: 0.5; */
   border: 0;
   border-radius: 20px;
   color: white;
-  font-weight: bold;
-  font-size: 20px;
+  font-weight: bolder;
+  font-size: 30px;
   width: 30px;
-  height: 30px;
+  line-height: 30px;
   margin: 10px;
 }
 
@@ -96,10 +99,12 @@
   color: white;
   font-weight: bold;
   font-size: 15px;
+  position: relative;
   width: 20px;
   height: 20px;
   margin: 10px;
   float: right;
+  transform: translate(0, -7px);
 }
 
 .dropDownButton:hover {

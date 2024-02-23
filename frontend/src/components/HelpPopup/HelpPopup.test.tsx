@@ -5,9 +5,6 @@ import HelpPopup from "./HelpPopup";
 
 test("TID 3.1. Renders HelpPopup component", () => {
   const { getByText, getByTestId } = render(<HelpPopup />);
-
-  // dom.getByText("? Help");
-
   // clicking the popup expand button
   getByTestId("popupButton");
   let button = getByTestId("popupButton");
@@ -42,7 +39,7 @@ test("TID 3.1. Renders HelpPopup component", () => {
         "Step 1: Drag and drop your files into the upload box. Once uploaded your files will appear in the Uploaded Files section on the right. You can select the file you want to process and click the process button. Once you have processed your data it will be saved. You do not need to process it again. Click Go To Processed Files to move to the processed data menu.",
       );
 
-      // // closing
+      // closing
       userEvent.click(button);
       expect(getByTestId("Paragraph 0").getAttribute("values")).toEqual(
         "closed",

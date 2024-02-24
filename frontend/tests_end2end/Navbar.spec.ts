@@ -1,8 +1,10 @@
 import { test, expect } from "@playwright/test";
+import setupMockLogin from "./util/setupMockLogin";
 // import exp from "constants";
 // import { title } from "process";
 
 test("Navbar Test", async ({ page }) => {
+  await setupMockLogin(page);
   // Navigate to the website
   await page.goto("./");
 
@@ -20,7 +22,7 @@ test("Navbar Test", async ({ page }) => {
 
   // check the NavBar will direct users to the correct pages
   await page.getByRole("link", { name: "FILE UPLOAD" }).click();
-  await expect(page).toHaveURL("./FileUpload");
+  await expect(page).toHaveURL("./FileUploadPage");
 
   await page.getByRole("link", { name: "PROCESSED FILES" }).click();
   await expect(page).toHaveURL("./ProcessedDataPage");

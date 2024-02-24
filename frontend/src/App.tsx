@@ -26,7 +26,6 @@ const rollbarConfig = {
 function App(): React.ReactElement<typeof Router> {
   return (
     <Provider config={rollbarConfig}>
-    
       <AuthProvider>
         <ErrorBoundary>
           <Router>
@@ -64,7 +63,7 @@ function App(): React.ReactElement<typeof Router> {
           </Router>
         </ErrorBoundary>
       </AuthProvider>
-  </Provider>
+    </Provider>
   );
 }
 

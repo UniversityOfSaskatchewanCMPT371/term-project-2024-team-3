@@ -1,6 +1,8 @@
 import { test, expect } from "@playwright/test";
+import setupMockLogin from "./util/setupMockLogin";
 
 test("Predicted Data Page Test", async ({ page }) => {
+  await setupMockLogin(page);
   // go to Predicted Data Page
   await page.goto("./PredictedDataPage");
 

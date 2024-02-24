@@ -1,11 +1,13 @@
 import { test, expect } from "@playwright/test";
+import setupMockLogin from "./util/setupMockLogin";
 
 test("File Upload Page Test", async ({ page }) => {
+  await setupMockLogin(page);
+
   // go to File Upload Page
-  await page.goto("./FileUpload");
+  await page.goto("./FileUploadPage");
 
   // Check if the page has all expected content
-
   await expect(page.getByRole("navigation")).toBeVisible();
 
   await expect(

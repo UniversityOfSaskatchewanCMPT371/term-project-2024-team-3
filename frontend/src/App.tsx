@@ -38,9 +38,9 @@ function App(): React.ReactElement<typeof Router> {
               <Route
                 path="/ProcessedDataPage"
                 element={
-                  <ProtectedRoute>
-                    <ProcessedDataPage />
-                  </ProtectedRoute>
+                  // <ProtectedRoute>
+                  <ProcessedDataPage />
+                  // </ProtectedRoute>
                 }
               />
               <Route

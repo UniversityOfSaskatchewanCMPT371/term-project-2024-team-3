@@ -1,4 +1,4 @@
-/* eslint-disable prefer-arrow-callback */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 import React, { useState } from "react";
 import Rollbar from "rollbar";
@@ -10,7 +10,6 @@ import {
   Button,
   Alert,
   Snackbar,
-  // List,
   Container,
 } from "@mui/material";
 import { FileWithPath } from "react-dropzone";
@@ -31,10 +30,30 @@ const ProcessedDataPage = function () {
   let renders;
 
   /**
+   * This function will get the users processed files from the database
+   * PRE-Conditions: User is logged in and authenticated
+   * POST-Conditions: Files will be updated to be the users list of files
+   *                  The list of displayed files will be updated to show this
+   */
+  const getProcessedFiles = () => {};
+
+  /**
+   * Downloads the currently selected file to the users computer
+   */
+  const downloadFile = () => {};
+
+  /**
+   * sends the selected files to the predict R script
+   * PRE-Conditions: A file is selected, and a prediction method is selected
+   * POST-Conditions: Sends the files to the R repo and adds them to the database???
+   */
+  const predictFiles = () => {};
+
+  /**
    *  Maps the list of files to a list of radial selectors for the files list
    */
   const getRendersOfFiles = () => {
-    renders = files.map(function (file: FileWithPath) {
+    renders = files.map((file: FileWithPath) => {
       const date = new Date(file.lastModified);
 
       return (

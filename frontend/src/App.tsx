@@ -10,6 +10,7 @@ import PredictedDataPage from "./pages/PredictedDataPage/PredictedDataPage";
 import FileUploadPage from "./pages/FileUploadPage/FileUploadPage";
 import "./App.css";
 import HomePage from "./pages/HomePage/HomePage";
+import HelpPopup from "./components/HelpPopup/HelpPopup";
 import { AuthProvider } from "./components/Authentication/useAuth";
 import ProtectedRoute from "./components/Authentication/ProtectedRoute";
 
@@ -29,6 +30,7 @@ function App(): React.ReactElement<typeof Router> {
         <ErrorBoundary>
           <Router>
             <Navbar />
+            <HelpPopup />
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/login" element={<LoginForm />} />

@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
 import React, { useState } from "react";
 import Rollbar from "rollbar";
 import {
@@ -12,7 +10,14 @@ import {
   Snackbar,
   Container,
 } from "@mui/material";
+import { saveAs } from "file-saver";
+
 import { FileWithPath } from "react-dropzone";
+
+// issues here
+import FitBitService from "../../../../backend/src/main/java/com/beaplab/BeaplabEngine/controller/FitBitController.java";
+import AppleWatchService from "../../../../backend/src/main/java/com/beaplab/BeaplabEngine/controller/AppleWatchController.java";
+
 import styles from "./ProcessedDataPage.module.css";
 
 const ProcessedDataPage = function () {
@@ -23,9 +28,13 @@ const ProcessedDataPage = function () {
   const rollbar = new Rollbar(rollbarConfig);
   rollbar.debug("Reached Processed Data page");
 
-  const [files, setFiles] = useState<FileWithPath[]>([]);
-  const [currentFile, setCurrentFile] = useState<FileWithPath>();
+  const [files, setFiles] = useState<any[]>([]);
+  const [currentFile, setCurrentFile] = useState<any>();
   const [selectedModel, setSelectedModel] = useState<String>("svm");
+
+  const fitBitService = new FitBitService();
+  const appleWatchService = new AppleWatchService();
+
   // the list of radial selectors for the file list
   let renders;
 
@@ -35,19 +44,140 @@ const ProcessedDataPage = function () {
    * POST-Conditions: Files will be updated to be the users list of files
    *                  The list of displayed files will be updated to show this
    */
-  const getProcessedFiles = () => {};
 
-  /**
-   * Downloads the currently selected file to the users computer
-   */
-  const downloadFile = () => {};
+  // async
+  const getProcessedFiles = () => {
+    // await
+    fitBitService
+      .getProcessedDataList()
+      .then(({ data, status }) => {
+        if (status !== 200) {
+          throw Error(data.message);
+        }
+        const transformData = [...data.list].map((file: File) => ({
+          ...file,
+          watch: "Fitbit",
+        }));
+        setFiles([...files, ...transformData]);
+      })
+      .catch((err: Error) => {
+        rollbar.error(err);
+      });
+    // await
+    appleWatchService
+      .getProcessedDataList()
+      .then(({ data, status }) => {
+        if (status !== 200) {
+          throw Error(data.message);
+        }
+        const transformData = [...data.list].map((file: File) => ({
+          ...file,
+          watch: "AppleWatch",
+        }));
+        setFiles([...files, ...transformData]);
+      })
+      .catch((err: Error) => {
+        rollbar.error(err);
+      });
+  };
 
   /**
    * sends the selected files to the predict R script
    * PRE-Conditions: A file is selected, and a prediction method is selected
    * POST-Conditions: Sends the files to the R repo and adds them to the database???
    */
-  const predictFiles = () => {};
+  const predictFiles = () => {
+    const { id, watch } = currentFile;
+    if (watch === "Fitbit") {
+      fitBitService
+        .predict(id, selectedModel)
+        .then((response: any) => {
+          if (response.status != 200) {
+            throw new Error(response.data.message);
+          }
+        })
+        .catch((err: Error) => {
+          rollbar.error(err);
+        });
+    }
+    if (watch === "AppleWatch") {
+      appleWatchService
+        .predict(id, selectedModel)
+        .then((response: any) => {
+          if (response.status != 200) {
+            throw new Error(response.data.message);
+          }
+        })
+        .catch((err: Error) => {
+          rollbar.error(err);
+        });
+    }
+  };
+
+  /**
+   * creates a blob for a file for download
+   * @param b64Data the data to be downloaded
+   * @param contentType a string representing the type
+   * @param sliceSize the size of the slice for the blob
+   * @returns a blob for downloading
+   */
+  const b64toBlob = function (
+    b64Data: string,
+    contentType: string,
+    sliceSize: number,
+  ) {
+    contentType = contentType || "";
+    sliceSize = sliceSize || 512; // sliceSize represent the bytes to be process in each batch(loop), 512 bytes seems to be the ideal slice size for the performance wise
+    var byteCharacters = atob(b64Data);
+    var byteArrays = [];
+    for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+      var slice = byteCharacters.slice(offset, offset + sliceSize);
+      var byteNumbers = new Array(slice.length);
+      for (var i = 0; i < slice.length; i++) {
+        byteNumbers[i] = slice.charCodeAt(i);
+      }
+      var byteArray = new Uint8Array(byteNumbers);
+      byteArrays.push(byteArray);
+    }
+    var blob = new Blob(byteArrays, { type: contentType });
+    return blob;
+  };
+
+  /**
+   * Downloads the currently selected file to the users computer
+   */
+  const downloadFile = () => {
+    const { id, watch } = currentFile;
+    if (watch === "Fitbit") {
+      fitBitService
+        .download(id, "process")
+        .then((response: any) => {
+          var blob = b64toBlob(
+            response.data.file,
+            "application/octet-stream",
+            512,
+          );
+          saveAs(blob, `Fitbit ${id}.zip`);
+        })
+        .catch((err: Error) => {
+          rollbar.error(err);
+        });
+    } else {
+      appleWatchService
+        .download(id, "process")
+        .then((response: any) => {
+          var blob = b64toBlob(
+            response.data.file,
+            "application/octet-stream",
+            512,
+          );
+          saveAs(blob, `Apple Watch ${id}.zip`);
+        })
+        .catch((err: Error) => {
+          rollbar.error(err);
+        });
+    }
+  };
 
   /**
    *  Maps the list of files to a list of radial selectors for the files list
@@ -80,14 +210,6 @@ const ProcessedDataPage = function () {
         </div>
       );
     });
-  };
-
-  /**
-   *
-   */
-  const predictFile = () => {
-    console.log(selectedModel);
-    console.log(currentFile);
   };
 
   // TEST DATA //
@@ -174,7 +296,7 @@ const ProcessedDataPage = function () {
             <Button
               variant="contained"
               className={styles.predictBtn}
-              onClick={() => predictFile()}
+              // onClick={() => predictFile()}
             >
               Predict File
             </Button>

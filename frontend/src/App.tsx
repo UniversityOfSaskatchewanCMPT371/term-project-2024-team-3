@@ -2,6 +2,7 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Provider, ErrorBoundary } from "@rollbar/react";
+import ProtectedRoute from "components/Authentication/ProtectedRoute";
 import Navbar from "./components/Navbar/Navbar";
 import LoginForm from "./pages/LoginPage/components/LoginForm";
 import Logout from "./Logout";
@@ -12,7 +13,6 @@ import "./App.css";
 import HomePage from "./pages/HomePage/HomePage";
 import HelpPopup from "./components/HelpPopup/HelpPopup";
 import { AuthProvider } from "./components/Authentication/useAuth";
-import ProtectedRoute from "./components/Authentication/ProtectedRoute";
 
 // Configuration for Rollbar, a real-time error tracking system
 const rollbarConfig = {

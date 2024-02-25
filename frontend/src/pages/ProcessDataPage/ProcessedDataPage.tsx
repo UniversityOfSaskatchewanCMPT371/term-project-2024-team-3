@@ -15,8 +15,8 @@ import { saveAs } from "file-saver";
 import { FileWithPath } from "react-dropzone";
 
 // issues here
-import FitBitService from "../../../../backend/src/main/java/com/beaplab/BeaplabEngine/controller/FitBitController.java";
-import AppleWatchService from "../../../../backend/src/main/java/com/beaplab/BeaplabEngine/controller/AppleWatchController.java";
+import FitBitService from "../../shared/Data/Fitbit";
+import AppleWatchService from "../../shared/Data/AppleWatch";
 
 import styles from "./ProcessedDataPage.module.css";
 
@@ -30,7 +30,7 @@ const ProcessedDataPage = function () {
 
   const [files, setFiles] = useState<any[]>([]);
   const [currentFile, setCurrentFile] = useState<any>();
-  const [selectedModel, setSelectedModel] = useState<String>("svm");
+  const [selectedModel, setSelectedModel] = useState<string>("svm");
 
   const fitBitService = new FitBitService();
   const appleWatchService = new AppleWatchService();
@@ -92,7 +92,7 @@ const ProcessedDataPage = function () {
       fitBitService
         .predict(id, selectedModel)
         .then((response: any) => {
-          if (response.status != 200) {
+          if (response.status !== 200) {
             throw new Error(response.data.message);
           }
         })
@@ -104,7 +104,7 @@ const ProcessedDataPage = function () {
       appleWatchService
         .predict(id, selectedModel)
         .then((response: any) => {
-          if (response.status != 200) {
+          if (response.status !== 200) {
             throw new Error(response.data.message);
           }
         })
@@ -126,20 +126,20 @@ const ProcessedDataPage = function () {
     contentType: string,
     sliceSize: number,
   ) {
-    contentType = contentType || "";
-    sliceSize = sliceSize || 512; // sliceSize represent the bytes to be process in each batch(loop), 512 bytes seems to be the ideal slice size for the performance wise
-    var byteCharacters = atob(b64Data);
-    var byteArrays = [];
-    for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-      var slice = byteCharacters.slice(offset, offset + sliceSize);
-      var byteNumbers = new Array(slice.length);
-      for (var i = 0; i < slice.length; i++) {
+    // contentType = contentType || "";
+    // sliceSize = sliceSize || 512; // sliceSize represent the bytes to be process in each batch(loop), 512 bytes seems to be the ideal slice size for the performance wise
+    const byteCharacters = atob(b64Data);
+    const byteArrays = [];
+    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+      const slice = byteCharacters.slice(offset, offset + sliceSize);
+      const byteNumbers = new Array(slice.length);
+      for (let i = 0; i < slice.length; i += 1) {
         byteNumbers[i] = slice.charCodeAt(i);
       }
-      var byteArray = new Uint8Array(byteNumbers);
+      const byteArray = new Uint8Array(byteNumbers);
       byteArrays.push(byteArray);
     }
-    var blob = new Blob(byteArrays, { type: contentType });
+    const blob = new Blob(byteArrays, { type: contentType });
     return blob;
   };
 
@@ -152,7 +152,7 @@ const ProcessedDataPage = function () {
       fitBitService
         .download(id, "process")
         .then((response: any) => {
-          var blob = b64toBlob(
+          const blob = b64toBlob(
             response.data.file,
             "application/octet-stream",
             512,
@@ -166,7 +166,7 @@ const ProcessedDataPage = function () {
       appleWatchService
         .download(id, "process")
         .then((response: any) => {
-          var blob = b64toBlob(
+          const blob = b64toBlob(
             response.data.file,
             "application/octet-stream",
             512,
@@ -212,17 +212,19 @@ const ProcessedDataPage = function () {
     });
   };
 
-  // TEST DATA //
-  const file = new File([], "../ProcessedDataPage.test.tsx");
-  const file2 = new File([], "../ProcessedDataPage.tsx");
-  const file3 = new File(
-    [],
-    "../../PredictedDataPage/PredoctedDataPage.module.css",
-  );
+  // // TEST DATA //
+  // const file = new File([], "../ProcessedDataPage.test.tsx");
+  // const file2 = new File([], "../ProcessedDataPage.tsx");
+  // const file3 = new File(
+  //   [],
+  //   "../../PredictedDataPage/PredoctedDataPage.module.css",
+  // );
 
-  if (files.length === 0) {
-    setFiles([file, file2, file3]);
-  }
+  // if (files.length === 0) {
+  //   setFiles([file, file2, file3]);
+  // }
+
+  getProcessedFiles();
 
   getRendersOfFiles();
 
@@ -296,11 +298,15 @@ const ProcessedDataPage = function () {
             <Button
               variant="contained"
               className={styles.predictBtn}
-              // onClick={() => predictFile()}
+              onClick={predictFiles}
             >
               Predict File
             </Button>
-            <Button variant="contained" className={styles.downloadBtn}>
+            <Button
+              variant="contained"
+              className={styles.downloadBtn}
+              onClick={downloadFile}
+            >
               Download File
             </Button>
             <Button

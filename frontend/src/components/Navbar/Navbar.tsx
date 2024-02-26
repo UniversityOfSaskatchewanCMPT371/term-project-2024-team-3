@@ -7,7 +7,7 @@ function Navbar(): React.ReactElement {
 
   const routes = [
     { path: "/", name: "HOME" },
-    { path: "/FileUpload", name: "FILE UPLOAD" },
+    { path: "/FileUploadPage", name: "FILE UPLOAD" },
     { path: "/ProcessedDataPage", name: "PROCESSED FILES" },
     { path: "/PredictedDataPage", name: "PREDICTED FILES" },
     { path: "/Logout", name: "LOGOUT", className: "logout-link" },

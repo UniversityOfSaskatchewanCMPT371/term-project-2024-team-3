@@ -1,6 +1,9 @@
 import { test, expect } from "@playwright/test";
+import setupMockLogin from "./util/setupMockLogin";
 
 test("Processed Files Page Test", async ({ page }) => {
+  await setupMockLogin(page);
+
   // go to File Upload Page
   await page.goto("./ProcessedDataPage");
 

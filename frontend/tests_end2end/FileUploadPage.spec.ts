@@ -1,18 +1,20 @@
 import { test, expect } from "@playwright/test";
+import setupMockLogin from "./util/setupMockLogin";
 
 test("File Upload Page Test", async ({ page }) => {
+  await setupMockLogin(page);
+
   // go to File Upload Page
-  await page.goto("./FileUpload");
+  await page.goto("./FileUploadPage");
 
   // Check if the page has all expected content
-
   await expect(page.getByRole("navigation")).toBeVisible();
 
   await expect(
     page
       .locator("div")
       .filter({ hasText: "Step 1: Drag and drop your" })
-      .nth(3),
+      .nth(4),
   ).toBeVisible();
   await expect(page.locator("#root")).toContainText(
     "section on the right. You can select the file you want to process and click the process button. Once you have processed your data it will be saved. You do not need to process it again. Click",

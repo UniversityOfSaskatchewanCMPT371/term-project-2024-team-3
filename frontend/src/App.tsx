@@ -8,6 +8,7 @@ import PredictedDataPage from "./pages/PredictedDataPage/PredictedDataPage";
 import FileUploadPage from "./pages/FileUploadPage/FileUploadPage";
 import "./App.css";
 import HomePage from "./pages/HomePage/HomePage";
+import Loginpage from "./pages/LoginPage/LoginPage";
 
 const rollbarConfig = {
   accessToken: "dbfced96b5df42d295242681f0560764",
@@ -25,8 +26,10 @@ function App(): React.ReactElement<typeof Router> {
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<HomePage />} />
+            <Route path="/Login" element={<Loginpage />} />
             <Route path="/Logout" element={<Logout />} />
             <Route path="/FileUpload" element={<FileUploadPage />} />
+
             {/* Protected Routes */}
             {/* This tag is to be added when the implementation of authentication is to be created */}
             {/* <Route element={<RequireAuth type={"user"} />}></Route> */}

@@ -7,7 +7,7 @@ import styles from "./FileUpload.module.css";
 function FileUploadPage(): ReactElement {
   const rollbarConfig = {
     accessToken: "dbfced96b5df42d295242681f0560764",
-    environment: "production",
+    environment: "dev",
   };
   const rollbar = new Rollbar(rollbarConfig);
   rollbar.debug("Reached File-upload page");

@@ -15,8 +15,7 @@ import { saveAs } from "file-saver";
 import { FileWithPath } from "react-dropzone";
 
 // issues here
-import FitBitService from "../../shared/Data/Fitbit";
-import AppleWatchService from "../../shared/Data/AppleWatch";
+import WatchService from "../../shared/Data";
 
 import styles from "./ProcessedDataPage.module.css";
 
@@ -32,8 +31,7 @@ const ProcessedDataPage = function () {
   const [currentFile, setCurrentFile] = useState<any>();
   const [selectedModel, setSelectedModel] = useState<string>("svm");
 
-  const fitBitService = new FitBitService();
-  const appleWatchService = new AppleWatchService();
+  const watchService = new WatchService();
 
   // the list of radial selectors for the file list
   let renders;
@@ -48,8 +46,8 @@ const ProcessedDataPage = function () {
   // async
   const getProcessedFiles = () => {
     // await
-    fitBitService
-      .getProcessedDataList()
+    watchService
+      .getProcessedDataList("fitbit")
       .then(({ data, status }) => {
         if (status !== 200) {
           throw Error(data.message);
@@ -64,8 +62,8 @@ const ProcessedDataPage = function () {
         rollbar.error(err);
       });
     // await
-    appleWatchService
-      .getProcessedDataList()
+    watchService
+      .getProcessedDataList("applewatch")
       .then(({ data, status }) => {
         if (status !== 200) {
           throw Error(data.message);
@@ -88,30 +86,17 @@ const ProcessedDataPage = function () {
    */
   const predictFiles = () => {
     const { id, watch } = currentFile;
-    if (watch === "Fitbit") {
-      fitBitService
-        .predict(id, selectedModel)
-        .then((response: any) => {
-          if (response.status !== 200) {
-            throw new Error(response.data.message);
-          }
-        })
-        .catch((err: Error) => {
-          rollbar.error(err);
-        });
-    }
-    if (watch === "AppleWatch") {
-      appleWatchService
-        .predict(id, selectedModel)
-        .then((response: any) => {
-          if (response.status !== 200) {
-            throw new Error(response.data.message);
-          }
-        })
-        .catch((err: Error) => {
-          rollbar.error(err);
-        });
-    }
+    const lowerCaseWatch = watch.toLowerCase();
+    watchService
+      .predict(id, selectedModel, lowerCaseWatch)
+      .then((response: any) => {
+        if (response.status !== 200) {
+          throw new Error(response.data.message);
+        }
+      })
+      .catch((err: Error) => {
+        rollbar.error(err);
+      });
   };
 
   /**
@@ -148,35 +133,20 @@ const ProcessedDataPage = function () {
    */
   const downloadFile = () => {
     const { id, watch } = currentFile;
-    if (watch === "Fitbit") {
-      fitBitService
-        .download(id, "process")
-        .then((response: any) => {
-          const blob = b64toBlob(
-            response.data.file,
-            "application/octet-stream",
-            512,
-          );
-          saveAs(blob, `Fitbit ${id}.zip`);
-        })
-        .catch((err: Error) => {
-          rollbar.error(err);
-        });
-    } else {
-      appleWatchService
-        .download(id, "process")
-        .then((response: any) => {
-          const blob = b64toBlob(
-            response.data.file,
-            "application/octet-stream",
-            512,
-          );
-          saveAs(blob, `Apple Watch ${id}.zip`);
-        })
-        .catch((err: Error) => {
-          rollbar.error(err);
-        });
-    }
+    const lowerCaseWatch = watch.toLowerCase();
+    watchService
+      .download(id, "process", lowerCaseWatch)
+      .then((response: any) => {
+        const blob = b64toBlob(
+          response.data.file,
+          "application/octet-stream",
+          512,
+        );
+        saveAs(blob, `${watch} ${id}.zip`);
+      })
+      .catch((err: Error) => {
+        rollbar.error(err);
+      });
   };
 
   /**

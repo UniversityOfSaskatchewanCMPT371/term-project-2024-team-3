@@ -1,16 +1,12 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { ReactElement, useCallback, useState } from "react";
-import Rollbar from "rollbar";
 import { useDropzone, FileWithPath } from "react-dropzone";
+import { useRollbar } from "@rollbar/react";
 import styles from "../FileUpload.module.css";
 import FileDropZoneControls from "./FileDropzoneControls";
 
 function FileDropZone(): ReactElement {
-  const rollbarConfig = {
-    accessToken: "dbfced96b5df42d295242681f0560764",
-    environment: "production",
-  };
-  const rollbar = new Rollbar(rollbarConfig);
+  const rollbar = useRollbar();
 
   const [files, setFiles] = useState<FileWithPath[]>([]);
 

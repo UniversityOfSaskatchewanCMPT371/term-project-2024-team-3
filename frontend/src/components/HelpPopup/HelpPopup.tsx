@@ -1,13 +1,9 @@
 import React from "react";
-import Rollbar from "rollbar";
+import { useRollbar } from "@rollbar/react";
 import styles from "./HelpPopup.module.css";
 
 function HelpPopup(): React.ReactElement {
-  const rollbarConfig = {
-    accessToken: "dbfced96b5df42d295242681f0560764",
-    environment: "production",
-  };
-  const rollbar = new Rollbar(rollbarConfig);
+  const rollbar = useRollbar();
 
   let renders;
   /**

@@ -1,7 +1,8 @@
-import React, { Component } from 'react';
-import { GoogleLogin, GoogleLogout } from 'react-google-login';
+import React, { Component } from "react";
+import { GoogleLogin, GoogleLogout } from "react-google-login";
 
-const CLIENT_ID = '827529413912-celsdkun_YOUR_API_KEY_lsn28.apps.googleusercontent.com';
+const CLIENT_ID =
+  "827529413912-celsdkun_YOUR_API_KEY_lsn28.apps.googleusercontent.com";
 
 interface UserInfo {
   name: string;
@@ -19,17 +20,20 @@ class GoogleLoginComponent extends Component<{}, State> {
     this.state = {
       isLoggedIn: false,
       userInfo: {
-        name: '',
-        emailId: '',
+        name: "",
+        emailId: "",
       },
     };
   }
 
   // Success Handler
   responseGoogleSuccess = (response: any) => {
+    const {
+      profileObj: { name, email },
+    } = response;
     const userInfo = {
-      name: response.profileObj.name,
-      emailId: response.profileObj.email,
+      name: name,
+      emailId: email,
     };
     this.setState({ userInfo, isLoggedIn: true });
   };
@@ -42,19 +46,24 @@ class GoogleLoginComponent extends Component<{}, State> {
   // Logout Session and Update State
   logout = () => {
     const userInfo = {
-      name: '',
-      emailId: '',
+      name: "",
+      emailId: "",
     };
     this.setState({ userInfo, isLoggedIn: false });
   };
 
   render() {
+    const {
+      isLoggedIn,
+      userInfo: { name },
+    } = this.state;
+
     return (
       <div className="row mt-5">
         <div className="col-md-12">
-          {this.state.isLoggedIn ? (
+          {isLoggedIn ? (
             <div>
-              <h1>Welcome, {this.state.userInfo.name}</h1>
+              <h1>Welcome, {name}</h1>
 
               <GoogleLogout
                 clientId={CLIENT_ID}
@@ -68,7 +77,7 @@ class GoogleLoginComponent extends Component<{}, State> {
               buttonText="Sign In with Google"
               onSuccess={this.responseGoogleSuccess}
               onFailure={this.responseGoogleError}
-              isSignedIn={true}
+              isSignedIn
               cookiePolicy="single_host_origin"
             />
           )}

@@ -3,6 +3,7 @@ import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Provider, ErrorBoundary } from "@rollbar/react";
 import ProtectedRoute from "components/Authentication/ProtectedRoute";
+import SignUpPage from "pages/SignUpPage/SIgnUpPage";
 import Navbar from "./components/Navbar/Navbar";
 import Logout from "./Logout";
 import ProcessedDataPage from "./pages/ProcessDataPage/ProcessedDataPage";
@@ -35,6 +36,7 @@ function App(): React.ReactElement<typeof Router> {
               <Route path="/" element={<HomePage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/logout" element={<Logout />} />
+              <Route path="/signup" element={<SignUpPage />} />
               <Route
                 path="/ProcessedDataPage"
                 element={

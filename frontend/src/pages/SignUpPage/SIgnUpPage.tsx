@@ -1,7 +1,7 @@
 import React, { useState, FormEvent } from "react";
 import { GoogleLogin } from "react-google-login";
-import "./LoginPage.css"; // Import your CSS file
-import useLogin from "shared/hooks/useLogin";
+import "./SignUpPage.css"; // Import your CSS file
+import useSignup from "shared/hooks/useSignup";
 import { useNavigate } from "react-router-dom";
 
 const CLIENT_ID =
@@ -15,19 +15,21 @@ const texts = [
   // Add more texts here...
 ];
 
-function LoginPage() {
+function SignUpPage() {
   const [userType, setUserType] = useState("researcher");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const { handleLogin } = useLogin();
+  const [passwordConfirmation, setPasswordConfirmation] = useState("");
+  const { handleSignup } = useSignup();
   const navigate = useNavigate();
 
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const handleSignUpClick = () => {
-    navigate("/signup");
+  const handleLogInClick = () => {
+    navigate("/Login");
   };
-
   const handleNext = () => {
     setCurrentIndex((currentIndex + 1) % texts.length);
   };
@@ -53,20 +55,18 @@ function LoginPage() {
   // Add this function
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
-    await handleLogin(username, password);
+    await handleSignup(firstName, lastName, username, password);
   };
 
   return (
     <div className="login-page">
       <div className="container">
         <div className="left-section">
-          <h1 className="sign-in-text">Sign In</h1>
-          <p className="login-text">
-            Log into your existing BEAPENGINE account
-          </p>
+          <h1 className="sign-up-text">Sign Up</h1>
+          <p className="signup-text">Create a free BEAPENGINE account</p>
           <GoogleLogin
             clientId={CLIENT_ID}
-            buttonText="Login with Google"
+            buttonText="Sign Up with Google"
             onSuccess={responseGoogleSuccess}
             onFailure={responseGoogleError}
             isSignedIn
@@ -76,9 +76,9 @@ function LoginPage() {
                 type="button"
                 onClick={renderProps.onClick}
                 disabled={renderProps.disabled}
-                className="google-login"
+                className="google-signup"
               >
-                Login with Google
+                Sign Up with Google
               </button>
             )}
           />
@@ -100,6 +100,26 @@ function LoginPage() {
                 Personal User
               </button>
             </div>
+            <div className="input-field firstname-field">
+              <label htmlFor="firstname">First Name</label>
+              <input
+                id="firstName"
+                type="text"
+                placeholder="Enter your first name"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+              />
+            </div>
+            <div className="input-field lastname-field">
+              <label htmlFor="lastname">Last Name</label>
+              <input
+                id="lastName"
+                type="text"
+                placeholder="Enter your last name"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+              />
+            </div>
             <div className="input-field username-field">
               <label htmlFor="username">Username</label>
               <input
@@ -120,10 +140,19 @@ function LoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
+            <div className="input-field password-confirmation-field">
+              <input
+                id="passwordConfirmation"
+                type="password"
+                placeholder="Confirm your password"
+                value={passwordConfirmation}
+                onChange={(e) => setPasswordConfirmation(e.target.value)}
+              />
+            </div>
             <div className="button-container">
               <p className="forgot-password">Forgot password?</p>
               <button type="submit" className="sign-in">
-                Sign In
+                Sign Up
               </button>
             </div>
           </form>
@@ -145,15 +174,17 @@ function LoginPage() {
           </div>
           <div className="cta-box">
             <div className="text-container">
-              <p className="cta-text no-account">No account?</p>
-              <p className="cta-text get-started">Get started for free</p>
+              <p className="cta-text no-account">Already have an account?</p>
+              <p className="cta-text get-started">
+                Log into your BEAPENGINE account
+              </p>
             </div>
             <button
               type="button"
               className="sign-up"
-              onClick={handleSignUpClick}
+              onClick={handleLogInClick}
             >
-              Sign Up
+              Sign In
             </button>
           </div>
         </div>
@@ -162,4 +193,4 @@ function LoginPage() {
   );
 }
 
-export default LoginPage;
+export default SignUpPage;

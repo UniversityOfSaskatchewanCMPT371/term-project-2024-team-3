@@ -28,7 +28,7 @@ function FileDropZone(): ReactElement {
     }
   }, []);
 
-  const { getRootProps, open, getInputProps, isDragActive } = useDropzone({
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: {
       "application/json": [".json"],
@@ -38,7 +38,7 @@ function FileDropZone(): ReactElement {
 
   const acceptedFileItems = files.map((file: FileWithPath) => (
     <li key={file.path}>
-      {file.path} - {file.size} bytes
+      {file.path} - {Math.round(file.size / 1024)} KB
     </li>
   ));
 
@@ -53,13 +53,12 @@ function FileDropZone(): ReactElement {
               {isDragActive ? (
                 <p style={pstyle}>Drop the files here...</p>
               ) : (
-                <>
-                  <p style={pstyle}>Drop files here, or </p>
-                  <button type="button" onClick={open}>
-                    Open File Dialog
-                  </button>
-                </>
+                <p style={pstyle}>Drop files here, or Click</p>
               )}
+            </div>
+            <div>
+              <h4>Accepted Files</h4>
+              <ul>{acceptedFileItems}</ul>
             </div>
           </section>
         </div>
@@ -67,10 +66,6 @@ function FileDropZone(): ReactElement {
       <div>
         <button type="submit">Upload</button>
       </div>
-      <aside>
-        <h4>Accepted Files</h4>
-        <ul>{acceptedFileItems}</ul>
-      </aside>
     </>
   );
 }

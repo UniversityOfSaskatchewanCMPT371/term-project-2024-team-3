@@ -15,7 +15,7 @@ function FileUploadPage(): ReactElement {
   return (
     <div className={styles.page}>
       <Container className={styles.container}>
-        <div className={styles.bannerinfo}>
+        {/* <div className={styles.bannerinfo}>
           <div>
             <strong>Step 1: </strong>
             <span>
@@ -33,7 +33,7 @@ function FileUploadPage(): ReactElement {
             <strong>Go To Processed Files</strong>
             <span> to move to the processed data menu.</span>
           </div>
-        </div>
+        </div> */}
         <FileDropZone />
       </Container>
     </div>

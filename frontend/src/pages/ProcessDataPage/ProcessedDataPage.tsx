@@ -11,6 +11,8 @@ import {
   List,
   Container,
 } from "@mui/material";
+import { WatchType } from "shared/api";
+import useListUploadedFiles from "shared/hooks/useListUploadedFiles";
 
 import styles from "./ProcessedDataPage.module.css";
 
@@ -21,6 +23,9 @@ const ProcessedDataPage = function () {
   };
   const rollbar = new Rollbar(rollbarConfig);
   rollbar.debug("Reached Processed Data page");
+
+  const { uploadedFiles } = useListUploadedFiles(WatchType.APPLE_WATCH);
+  console.log(uploadedFiles);
 
   return (
     <div>

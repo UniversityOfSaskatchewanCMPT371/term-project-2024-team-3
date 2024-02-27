@@ -16,3 +16,58 @@ export type LoginResponseData = {
 export type LogoutResponseData = {
   name: String;
 };
+
+export enum WatchType {
+  APPLE_WATCH = "applewatch",
+  FITBIT = "fitbit",
+}
+
+export enum PredictionType {
+  SVM = "svm",
+  RANDOM_FOREST = "randomForest",
+  ROTATION_FOREST = "rotationForest",
+  DECISSION_TREE = "decissionTree",
+}
+
+export type FileData = {
+  id: Number;
+  data: Uint8Array | null;
+  predictionType: PredictionType | null;
+  dateTime: Date | null;
+};
+
+export type PredictedFilesData = {
+  list: Array<FileData>;
+};
+
+export type ProcessedFilesData = {
+  list: Array<ProcessedFileData>;
+};
+
+export type ProcessedFileData = {
+  id: Number;
+  data: Uint8Array | null;
+  predictedData: FileData | null;
+  dateTime: Date | null;
+};
+
+export enum DataType {
+  APPLE_WATCH = "AppleWatch",
+  FITBIT = "FitBit",
+}
+
+export type RawFileData = {
+  id: Number;
+  data: Uint8Array | null;
+  type: DataType | null;
+  processedDataId: Number | null;
+  dateTime: Date | null;
+};
+
+export type RawFilesData = {
+  list: Array<RawFileData>;
+};
+
+export type DownloadData = {
+  file: Uint8Array | null;
+};

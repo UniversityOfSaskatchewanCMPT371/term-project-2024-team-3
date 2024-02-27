@@ -9,11 +9,11 @@ on:
 jobs:
   build-and-deploy:
     if: ${{ github.event.workflow_run.conclusion == 'success'}}
-    runs-on: self-hosted
+    runs-on: beapengine
     steps:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Build containers     
-        run: docker-compose -f docker-compose-prod.yml build
+        run: docker compose -f docker-compose-prod.yml build
       - name: Run app    
-        run: docker-compose -f docker-compose-prod.yml up -d
+        run: docker compose -f docker-compose-prod.yml up -d

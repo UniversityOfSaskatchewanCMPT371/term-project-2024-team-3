@@ -13,9 +13,8 @@ import {
 import { DataType, PredictionType, RawFileData, WatchType } from "shared/api";
 import useListUploadedFiles from "shared/hooks/useListUploadedFiles";
 import usePredictedFile from "shared/hooks/usePredictFile";
-// import useDeleteFile from "shared/hooks/useDeleteFile";
+import useDeleteFile from "shared/hooks/useDeleteFile";
 import useDownload from "shared/hooks/useDownload";
-import { FileWithPath } from "react-dropzone";
 import styles from "./ProcessedDataPage.module.css";
 
 const ProcessedDataPage = function () {
@@ -26,7 +25,6 @@ const ProcessedDataPage = function () {
   const rollbar = new Rollbar(rollbarConfig);
   rollbar.debug("Reached Processed Data page");
 
-  const [files, setFiles] = useState<any[]>([]);
   const [currentFile, setCurrentFile] = useState<any>();
   const [selectedModel, setSelectedModel] = useState<PredictionType>(
     PredictionType.SVM,
@@ -34,55 +32,33 @@ const ProcessedDataPage = function () {
 
   const { handlePredict } = usePredictedFile();
   const { handleDownload } = useDownload();
-  // const { handleDelete } = useDeleteFile();
+  const { handleDelete } = useDeleteFile();
+
+  const { uploadedFiles } = useListUploadedFiles(WatchType.FITBIT);
+
+  const files =
+    uploadedFiles?.length !== 0
+      ? uploadedFiles.map((file: RawFileData) => ({
+          ...file,
+          watch: DataType.FITBIT,
+        }))
+      : [];
 
   // the list of radial selectors for the file list
   let renders: any;
-
-  /**
-   * This function will get the users processed files from the database
-   * PRE-Conditions: User is logged in and authenticated
-   * POST-Conditions: Files will be updated to be the users list of files
-   *                  The list of displayed files will be updated to show this
-   */
-  const getUploadedFiles = () => {
-    if (files.length === 0) {
-      try {
-        const { uploadedFiles } = useListUploadedFiles(WatchType.APPLE_WATCH);
-        const transformData = uploadedFiles.map((file: RawFileData) => ({
-          ...file,
-          watch: DataType.APPLE_WATCH,
-        }));
-        setFiles([...files, ...transformData]);
-      } catch (error: any) {
-        rollbar.error(error);
-        throw error;
-      }
-      try {
-        const { uploadedFiles } = useListUploadedFiles(WatchType.APPLE_WATCH);
-        const transformData = uploadedFiles.map((file: RawFileData) => ({
-          ...file,
-          watch: DataType.APPLE_WATCH,
-        }));
-        setFiles([...files, ...transformData]);
-      } catch (error: any) {
-        rollbar.error(error);
-        throw error;
-      }
-    }
-  };
 
   /**
    * sends the selected files to the predict R script
    * PRE-Conditions: A file is selected, and a prediction method is selected
    * POST-Conditions: Sends the files to the R repo and adds them to the database???
    */
-  const predictFiles = async (event: React.MouseEvent) => {
+  const predictFile = async (event: React.MouseEvent) => {
     event.preventDefault();
-    const { id, watch } = currentFile;
-    const lowerCaseWatch = watch.toLowerCase();
-
-    await handlePredict(id, selectedModel, lowerCaseWatch);
+    if (currentFile) {
+      const { id, watch } = currentFile;
+      const lowerCaseWatch = watch.toLowerCase();
+      await handlePredict(id, selectedModel, lowerCaseWatch);
+    }
   };
 
   /**
@@ -90,22 +66,41 @@ const ProcessedDataPage = function () {
    */
   const downloadFile = (event: React.MouseEvent) => {
     event.preventDefault();
-    const { id, watch } = currentFile;
-    const lowerCaseWatch = watch.toLowerCase();
-    handleDownload(id, "process", lowerCaseWatch);
+    if (currentFile) {
+      const { id, watch } = currentFile;
+      const lowerCaseWatch = watch.toLowerCase();
+      handleDownload(id, "process", lowerCaseWatch);
+    }
+  };
+
+  const deleteFile = (event: React.MouseEvent) => {
+    event.preventDefault();
+    if (currentFile) {
+      const { id, watch } = currentFile;
+      const lowerCaseWatch = watch.toLowerCase();
+      handleDelete(id, lowerCaseWatch);
+    }
   };
 
   /**
    *  Maps the list of files to a list of radial selectors for the files list
    */
   const getRendersOfFiles = () => {
-    renders = files.map((file: FileWithPath) => {
-      const date = new Date(file.lastModified);
+    renders = files.map((file: RawFileData) => {
+      const date = file.dateTime;
+
+      let dateString;
+
+      if (date !== null) {
+        dateString = date.toDateString();
+      } else {
+        dateString = "N/A";
+      }
 
       return (
         <div className={styles.fileSelector}>
           <FormControlLabel
-            value={file.name}
+            value={file.id}
             onClick={() => setCurrentFile(file)}
             control={
               <Radio
@@ -117,18 +112,16 @@ const ProcessedDataPage = function () {
                 }}
               />
             }
-            label={file.name}
+            label={file.id.toString()}
             labelPlacement="end"
           />
           <div className={styles.fileTextBox}>
-            <div className={styles.fileDate}>{date.toDateString()}</div>
+            <div className={styles.fileDate}>{dateString}</div>
           </div>
         </div>
       );
     });
   };
-
-  getUploadedFiles();
 
   getRendersOfFiles();
 
@@ -202,7 +195,7 @@ const ProcessedDataPage = function () {
             <Button
               variant="contained"
               className={styles.predictBtn}
-              onClick={predictFiles}
+              onClick={predictFile}
             >
               Predict File
             </Button>
@@ -217,6 +210,7 @@ const ProcessedDataPage = function () {
               className={styles.goToPredicted}
               variant="contained"
               href="/PredictedDataPage"
+              onClick={deleteFile}
             >
               DELETE FILE{" "}
             </Button>

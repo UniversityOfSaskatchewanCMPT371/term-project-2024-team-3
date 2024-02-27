@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
-import { download } from "../Data/index";
 import { saveAs } from "file-saver";
-import { PredictionType, WatchType } from "../api";
+import { download } from "../Data/index";
+import { WatchType } from "../api";
 
 type UseDownload = {
   handleDownload: (

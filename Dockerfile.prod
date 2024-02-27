@@ -19,15 +19,7 @@ COPY ./backend/src src
 RUN mvn clean install
 
 FROM tomcat:9.0-jre11
-WORKDIR /usr/local/tomcat/webapps
 
-RUN rm -rf ROOT
-RUN rm -rf /usr/local/tomcat/webapps/ROOT
-
-COPY --from=backend-build /app/target/BeaplabEngine-0.0.1-SNAPSHOT.war /usr/local/tomcat/webapps/api.war
-COPY --from=react-build /app/build /usr/local/tomcat/webapps/ROOT
-
-# Install R dependencies
 RUN apt-get update && \
     apt-get install -y r-base && \
     apt-get install -y r-cran-rjava && \
@@ -48,9 +40,16 @@ RUN apt-get update && \
         r-cran-rpart \
         r-cran-tidyverse
 
-# Copy R requirements and install
 COPY ./backend/r-requirements/requirements-src.R .
 RUN Rscript requirements-src.R
+
+WORKDIR /usr/local/tomcat/webapps
+
+RUN rm -rf ROOT
+RUN rm -rf /usr/local/tomcat/webapps/ROOT
+
+COPY --from=backend-build /app/target/BeaplabEngine-0.0.1-SNAPSHOT.war /usr/local/tomcat/webapps/api.war
+COPY --from=react-build /app/build /usr/local/tomcat/webapps/ROOT
 
 EXPOSE 8080
 CMD ["catalina.sh", "run"]

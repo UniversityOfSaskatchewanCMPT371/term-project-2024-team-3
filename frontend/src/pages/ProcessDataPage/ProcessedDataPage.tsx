@@ -10,6 +10,8 @@ import {
   Snackbar,
   Container,
 } from "@mui/material";
+import { WatchType } from "shared/api";
+import useListUploadedFiles from "shared/hooks/useListUploadedFiles";
 import { saveAs } from "file-saver";
 
 import { FileWithPath } from "react-dropzone";
@@ -26,6 +28,9 @@ const ProcessedDataPage = function () {
   };
   const rollbar = new Rollbar(rollbarConfig);
   rollbar.debug("Reached Processed Data page");
+
+  const { uploadedFiles } = useListUploadedFiles(WatchType.APPLE_WATCH);
+  console.log(uploadedFiles);
 
   const [files, setFiles] = useState<any[]>([]);
   const [currentFile, setCurrentFile] = useState<any>();

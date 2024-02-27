@@ -14,7 +14,7 @@ import { DataType, PredictionType, RawFileData, WatchType } from "shared/api";
 import useListUploadedFiles from "shared/hooks/useListUploadedFiles";
 import usePredictedFile from "shared/hooks/usePredictFile";
 // import useDeleteFile from "shared/hooks/useDeleteFile";
-// import { saveAs } from "file-saver";
+import useDownload from "shared/hooks/useDownload";
 import { FileWithPath } from "react-dropzone";
 import styles from "./ProcessedDataPage.module.css";
 
@@ -33,6 +33,7 @@ const ProcessedDataPage = function () {
   );
 
   const { handlePredict } = usePredictedFile();
+  const { handleDownload } = useDownload();
   // const { handleDelete } = useDeleteFile();
 
   // the list of radial selectors for the file list
@@ -84,55 +85,15 @@ const ProcessedDataPage = function () {
     await handlePredict(id, selectedModel, lowerCaseWatch);
   };
 
-  // /**
-  //  * creates a blob for a file for download
-  //  * @param b64Data the data to be downloaded
-  //  * @param contentType a string representing the type
-  //  * @param sliceSize the size of the slice for the blob
-  //  * @returns a blob for downloading
-  //  */
-  // const b64toBlob = function (
-  //   b64Data: string,
-  //   contentType: string,
-  //   sliceSize: number,
-  // ) {
-  //   // contentType = contentType || "";
-  //   // sliceSize = sliceSize || 512; // sliceSize represent the bytes to be process in each batch(loop), 512 bytes seems to be the ideal slice size for the performance wise
-  //   const byteCharacters = atob(b64Data);
-  //   const byteArrays = [];
-  //   for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-  //     const slice = byteCharacters.slice(offset, offset + sliceSize);
-  //     const byteNumbers = new Array(slice.length);
-  //     for (let i = 0; i < slice.length; i += 1) {
-  //       byteNumbers[i] = slice.charCodeAt(i);
-  //     }
-  //     const byteArray = new Uint8Array(byteNumbers);
-  //     byteArrays.push(byteArray);
-  //   }
-  //   const blob = new Blob(byteArrays, { type: contentType });
-  //   return blob;
-  // };
-
-  // /**
-  //  * Downloads the currently selected file to the users computer
-  //  */
-  // const downloadFile = () => {
-  //   const { id, watch } = currentFile;
-  //   const lowerCaseWatch = watch.toLowerCase();
-  //   watchService
-  //     .download(id, "process", lowerCaseWatch)
-  //     .then((response: any) => {
-  //       const blob = b64toBlob(
-  //         response.data.file,
-  //         "application/octet-stream",
-  //         512,
-  //       );
-  //       saveAs(blob, `${watch} ${id}.zip`);
-  //     })
-  //     .catch((err: Error) => {
-  //       rollbar.error(err);
-  //     });
-  // };
+  /**
+   * Downloads the currently selected file to the users computer
+   */
+  const downloadFile = (event: React.MouseEvent) => {
+    event.preventDefault();
+    const { id, watch } = currentFile;
+    const lowerCaseWatch = watch.toLowerCase();
+    handleDownload(id, "process", lowerCaseWatch);
+  };
 
   /**
    *  Maps the list of files to a list of radial selectors for the files list
@@ -248,7 +209,7 @@ const ProcessedDataPage = function () {
             <Button
               variant="contained"
               className={styles.downloadBtn}
-              // onClick={downloadFile}
+              onClick={downloadFile}
             >
               Download File
             </Button>

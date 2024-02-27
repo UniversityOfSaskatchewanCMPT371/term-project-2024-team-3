@@ -5,5 +5,8 @@ const api = axios.create({
     process.env.NODE_ENV === "production"
       ? "https://beapengine.com/api"
       : "http://localhost:8080",
+
+  withCredentials: true,
+  responseType: "json",
 });
 export default api;

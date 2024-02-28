@@ -25,20 +25,20 @@ RUN apt-get update && \
     apt-get install -y r-cran-rjava && \
     apt-get install -y libssl-dev libxml2-dev && \
     apt-get install -y -qq \
-        r-cran-stringi \
-        r-cran-lubridate \
-        r-cran-xml2 \
-        r-cran-dplyr \
-        r-cran-lubridate \
-        r-cran-dplyr \
-        r-cran-tm \
-        r-cran-mice \
-        r-cran-zoo \
-        r-cran-mlbench \
-        r-cran-e1071 \
-        r-cran-caret \
-        r-cran-rpart \
-        r-cran-tidyverse
+    r-cran-stringi \
+    r-cran-lubridate \
+    r-cran-xml2 \
+    r-cran-dplyr \
+    r-cran-lubridate \
+    r-cran-dplyr \
+    r-cran-tm \
+    r-cran-mice \
+    r-cran-zoo \
+    r-cran-mlbench \
+    r-cran-e1071 \
+    r-cran-caret \
+    r-cran-rpart \
+    r-cran-tidyverse
 
 COPY ./backend/r-requirements/requirements-src.R .
 RUN Rscript requirements-src.R
@@ -48,6 +48,7 @@ WORKDIR /usr/local/tomcat/webapps
 RUN rm -rf ROOT
 RUN rm -rf /usr/local/tomcat/webapps/ROOT
 
+COPY ./frontend/tomcat-config/web.xml /usr/local/tomcat/webapps/ROOT/WEB-INF/
 COPY --from=backend-build /app/target/BeaplabEngine-0.0.1-SNAPSHOT.war /usr/local/tomcat/webapps/api.war
 COPY --from=react-build /app/build /usr/local/tomcat/webapps/ROOT
 

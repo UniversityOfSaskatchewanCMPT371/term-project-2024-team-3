@@ -9,7 +9,6 @@ on:
 
 jobs:
   build-and-deploy:
-    if: ${{ github.event.workflow_run.conclusion == 'success'}}
     runs-on: beapengine
     env:
       POSTGRESQL_URL: ${{ secrets.POSTGRESQL_URL }}

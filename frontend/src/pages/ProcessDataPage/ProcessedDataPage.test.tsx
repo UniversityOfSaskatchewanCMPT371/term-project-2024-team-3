@@ -1,9 +1,9 @@
 import React from "react";
-import { render } from "@testing-library/react";
+import { renderWithProvider } from "shared/util/tests/render";
 import ProcessedDataPage from "./ProcessedDataPage";
 
 test("TID 1.3. Render ProcessDataPage Components", () => {
-  const { getByText, getAllByText } = render(<ProcessedDataPage />);
+  const { getByText, getAllByText } = renderWithProvider(<ProcessedDataPage />);
   getByText("Step 2 - Data prediction and download:");
   getByText("In this step you can either download the");
   getByText(".csv");

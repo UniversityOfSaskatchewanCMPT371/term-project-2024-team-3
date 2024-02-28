@@ -1,5 +1,6 @@
 import React from "react";
-import { render, fireEvent, act, waitFor } from "@testing-library/react";
+import { fireEvent, act, waitFor } from "@testing-library/react";
+import { renderWithProvider } from "shared/util/tests/render";
 import FileDropzone from "./FileDropzone";
 
 async function flushPromises(rerender: any, ui: React.ReactElement) {
@@ -35,7 +36,7 @@ jest.mock(
 );
 
 test(" TID 1.6. Renders FileDropzone components", () => {
-  const { getByText } = render(<FileDropzone />);
+  const { getByText } = renderWithProvider(<FileDropzone />);
   getByText("FileDropzoneControls");
 });
 
@@ -44,7 +45,7 @@ test("invoke onDragEnter when dragenter event occurs", async () => {
     type: "application/json",
   });
   const data = mockData([file]);
-  const { getByTestId, container, rerender, getByText } = render(
+  const { getByTestId, container, rerender, getByText } = renderWithProvider(
     <FileDropzone />,
   );
   getByText("Drop files here, or");

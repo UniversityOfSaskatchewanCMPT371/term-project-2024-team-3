@@ -1,15 +1,11 @@
 import React, { ReactElement } from "react";
-import Rollbar from "rollbar";
 import { Container } from "@mui/material";
+import { useRollbar } from "@rollbar/react";
 import FileDropZone from "./components/FileDropzone";
 import styles from "./FileUpload.module.css";
 
 function FileUploadPage(): ReactElement {
-  const rollbarConfig = {
-    accessToken: "dbfced96b5df42d295242681f0560764",
-    environment: "production",
-  };
-  const rollbar = new Rollbar(rollbarConfig);
+  const rollbar = useRollbar();
   rollbar.debug("Reached File-upload page");
 
   return (

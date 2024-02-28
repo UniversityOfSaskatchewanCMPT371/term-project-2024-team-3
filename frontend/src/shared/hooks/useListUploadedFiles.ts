@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
-import { getUploadedFiles } from "shared/Data";
+import { getUploadedFiles } from "../Data/index";
 import { RawFileData, WatchType } from "../api";
 
 type UseListUploadedFiles = {
@@ -18,8 +18,8 @@ const useListUploadedFiles = (watchType: WatchType): UseListUploadedFiles => {
       .then((data) => {
         setUploadedFiles(data.list);
       })
-      .catch((error) => {
-        setErrorState(error);
+      .catch((error: Error) => {
+        setErrorState("An error occured while getting uploaded files.");
       })
       .finally(() => {
         setIsLoading(false);

@@ -6,8 +6,6 @@ import {
   FormControlLabel,
   Radio,
   Button,
-  Alert,
-  Snackbar,
   Container,
 } from "@mui/material";
 import { DataType, PredictionType, RawFileData, WatchType } from "shared/api";
@@ -159,6 +157,7 @@ const ProcessedDataPage = function () {
                     }}
                   />
                 }
+                data-testid="SVM_Radial"
                 label="SVM"
                 labelPlacement="end"
               />
@@ -175,6 +174,7 @@ const ProcessedDataPage = function () {
                     }}
                   />
                 }
+                data-testid="RandomForest_Radial"
                 label="Random Forest"
                 labelPlacement="end"
               />
@@ -191,6 +191,7 @@ const ProcessedDataPage = function () {
                     }}
                   />
                 }
+                data-testid="DecissionTree_Radial"
                 label="Decission Tree"
                 labelPlacement="end"
               />
@@ -211,6 +212,7 @@ const ProcessedDataPage = function () {
               variant="contained"
               className={styles.predictBtn}
               onClick={predictFile}
+              data-testid="Predict_Button"
             >
               Predict File
             </Button>
@@ -218,6 +220,7 @@ const ProcessedDataPage = function () {
               variant="contained"
               className={styles.downloadBtn}
               onClick={downloadFile}
+              data-testid="Download_Button"
             >
               Download File
             </Button>
@@ -226,16 +229,13 @@ const ProcessedDataPage = function () {
               variant="contained"
               href="/PredictedDataPage"
               onClick={deleteFile}
+              data-testid="Delete_Button"
             >
               DELETE FILE{" "}
             </Button>
           </div>
         </div>
       </Container>
-
-      <Snackbar>
-        <Alert />
-      </Snackbar>
     </div>
   );
 };

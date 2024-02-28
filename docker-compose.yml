@@ -39,7 +39,7 @@ services:
   backend:
     container_name: backend-dev
     environment:
-        - DATABASE_URL=jdbc:postgresql://postgres-db:5432/beapengine?user=root&password=root
+        - POSTGRESQL_URL=jdbc:postgresql://postgres-db:5432/beapengine?user=root&password=root
         - PG_CRYPTO_KEY=123
     build:
       context: ./backend

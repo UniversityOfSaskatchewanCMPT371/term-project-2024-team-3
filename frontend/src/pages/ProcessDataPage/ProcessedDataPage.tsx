@@ -10,13 +10,11 @@ import {
   Snackbar,
   Container,
 } from "@mui/material";
-import { saveAs } from "file-saver";
-
-import { FileWithPath } from "react-dropzone";
-
-// issues here
-import WatchService from "../../shared/Data";
-
+import { DataType, PredictionType, RawFileData, WatchType } from "shared/api";
+import useListUploadedFiles from "shared/hooks/useListUploadedFiles";
+import usePredictedFile from "shared/hooks/usePredictFile";
+import useDeleteFile from "shared/hooks/useDeleteFile";
+import useDownload from "shared/hooks/useDownload";
 import styles from "./ProcessedDataPage.module.css";
 
 const ProcessedDataPage = function () {
@@ -27,139 +25,97 @@ const ProcessedDataPage = function () {
   const rollbar = new Rollbar(rollbarConfig);
   rollbar.debug("Reached Processed Data page");
 
-  const [files, setFiles] = useState<any[]>([]);
   const [currentFile, setCurrentFile] = useState<any>();
-  const [selectedModel, setSelectedModel] = useState<string>("svm");
+  const [selectedModel, setSelectedModel] = useState<PredictionType>(
+    PredictionType.SVM,
+  );
 
-  const watchService = new WatchService();
+  const { handlePredict } = usePredictedFile();
+  const { handleDownload } = useDownload();
+  const { handleDelete } = useDeleteFile();
+
+  const { uploadedFiles: fitbitFiles } = useListUploadedFiles(WatchType.FITBIT);
+  const { uploadedFiles: appleWatchFiles } = useListUploadedFiles(
+    WatchType.APPLE_WATCH,
+  );
+
+  console.log(appleWatchFiles);
+
+  const appleWatchProcessedFiles =
+    appleWatchFiles?.length !== 0
+      ? appleWatchFiles.map((file: RawFileData) => ({
+          ...file,
+          watch: DataType.APPLE_WATCH,
+        }))
+      : [];
+
+  const fitbitProcessedFiles =
+    fitbitFiles?.length !== 0
+      ? fitbitFiles.map((file: RawFileData) => ({
+          ...file,
+          watch: DataType.FITBIT,
+        }))
+      : [];
+
+  const files = fitbitProcessedFiles.concat(appleWatchProcessedFiles);
 
   // the list of radial selectors for the file list
-  let renders;
-
-  /**
-   * This function will get the users processed files from the database
-   * PRE-Conditions: User is logged in and authenticated
-   * POST-Conditions: Files will be updated to be the users list of files
-   *                  The list of displayed files will be updated to show this
-   */
-
-  // async
-  const getProcessedFiles = () => {
-    // await
-    watchService
-      .getProcessedDataList("fitbit")
-      .then(({ data, status }) => {
-        if (status !== 200) {
-          throw Error(data.message);
-        }
-        const transformData = [...data.list].map((file: File) => ({
-          ...file,
-          watch: "Fitbit",
-        }));
-        setFiles([...files, ...transformData]);
-      })
-      .catch((err: Error) => {
-        rollbar.error(err);
-      });
-    // await
-    watchService
-      .getProcessedDataList("applewatch")
-      .then(({ data, status }) => {
-        if (status !== 200) {
-          throw Error(data.message);
-        }
-        const transformData = [...data.list].map((file: File) => ({
-          ...file,
-          watch: "AppleWatch",
-        }));
-        setFiles([...files, ...transformData]);
-      })
-      .catch((err: Error) => {
-        rollbar.error(err);
-      });
-  };
+  let renders: any;
 
   /**
    * sends the selected files to the predict R script
    * PRE-Conditions: A file is selected, and a prediction method is selected
    * POST-Conditions: Sends the files to the R repo and adds them to the database???
    */
-  const predictFiles = () => {
-    const { id, watch } = currentFile;
-    const lowerCaseWatch = watch.toLowerCase();
-    watchService
-      .predict(id, selectedModel, lowerCaseWatch)
-      .then((response: any) => {
-        if (response.status !== 200) {
-          throw new Error(response.data.message);
-        }
-      })
-      .catch((err: Error) => {
-        rollbar.error(err);
-      });
-  };
-
-  /**
-   * creates a blob for a file for download
-   * @param b64Data the data to be downloaded
-   * @param contentType a string representing the type
-   * @param sliceSize the size of the slice for the blob
-   * @returns a blob for downloading
-   */
-  const b64toBlob = function (
-    b64Data: string,
-    contentType: string,
-    sliceSize: number,
-  ) {
-    // contentType = contentType || "";
-    // sliceSize = sliceSize || 512; // sliceSize represent the bytes to be process in each batch(loop), 512 bytes seems to be the ideal slice size for the performance wise
-    const byteCharacters = atob(b64Data);
-    const byteArrays = [];
-    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-      const slice = byteCharacters.slice(offset, offset + sliceSize);
-      const byteNumbers = new Array(slice.length);
-      for (let i = 0; i < slice.length; i += 1) {
-        byteNumbers[i] = slice.charCodeAt(i);
-      }
-      const byteArray = new Uint8Array(byteNumbers);
-      byteArrays.push(byteArray);
+  const predictFile = async (event: React.MouseEvent) => {
+    event.preventDefault();
+    if (currentFile) {
+      const { id, watch } = currentFile;
+      const lowerCaseWatch = watch.toLowerCase();
+      await handlePredict(id, selectedModel, lowerCaseWatch);
     }
-    const blob = new Blob(byteArrays, { type: contentType });
-    return blob;
   };
 
   /**
    * Downloads the currently selected file to the users computer
    */
-  const downloadFile = () => {
-    const { id, watch } = currentFile;
-    const lowerCaseWatch = watch.toLowerCase();
-    watchService
-      .download(id, "process", lowerCaseWatch)
-      .then((response: any) => {
-        const blob = b64toBlob(
-          response.data.file,
-          "application/octet-stream",
-          512,
-        );
-        saveAs(blob, `${watch} ${id}.zip`);
-      })
-      .catch((err: Error) => {
-        rollbar.error(err);
-      });
+  const downloadFile = (event: React.MouseEvent) => {
+    event.preventDefault();
+    if (currentFile) {
+      const { id, watch } = currentFile;
+      const lowerCaseWatch = watch.toLowerCase();
+      handleDownload(id, "process", lowerCaseWatch);
+    }
+  };
+
+  const deleteFile = (event: React.MouseEvent) => {
+    event.preventDefault();
+    if (currentFile) {
+      const { id, watch } = currentFile;
+      const lowerCaseWatch = watch.toLowerCase();
+      handleDelete(id, lowerCaseWatch);
+    }
   };
 
   /**
    *  Maps the list of files to a list of radial selectors for the files list
    */
   const getRendersOfFiles = () => {
-    renders = files.map((file: FileWithPath) => {
-      const date = new Date(file.lastModified);
+    renders = files.map((file: RawFileData) => {
+      const date = file.dateTime;
+
+      let dateString;
+
+      if (date !== null) {
+        dateString = date.toDateString();
+      } else {
+        dateString = "N/A";
+      }
 
       return (
         <div className={styles.fileSelector}>
           <FormControlLabel
-            value={file.name}
+            value={file.id}
             onClick={() => setCurrentFile(file)}
             control={
               <Radio
@@ -171,30 +127,16 @@ const ProcessedDataPage = function () {
                 }}
               />
             }
-            label={file.name}
+            label={file.id.toString()}
             labelPlacement="end"
           />
           <div className={styles.fileTextBox}>
-            <div className={styles.fileDate}>{date.toDateString()}</div>
+            <div className={styles.fileDate}>{dateString}</div>
           </div>
         </div>
       );
     });
   };
-
-  // // TEST DATA //
-  // const file = new File([], "../ProcessedDataPage.test.tsx");
-  // const file2 = new File([], "../ProcessedDataPage.tsx");
-  // const file3 = new File(
-  //   [],
-  //   "../../PredictedDataPage/PredoctedDataPage.module.css",
-  // );
-
-  // if (files.length === 0) {
-  //   setFiles([file, file2, file3]);
-  // }
-
-  getProcessedFiles();
 
   getRendersOfFiles();
 
@@ -206,7 +148,7 @@ const ProcessedDataPage = function () {
             <RadioGroup row defaultValue="svm">
               <FormControlLabel
                 value="svm"
-                onClick={() => setSelectedModel("svm")}
+                onClick={() => setSelectedModel(PredictionType.SVM)}
                 control={
                   <Radio
                     color="primary"
@@ -222,7 +164,7 @@ const ProcessedDataPage = function () {
               />
               <FormControlLabel
                 value="randomForest"
-                onClick={() => setSelectedModel("randomForest")}
+                onClick={() => setSelectedModel(PredictionType.RANDOM_FOREST)}
                 control={
                   <Radio
                     color="primary"
@@ -238,7 +180,7 @@ const ProcessedDataPage = function () {
               />
               <FormControlLabel
                 value="decissionTree"
-                onClick={() => setSelectedModel("decisionTree")}
+                onClick={() => setSelectedModel(PredictionType.DECISSION_TREE)}
                 control={
                   <Radio
                     color="primary"
@@ -268,7 +210,7 @@ const ProcessedDataPage = function () {
             <Button
               variant="contained"
               className={styles.predictBtn}
-              onClick={predictFiles}
+              onClick={predictFile}
             >
               Predict File
             </Button>
@@ -283,6 +225,7 @@ const ProcessedDataPage = function () {
               className={styles.goToPredicted}
               variant="contained"
               href="/PredictedDataPage"
+              onClick={deleteFile}
             >
               DELETE FILE{" "}
             </Button>

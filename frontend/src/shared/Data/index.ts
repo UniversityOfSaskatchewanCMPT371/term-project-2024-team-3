@@ -1,40 +1,121 @@
-import { AxiosPromise } from "axios";
 import api from "shared/api/baseapi";
+import {
+  WatchType,
+  ProcessedFilesData,
+  PredictedFilesData,
+  RawFilesData,
+  DownloadData,
+  PredictionType,
+} from "shared/api";
 
-export default class WatchService {
-  upload(form: FormData, year: string, watchType: string): AxiosPromise {
-    return api.post(`/${watchType}/upload/${year}`, form, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-  }
+/**
+ * Uploads a file
+ * @param form the data to upload
+ * @param year the year the file was created
+ * @param watchType the type of watch being uploaded. Either "fitbit" or "applewatch"
+ * @returns
+ */
+export async function upload(
+  form: FormData,
+  year: string,
+  watchType: WatchType,
+): Promise<void> {
+  await api.post(`/rest/beapengine/${watchType}/upload/${year}`, form, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+}
 
-  process(id: any, watchType: string): AxiosPromise {
-    return api.get(`/${watchType}/process/${id}`);
-  }
+/**
+ * Processes a file
+ * @param id a string id corresponding to a file
+ * @param watchType the type of watch to be processed
+ */
+export async function process(id: any, watchType: WatchType): Promise<void> {
+  await api.get(`/rest/beapengine//${watchType}/process/${id}`);
+}
 
-  predict(id: string, model: string, watchType: string): AxiosPromise {
-    return api.get(`/${watchType}/predict/${id}/${model}`);
-  }
+/**
+ * sends a file to the R repository for predicting
+ * @param id a string id corresponding to a file
+ * @param model the model
+ * @param watchType the type of watch being predicted
+ */
+export async function predict(
+  id: string,
+  model: PredictionType,
+  watchType: WatchType,
+): Promise<void> {
+  await api.get(`/rest/beapengine//${watchType}/predict/${id}/${model}`);
+}
 
-  download(id: string, type: string, watchType: string): AxiosPromise {
-    return api.get(`/${watchType}/download_file/${id}/${type}`);
-  }
+/**
+ * Downloads a file
+ * @param id a string id corresponding to a file
+ * @param type the type of download
+ * @param watchType the type of watch being predicted
+ * @returns
+ */
+export async function download(
+  id: string,
+  type: string,
+  watchType: WatchType,
+): Promise<DownloadData> {
+  const response = await api.get(
+    `/rest/beapengine//${watchType}/download_file/${id}/${type}`,
+  );
+  return { file: response.data.file };
+}
 
-  delete(id: string, watchType: string): AxiosPromise {
-    return api.get(`/${watchType}/delete/${id}`);
-  }
+/**
+ * Deletes a file from the back-end
+ * @param id a string id corresponding to a file
+ * @param watchType the type of watch being predicted
+ */
+export const deleteFile = async (
+  id: string,
+  watchType: WatchType,
+): Promise<void> => {
+  await api.get(`/rest/beapengine/${watchType}/delete/${id}`);
+};
 
-  getUploadedFiles(watchType: string): AxiosPromise {
-    return api.get(`/${watchType}/list/raw`);
-  }
+/**
+ * gets a list of uploaded files
+ * @param watchType the type of watch being predicted
+ * @returns the list of uploaded files
+ */
+export async function getUploadedFiles(
+  watchType: WatchType,
+): Promise<RawFilesData> {
+  const response = await api.get(`/rest/beapengine/${watchType}/list/raw`);
+  return { list: response.data.list };
+}
 
-  getPredictedDataList(watchType: string): AxiosPromise {
-    return api.get(`/${watchType}/list/predicted`);
-  }
+/**
+ * gets the list of predicted files
+ * @param watchType the type of watch being predicted
+ * @returns the list of predicted files
+ */
+export async function getPredictedDataList(
+  watchType: WatchType,
+): Promise<PredictedFilesData> {
+  const response = await api.get(
+    `/rest/beapengine/${watchType}/list/predicted`,
+  );
+  return { list: response.data.list };
+}
 
-  getProcessedDataList(watchType: string): AxiosPromise {
-    return api.get(`/${watchType}/list/processed`);
-  }
+/**
+ * gets a list of processed files
+ * @param watchType the type of watch being predicted
+ * @returns a list of files
+ */
+export async function getProcessedDataList(
+  watchType: WatchType,
+): Promise<ProcessedFilesData> {
+  const response = await api.get(
+    `/rest/beapengine/${watchType}/list/processed`,
+  );
+  return { list: response.data.list };
 }

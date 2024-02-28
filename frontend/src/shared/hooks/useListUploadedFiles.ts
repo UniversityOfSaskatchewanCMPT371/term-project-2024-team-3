@@ -19,7 +19,9 @@ const useListUploadedFiles = (watchType: WatchType): UseListUploadedFiles => {
         setUploadedFiles(data.list);
       })
       .catch((error: Error) => {
-        setErrorState("An error occured while getting uploaded files.");
+        setErrorState(
+          `An error occured while getting uploaded files: ${error.toString}`,
+        );
       })
       .finally(() => {
         setIsLoading(false);

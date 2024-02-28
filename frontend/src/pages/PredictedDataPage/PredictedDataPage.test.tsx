@@ -1,9 +1,15 @@
 import React from "react";
-import { render } from "@testing-library/react";
+import { Provider } from "@rollbar/react";
+import rollbarConfig from "shared/config/rollbar";
+import { renderWithProvider } from "shared/util/tests/render";
 import PredictedDataPage from "./PredictedDataPage";
 
 test("Renders PredictedDataPage components", () => {
-  const { getByText } = render(<PredictedDataPage />);
+  const { getByText } = renderWithProvider(
+    <Provider config={rollbarConfig}>
+      <PredictedDataPage />
+    </Provider>,
+  );
   getByText("Step 3 - Predicted data files:");
   getByText(
     "On this page, you can download your new data files with both the raw Apple Watch or Fitbit data, the features we use for our machine learning models, and the predicted activity for each minute of your data.",

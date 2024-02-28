@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Rollbar from "rollbar";
 import {
   RadioGroup,
   FormControl,
@@ -13,14 +12,11 @@ import useListUploadedFiles from "shared/hooks/useListUploadedFiles";
 import usePredictedFile from "shared/hooks/usePredictFile";
 import useDeleteFile from "shared/hooks/useDeleteFile";
 import useDownload from "shared/hooks/useDownload";
+import { useRollbar } from "@rollbar/react";
 import styles from "./ProcessedDataPage.module.css";
 
 const ProcessedDataPage = function () {
-  const rollbarConfig = {
-    accessToken: "dbfced96b5df42d295242681f0560764",
-    environment: "dev",
-  };
-  const rollbar = new Rollbar(rollbarConfig);
+  const rollbar = useRollbar();
   rollbar.debug("Reached Processed Data page");
 
   const [currentFile, setCurrentFile] = useState<any>();

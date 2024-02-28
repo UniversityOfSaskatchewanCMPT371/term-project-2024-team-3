@@ -1,4 +1,5 @@
 import React from "react";
+import { renderWithProvider } from "shared/util/tests/render";
 import { getByTestId, render } from "@testing-library/react";
 import ProcessedDataPage from "./ProcessedDataPage";
 

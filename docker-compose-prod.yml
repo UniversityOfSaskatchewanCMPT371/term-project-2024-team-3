@@ -14,6 +14,9 @@ services:
 
   beapengineapp:
     container_name: beapengineapp-prod
+    environment:
+        - POSTGRESQL_URL=${POSTGRESQL_URL}
+        - PG_CRYPTO_KEY=${PG_CRYPTO_KEY}
     restart: always
     build:
       context: .
@@ -21,7 +24,7 @@ services:
     volumes:
       - ./services/ml-service:/usr/local/tomcat/webapps/ml-service
     ports:
-      - 8080:8080
+      - 80:8080
     networks:
       - spring
     depends_on:

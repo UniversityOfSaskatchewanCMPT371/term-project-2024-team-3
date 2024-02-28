@@ -47,7 +47,7 @@ describe("useListGetUploadedFiles", () => {
     expect(getUploadedFileSpy).toHaveBeenCalledTimes(1);
     expect(result.current.isLoading).toBe(false);
     expect(result.current.error).toEqual(
-      "An error occured while getting uploaded files.",
+      `An error occured while getting uploaded files: Delete failed`,
     );
   });
 });

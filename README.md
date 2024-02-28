@@ -1,5 +1,7 @@
 # Deliverables
+
 Here are some quick links to our document deliverables!
+
 - [Incremental Deliverable 1 (ID1)](/documents/ID1)
 - [Incremental Deliverable 2 (ID2)](/documents/ID2)
 - [Incremental Deliverable 3 (ID3)](/documents/ID3)
@@ -18,11 +20,7 @@ Mac Users: [Docker](https://docs.docker.com/desktop/install/mac-install/) or [Or
 
 ## Local Environment Set Up
 
-  
-
 1. For your first initial setup you would need to run the following:
-
-`docker network create spring`
 
 `docker-compose build`
 
@@ -32,13 +30,16 @@ i. `docker-compose up` <- this runs docker in your current terminal session
 
 ii.`docker-compose up -d` <- this runs docker in the background so you would not need it inside the terminal
 
-3. Everything should be up and running now!
+3. The react app (webapp) has been removed from the containers, so make sure t manually install and start it on your own
+4. Make sure react app is up to date by `cd frontend && yarn install`
+5. Get it up and running by doing `yarn start`
+6. Everything should be up and running now!
 
 ## Containers
 
 **webapp**: [http://localhost:3000](http://localhost:3000/)
 
-Our webapp ui. It is dependent on the backend to handle authentication and processing/predicting files.
+Removed as a container! Our webapp ui. It is dependent on the backend to handle authentication and processing/predicting files.
 
 **backend**: [http://localhost:8080](http://localhost:8080/)
 
@@ -47,17 +48,19 @@ Running Java SpringMVC. Contains the routes and logic we need to handle authenti
 **adminer**: [http://localhost:8082](http://localhost:8082/)
 
 You can use adminer to check what data is stored inside our database. As well as you can write/read data into it.
+
 ```
-    System: PostgreSQL
-    
-    Server: postgres-db
-    
-    Username: root
-    
-    Password: root
-    
-    Database: beapengine
+System: PostgreSQL
+
+Server: postgres-db
+
+Username: root
+
+Password: root
+
+Database: beapengine
 ```
+
 **cache**: [http://localhost:6379](http://localhost:6379/)
 
 Running our Redis instance. No protection on local, can access without password.
@@ -66,26 +69,24 @@ Running our Redis instance. No protection on local, can access without password.
 
 PostgreSQL database running on version 15. Username is `root` and password is `root`
 
-  
-
 ## FAQS
 
-***My changes in the frontend is not reflected, why is that?***
+**_My changes in the frontend is not reflected, why is that?_**
 
 It actually does hot-reload on your code changes! If you have a slow machine you may have to wait a little while longer...
 
-***My changes in the backend is not reflected when querying the api, why is that?***
+**_My changes in the backend is not reflected when querying the api, why is that?_**
 
 Our configuration for running our backend involves producing a WAR file to deploy to our tomcat server. The WAR file contains all the changes and code of our backend app. To see your changes you would have to rebuild the backend container. To do that you can run `docker-compose up --build`
 
-***Can I run the react app locally instead of running in the container?***
+**_Can I run the react app locally instead of running in the container?_**
 
 Yes you can! You can turn off the container and just do `yarn start` locally. Although you would still need the other containers to be running to interact with our api routes.
 
-***How do I nuke my docker?***
+**_How do I nuke my docker?_**
 
 Glad you asked, `docker system prune -a`. **Warning**: this deletes all volumes and containers in your docker, so in this context you will have to do the initial local environment setup all over gain.
-  
+
 # Branch Naming Convention
 
 ## Naming Convention
@@ -108,19 +109,11 @@ Issue types currently known:
 
 - qa
 
-  
-  
-
 example branch names:
 
 - document/71-branch-name-guide
 
 - feature/22-setup-home-page
-
-  
-  
-  
-  
 
 ## Workflow example for creating a new branch on Github
 

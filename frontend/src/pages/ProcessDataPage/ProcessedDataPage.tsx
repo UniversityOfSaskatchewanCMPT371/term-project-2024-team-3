@@ -34,15 +34,30 @@ const ProcessedDataPage = function () {
   const { handleDownload } = useDownload();
   const { handleDelete } = useDeleteFile();
 
-  const { uploadedFiles } = useListUploadedFiles(WatchType.FITBIT);
+  const { uploadedFiles: fitbitFiles } = useListUploadedFiles(WatchType.FITBIT);
+  const { uploadedFiles: appleWatchFiles } = useListUploadedFiles(
+    WatchType.APPLE_WATCH,
+  );
 
-  const files =
-    uploadedFiles?.length !== 0
-      ? uploadedFiles.map((file: RawFileData) => ({
+  console.log(appleWatchFiles);
+
+  const appleWatchProcessedFiles =
+    appleWatchFiles?.length !== 0
+      ? appleWatchFiles.map((file: RawFileData) => ({
+          ...file,
+          watch: DataType.APPLE_WATCH,
+        }))
+      : [];
+
+  const fitbitProcessedFiles =
+    fitbitFiles?.length !== 0
+      ? fitbitFiles.map((file: RawFileData) => ({
           ...file,
           watch: DataType.FITBIT,
         }))
       : [];
+
+  const files = fitbitProcessedFiles.concat(appleWatchProcessedFiles);
 
   // the list of radial selectors for the file list
   let renders: any;

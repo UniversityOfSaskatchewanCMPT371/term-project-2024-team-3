@@ -139,10 +139,18 @@ const ProcessedDataPage = function () {
       <Container className={styles.containerDiv}>
         <div className={styles.action_bar}>
           <FormControl component="fieldset">
-            <RadioGroup row defaultValue="svm">
+            <RadioGroup
+              row
+              defaultValue="svm"
+              // onChange={() => {
+
+              // }}
+            >
               <FormControlLabel
                 value="svm"
                 onClick={() => setSelectedModel(PredictionType.SVM)}
+                label="SVM"
+                labelPlacement="end"
                 control={
                   <Radio
                     color="primary"
@@ -151,15 +159,15 @@ const ProcessedDataPage = function () {
                         color: "#5FCED3",
                       },
                     }}
+                    data-testid="SVM_Radial"
                   />
                 }
-                data-testid="SVM_Radial"
-                label="SVM"
-                labelPlacement="end"
               />
               <FormControlLabel
                 value="randomForest"
                 onClick={() => setSelectedModel(PredictionType.RANDOM_FOREST)}
+                label="Random Forest"
+                labelPlacement="end"
                 control={
                   <Radio
                     color="primary"
@@ -168,15 +176,15 @@ const ProcessedDataPage = function () {
                         color: "#5FCED3",
                       },
                     }}
+                    data-testid="RandomForest_Radial"
                   />
                 }
-                data-testid="RandomForest_Radial"
-                label="Random Forest"
-                labelPlacement="end"
               />
               <FormControlLabel
                 value="decissionTree"
                 onClick={() => setSelectedModel(PredictionType.DECISSION_TREE)}
+                label="Decission Tree"
+                labelPlacement="end"
                 control={
                   <Radio
                     color="primary"
@@ -185,11 +193,9 @@ const ProcessedDataPage = function () {
                         color: "#5FCED3",
                       },
                     }}
+                    data-testid="DecissionTree_Radial"
                   />
                 }
-                data-testid="DecissionTree_Radial"
-                label="Decission Tree"
-                labelPlacement="end"
               />
             </RadioGroup>
           </FormControl>

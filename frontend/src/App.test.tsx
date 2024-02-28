@@ -1,10 +1,11 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import { BrowserRouter as Router } from "react-router-dom";
+import { renderWithProvider } from "shared/util/tests/render";
 import Navbar from "./components/Navbar/Navbar";
 
 test(" TID 1.4. renders all links", () => {
-  render(
+  renderWithProvider(
     <Router>
       <Navbar />
     </Router>,

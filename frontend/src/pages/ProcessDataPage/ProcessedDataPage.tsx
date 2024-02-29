@@ -99,7 +99,7 @@ const ProcessedDataPage = function () {
       let dateString;
 
       if (date !== null) {
-        dateString = date.toDateString();
+        dateString = date.toString();
       } else {
         dateString = "N/A";
       }

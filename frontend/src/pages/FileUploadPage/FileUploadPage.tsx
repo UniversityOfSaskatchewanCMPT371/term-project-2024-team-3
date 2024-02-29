@@ -5,16 +5,16 @@ import FileDropZone from "./components/FileDropzone";
 import styles from "./FileUpload.module.css";
 
 function FileUploadPage(): ReactElement {
-  const rollbar = useRollbar();
-  rollbar.debug("Reached File-upload page");
+    const rollbar = useRollbar();
+    rollbar.debug("Reached File-upload page");
 
-  return (
-    <div className={styles.page}>
-      <Container className={styles.container}>
-        <FileDropZone />
-      </Container>
-    </div>
-  );
+    return (
+        <div className={styles.page}>
+            <Container className={styles.container}>
+                <FileDropZone />
+            </Container>
+        </div>
+    );
 }
 
 export default FileUploadPage;

@@ -1,22 +1,24 @@
+/* Reset and global styles */
 * {
     box-sizing: border-box;
   }
 
-  .login-page {
-    font-family: 'Inter', sans-serif;
-    font-weight: bold;
-  }
-  
   body {
     margin: 0;
     padding: 0;
   }
+
+  .signup-page {
+    font-family: 'Inter', sans-serif;
+    font-weight: bold;
+  }
   
   .container {
     display: flex;
-    height: 100vh; /* This will make your container take up the full viewport height */
+    height: 100vh; /* This will make the container take up the full viewport height */
   }
   
+  /* Right section styles */
   .right-section {
     width: 50%;
     padding: 20px;
@@ -35,6 +37,7 @@
   }
 
 
+  /* Left section styles */
   .left-section {
     width: 50%;
     padding: 20px;
@@ -56,13 +59,13 @@
     text-align: center;
   }
   
+  /* Button styles */
   .sign-in,
   .sign-up {
     font-family: 'Inter', sans-serif;
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
-    background-color: #4285f4;
     color: white;
     cursor: pointer;
   }
@@ -113,7 +116,7 @@
     font-weight: 550;
     font-size: 14px;
     margin: 0;
-    color: #017176; /* Add your color here */
+    color: #017176;
   }
   
   
@@ -277,6 +280,7 @@
   .tab:hover {
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     transform: translateY(-2px); /* Move up when hovered */;
+    border: none
   }
 
   .tab.researcher {
@@ -305,15 +309,15 @@
   }
 
   .beap {
-    /* Your styles for "BEAP" */
-    font-size: 1.2em; /* adjust as needed */
-    color: white; /* adjust as needed */
+    /* Styles for "BEAP" */
+    font-size: 1.2em;
+    color: white;
   }
   
   .engine {
-    /* Your styles for "ENGINE" */
-    font-size: 0.8em; /* adjust as needed */
-    color: white; /* adjust as needed */
+    /* Styles for "ENGINE" */
+    font-size: 0.8em;
+    color: white;
   }
   
   .cta-box {
@@ -321,48 +325,48 @@
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  background-color: #FF7572; /* adjust as needed */
-  border: 1px solid #ddd; /* adjust as needed */
-  border-radius: 5px; /* adjust as needed */
-  width: 380px; /* adjust as needed */
-  height: 67px; /* adjust as needed */
-  margin-bottom: 50px; /* adjust as needed */
-  margin-left: 75px; /* adjust as needed */
+  background-color: #FF7572;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  width: 380px;
+  height: 67px;
+  margin-bottom: 50px;
+  margin-left: 75px;
 }
 
 .cta-text {
-  color: white; /* adjust as needed */
-  font-size: 1em; /* adjust as needed */
+  color: white;
+  font-size: 1em;
   margin: 0;
-  margin-top: 0px; /* adjust as needed */
+  margin-top: 0px;
 }
 
 .sign-up {
-  padding: 10px 20px; /* adjust as needed */
-  border: none; /* adjust as needed */
-  border-radius: 5px; /* adjust as needed */
-  background-color: white; /* adjust as needed */
-  color: #017176; /* adjust as needed */
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: white;
+  color: #017176;
   cursor: pointer;
-  font-weight: 900; /* adjust as needed */
+  font-weight: 900;
   margin-left: 225px;
   transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 .sign-up:hover {
-  background-color: #017176; /* adjust as needed */
-  color: white; /* adjust as needed */
+  background-color: #017176;
+  color: white;
   transform: translateY(-2px);
 }
 
 .sign-up:active {
   transform: scale(0.95);
-  background-color: #e0e0e0; /* adjust as needed */
+  background-color: #e0e0e0;
   transform: translateY(0);
 }
 
 .no-account {
   font-family: 'Inter', sans-serif;
-  font-weight: 500; /* adjust as needed */
+  font-weight: 500;
 }
 

@@ -1,8 +1,8 @@
 import React, { useState, FormEvent } from "react";
 import { GoogleLogin } from "react-google-login";
-import "./LoginPage.css"; // Import your CSS file
 import useLogin from "shared/hooks/useLogin";
 import { useNavigate } from "react-router-dom";
+import styles from "./LoginPage.module.css";
 
 const CLIENT_ID =
   "827529413912-celsdkun_YOUR_API_KEY_lsn28.apps.googleusercontent.com";
@@ -57,11 +57,11 @@ function LoginPage() {
   };
 
   return (
-    <div className="login-page">
-      <div className="container">
-        <div className="left-section">
-          <h1 className="sign-in-text">Sign In</h1>
-          <p className="login-text">
+    <div className={styles["login-page"]}>
+      <div className={styles.container}>
+        <div className={styles["left-section"]}>
+          <h1 className={styles["signin-text"]}>Sign In</h1>
+          <p className={styles["login-text"]}>
             Log into your existing BEAPENGINE account
           </p>
           <GoogleLogin
@@ -76,31 +76,31 @@ function LoginPage() {
                 type="button"
                 onClick={renderProps.onClick}
                 disabled={renderProps.disabled}
-                className="google-login"
+                className={styles["google-login"]}
               >
                 Login with Google
               </button>
             )}
           />
           <p>OR</p>
-          <form onSubmit={handleSubmit} className="form-box">
-            <div className="tabs">
+          <form onSubmit={handleSubmit} className={styles["form-box"]}>
+            <div className={styles.tabs}>
               <button
                 type="button"
-                className={`tab researcher ${userType === "researcher" ? "active" : ""}`}
+                className={`${styles.tab} ${styles.researcher} ${userType === "researcher" ? styles.active : ""}`}
                 onClick={() => setUserType("researcher")}
               >
                 Researcher
               </button>
               <button
                 type="button"
-                className={`tab personal ${userType === "personal" ? "active" : ""}`}
+                className={`${styles.tab} ${styles.personal} ${userType === "personal" ? styles.active : ""}`}
                 onClick={() => setUserType("personal")}
               >
                 Personal User
               </button>
             </div>
-            <div className="input-field username-field">
+            <div className={styles["input-field"]}>
               <label htmlFor="username">Username</label>
               <input
                 id="username"
@@ -110,7 +110,7 @@ function LoginPage() {
                 onChange={(e) => setUsername(e.target.value)}
               />
             </div>
-            <div className="input-field password-field">
+            <div className={styles["input-field"]}>
               <label htmlFor="password">Password</label>
               <input
                 id="password"
@@ -120,21 +120,24 @@ function LoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
-            <div className="button-container">
-              <p className="forgot-password">Forgot password?</p>
-              <button type="submit" className="sign-in">
+            <div className={styles["button-container"]}>
+              <p className={styles["forgot-password"]}>Forgot password?</p>
+              <button
+                type="submit"
+                className={`${styles.button} ${styles["sign-in"]}`}
+              >
                 Sign In
               </button>
             </div>
           </form>
         </div>
-        <div className="right-section">
+        <div className={styles["right-section"]}>
           <h1>
-            <span className="beap">BEAP</span>
-            <span className="engine">ENGINE</span>
+            <span className={styles.beap}>BEAP</span>
+            <span className={styles.engine}>ENGINE</span>
           </h1>
           <p>JOIN OUR RESEARCH PROJECT</p>
-          <div className="text-slider">
+          <div className={styles["text-slider"]}>
             <button type="button" onClick={handlePrevious}>
               ←
             </button>
@@ -143,14 +146,16 @@ function LoginPage() {
               →
             </button>
           </div>
-          <div className="cta-box">
-            <div className="text-container">
-              <p className="cta-text no-account">No account?</p>
-              <p className="cta-text get-started">Get started for free</p>
+          <div className={styles["cta-box"]}>
+            <div className={styles["text-container"]}>
+              <p className={`${styles["cta-text"]} ${styles["no-account"]}`}>
+                No account?
+              </p>
+              <p className={styles["cta-text"]}>Get started for free</p>
             </div>
             <button
               type="button"
-              className="sign-up"
+              className={`${styles.button} ${styles["sign-up"]}`}
               onClick={handleSignUpClick}
             >
               Sign Up

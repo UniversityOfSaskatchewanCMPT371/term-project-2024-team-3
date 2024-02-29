@@ -20,7 +20,7 @@ export async function upload(
   year: string,
   watchType: WatchType,
 ): Promise<void> {
-  await api.post(`/rest/beapengine/${watchType}/upload/${year}`, form, {
+  await api.post(`/rest/beapengine/${watchType}/upload`, form, {
     headers: {
       "Content-Type": "multipart/form-data",
     },

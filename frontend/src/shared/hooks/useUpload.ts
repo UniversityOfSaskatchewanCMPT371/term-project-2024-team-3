@@ -1,6 +1,6 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { upload } from "shared/Data";
-import { RawFileData, WatchType } from "../api";
+import { WatchType } from "../api";
 
 type UseUpload = {
   handleUpload: (
@@ -25,7 +25,7 @@ const useUpload = (): UseUpload => {
     try {
       await upload(form, year, watchType);
     } catch (error) {
-      setErrorState("Upload failed.");
+      setErrorState("Upload failed. Please Try Again.");
     } finally {
       setIsLoading(false);
     }

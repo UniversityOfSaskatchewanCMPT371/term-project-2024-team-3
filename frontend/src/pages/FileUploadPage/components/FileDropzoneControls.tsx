@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import React, { ChangeEvent, ReactElement } from "react";
 import {
   FormControl,
   FormControlLabel,
@@ -8,7 +8,7 @@ import {
 import styles from "../FileUpload.module.css";
 
 interface FileDropZoneControlsProps {
-  onRadioChange: () => void;
+  onRadioChange: (event: ChangeEvent, value: string) => void;
 }
 
 function FileDropZoneControls({
@@ -18,7 +18,11 @@ function FileDropZoneControls({
     <div className={styles.fd_header}>
       <span>Select File Type: </span>
       <FormControl component="fieldset" className={styles.f_radio}>
-        <RadioGroup row defaultValue="fitbit" onChange={onRadioChange}>
+        <RadioGroup
+          row
+          defaultValue="fitbit"
+          onChange={(event, value) => onRadioChange(event, value)}
+        >
           <FormControlLabel
             value="fitbit"
             control={<Radio color="primary" />}

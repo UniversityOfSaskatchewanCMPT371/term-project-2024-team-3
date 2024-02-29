@@ -5,7 +5,6 @@ import * as useGetProcessedDataList from "shared/hooks/useGetProcessedDataList";
 import * as usePredictFile from "shared/hooks/usePredictFile";
 import ProcessedDataPage from "./ProcessedDataPage";
 
-
 const mockFitbitFiles = [
   {
     id: 123,

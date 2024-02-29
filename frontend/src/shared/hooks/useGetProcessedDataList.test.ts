@@ -8,55 +8,51 @@ import * as API from "../Data/index";
 jest.mock("../api");
 
 const mockData = {
-  list: [
-    {
-      id: 123,
-      data: new Uint8Array([1, 2]),
-      predictedData: {
-        id: 321,
-        data: new Uint8Array([1, 2, 3, 4]),
-        predictionType: null,
-        dateTime: new Date(),
-      },
-      dateTime: new Date(),
-    },
-  ],
+    list: [
+        {
+            id: 123,
+            data: new Uint8Array([1, 2]),
+            predictedData: {
+                id: 321,
+                data: new Uint8Array([1, 2, 3, 4]),
+                predictionType: null,
+                dateTime: new Date(),
+            },
+            dateTime: new Date(),
+        },
+    ],
 };
 
 const getProcessedFilesSpy = jest
-  .spyOn(API, "getProcessedDataList")
-  .mockImplementation(async () => mockData);
+    .spyOn(API, "getProcessedDataList")
+    .mockImplementation(async () => mockData);
 
 describe("useListGetProcessedFiles", () => {
-  it("should get processed files successfully", async () => {
-    getProcessedFilesSpy.mockResolvedValue(mockData);
+    it("should get processed files successfully", async () => {
+        getProcessedFilesSpy.mockResolvedValue(mockData);
 
-    const { result } = renderHook(() =>
-      useGetProcessedDataList(WatchType.APPLE_WATCH),
-    );
+        const { result } = renderHook(() => useGetProcessedDataList(WatchType.APPLE_WATCH));
 
-    expect(getProcessedFilesSpy).toHaveBeenCalledTimes(1);
-    waitFor(() => {
-      expect(result.current.isLoading).toBe(false);
-    });
-    expect(result.current.error).toBe(null);
-  });
-
-  it("should handle getProcessedFiles when it errors", async () => {
-    getProcessedFilesSpy.mockImplementation(async () => {
-      throw new Error("Getting processed failed");
+        expect(getProcessedFilesSpy).toHaveBeenCalledTimes(1);
+        waitFor(() => {
+            expect(result.current.isLoading).toBe(false);
+        });
+        expect(result.current.error).toBe(null);
     });
 
-    const { result } = renderHook(() =>
-      useGetProcessedDataList(WatchType.APPLE_WATCH),
-    );
+    it("should handle getProcessedFiles when it errors", async () => {
+        getProcessedFilesSpy.mockImplementation(async () => {
+            throw new Error("Getting processed failed");
+        });
 
-    expect(getProcessedFilesSpy).toHaveBeenCalledTimes(1);
-    waitFor(() => {
-      expect(result.current.isLoading).toBe(false);
-      expect(result.current.error).toEqual(
-        `An error occured while getting processed files Getting processed failed`,
-      );
+        const { result } = renderHook(() => useGetProcessedDataList(WatchType.APPLE_WATCH));
+
+        expect(getProcessedFilesSpy).toHaveBeenCalledTimes(1);
+        waitFor(() => {
+            expect(result.current.isLoading).toBe(false);
+            expect(result.current.error).toEqual(
+                `An error occured while getting processed files Getting processed failed`,
+            );
+        });
     });
-  });
 });

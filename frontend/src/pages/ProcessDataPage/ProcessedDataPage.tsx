@@ -99,7 +99,7 @@ const ProcessedDataPage = function () {
       let dateString;
 
       if (date !== null) {
-        dateString = date.toString();
+        dateString = `${date.getFullYear}/${date.getMonth}/${date.getDate}`;
       } else {
         dateString = "N/A";
       }

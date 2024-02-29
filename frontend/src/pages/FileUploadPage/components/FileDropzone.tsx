@@ -26,8 +26,6 @@ function FileDropZone(): ReactElement {
     WatchType.FITBIT,
   );
 
-  // const fileType = "application/json, .json";
-
   const pstyle = { fontWeight: "bold", fontSize: "22px" }; // add to style sheet
 
   const changedType = (event: ChangeEvent, value: string) => {
@@ -43,6 +41,7 @@ function FileDropZone(): ReactElement {
     }
   };
 
+  // for fitbit files parse the year out of the files name
   const getYear = (fName: string): string | undefined => {
     // check if the year is the last number in the date
     let fullDate = fName.match("[0-9]{2}([-/ .])[0-9]{2}[-/ .][0-9]{4}");
@@ -60,6 +59,7 @@ function FileDropZone(): ReactElement {
     return undefined;
   };
 
+  //accept the files that are dropped into the dropzone
   const onDrop = (acceptedFiles: FileWithPath[]) => {
     rollbar.debug(acceptedFiles);
     if (acceptedFiles?.length) {
@@ -86,6 +86,7 @@ function FileDropZone(): ReactElement {
     }
   };
 
+  //zip a years group of files then send them to the api
   const uploadFiles = async (year: string) => {
     const filesToZip = [...filesPerYear[year]];
     const zip = new Zip();
@@ -120,6 +121,7 @@ function FileDropZone(): ReactElement {
     accept: fileType,
   });
 
+  //displays uploaded files grouped by year
   const acceptedFileItems = Object.keys(filesPerYear).map((year: string) => (
     <div
       key={year}

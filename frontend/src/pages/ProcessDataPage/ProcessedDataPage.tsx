@@ -14,8 +14,9 @@ import {
   WatchType,
 } from "shared/api";
 import useListProcessedFiles from "shared/hooks/useGetProcessedDataList";
+import moment from "moment";
 import usePredictedFile from "shared/hooks/usePredictFile";
-import useDeleteFile from "shared/hooks/useDeleteFile";
+// import useDeleteFile from "shared/hooks/useDeleteFile";
 import { useRollbar } from "@rollbar/react";
 import styles from "./ProcessedDataPage.module.css";
 
@@ -29,7 +30,7 @@ const ProcessedDataPage = function () {
   );
 
   const { handlePredict } = usePredictedFile();
-  const { handleDelete } = useDeleteFile();
+  // const { handleDelete } = useDeleteFile();
 
   const { uploadedFiles: fitbitFiles } = useListProcessedFiles(
     WatchType.FITBIT,
@@ -80,13 +81,17 @@ const ProcessedDataPage = function () {
     event.preventDefault();
   };
 
+  /**
+   * deletes a file
+   * NOTE: The delete route in the back-end does not exist, but the hook works
+   */
   const deleteFile = (event: React.MouseEvent) => {
     event.preventDefault();
-    if (currentFile) {
-      const { id, watch } = currentFile;
-      const lowerCaseWatch = watch.toLowerCase();
-      handleDelete(id, lowerCaseWatch);
-    }
+    // if (currentFile) {
+    //   const { id, watch } = currentFile;
+    //   const lowerCaseWatch = watch.toLowerCase();
+    //   handleDelete(id, lowerCaseWatch);
+    // }
   };
 
   /**
@@ -94,12 +99,11 @@ const ProcessedDataPage = function () {
    */
   const getRendersOfFiles = () => {
     renders = files.map((file: ProcessedFileData) => {
-      const date = file.dateTime;
-
+      const date = moment(file.dateTime ?? "");
       let dateString;
 
-      if (date !== null) {
-        dateString = `${date.getFullYear}/${date.getMonth}/${date.getDate}`;
+      if (date.isValid()) {
+        dateString = date.format("YYYY/MM/DD");
       } else {
         dateString = "N/A";
       }

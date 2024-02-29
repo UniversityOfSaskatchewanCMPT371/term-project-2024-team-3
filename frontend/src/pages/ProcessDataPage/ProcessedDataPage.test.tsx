@@ -31,9 +31,13 @@ test("TID 3.16 Render ProcessDataPage Components", () => {
   expect(DecissionRad).toBeChecked();
 
   // buttons rendering
-  getByTestId("Predict_Button");
-  getByTestId("Download_Button");
-  getByTestId("Delete_Button");
+  const predictButton = getByTestId("Predict_Button");
+  const downloadButton = getByTestId("Download_Button");
+  const deleteButton = getByTestId("Delete_Button");
+
+  userEvent.click(predictButton);
+  userEvent.click(downloadButton);
+  userEvent.click(deleteButton);
 
   // NEXT TEST FUNCTIONALITY
 });

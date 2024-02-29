@@ -11,7 +11,6 @@ import { DataType, PredictionType, RawFileData, WatchType } from "shared/api";
 import useListUploadedFiles from "shared/hooks/useListUploadedFiles";
 import usePredictedFile from "shared/hooks/usePredictFile";
 import useDeleteFile from "shared/hooks/useDeleteFile";
-import useDownload from "shared/hooks/useDownload";
 import { useRollbar } from "@rollbar/react";
 import styles from "./ProcessedDataPage.module.css";
 
@@ -25,7 +24,6 @@ const ProcessedDataPage = function () {
   );
 
   const { handlePredict } = usePredictedFile();
-  const { handleDownload } = useDownload();
   const { handleDelete } = useDeleteFile();
 
   const { uploadedFiles: fitbitFiles } = useListUploadedFiles(WatchType.FITBIT);
@@ -75,11 +73,6 @@ const ProcessedDataPage = function () {
    */
   const downloadFile = (event: React.MouseEvent) => {
     event.preventDefault();
-    if (currentFile) {
-      const { id, watch } = currentFile;
-      const lowerCaseWatch = watch.toLowerCase();
-      handleDownload(id, "process", lowerCaseWatch);
-    }
   };
 
   const deleteFile = (event: React.MouseEvent) => {

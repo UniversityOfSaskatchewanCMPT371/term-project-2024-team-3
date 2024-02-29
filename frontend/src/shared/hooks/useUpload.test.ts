@@ -1,7 +1,7 @@
 import { renderHook } from "@testing-library/react-hooks";
+import { WatchType } from "shared/api";
 import useUpload from "./useUpload";
 import * as API from "../Data";
-import { WatchType } from "shared/api";
 
 jest.mock("../Data");
 

@@ -1,19 +1,18 @@
 /* eslint-disable react/jsx-props-no-spreading */
-/* eslint-disable */
-import React, { ChangeEvent, ReactElement, useCallback, useState } from "react";
+import React, { ChangeEvent, ReactElement, useState } from "react";
 import { useRollbar } from "@rollbar/react";
 import { useDropzone, FileWithPath, Accept } from "react-dropzone";
 import { WatchType } from "shared/api";
 import { Button } from "@mui/material";
 import Zip from "jszip";
+import useUpload from "shared/hooks/useUpload";
 import FileDropZoneControls from "./FileDropzoneControls";
 import styles from "../FileUpload.module.css";
-import useUpload from "shared/hooks/useUpload";
 
 function FileDropZone(): ReactElement {
   const rollbar = useRollbar();
 
-  const { handleUpload, error: uploadError } = useUpload();
+  const { handleUpload } = useUpload();
 
   const [filesPerYear, setFilesPerYear] = useState<{
     [years: string]: FileWithPath[];

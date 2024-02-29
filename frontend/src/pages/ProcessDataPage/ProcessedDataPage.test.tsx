@@ -1,43 +1,112 @@
 import React from "react";
-import { renderWithProvider } from "shared/util/tests/render";
+import { renderWithProvider, waitFor } from "shared/util/tests/render";
 // import { getByLabelText, getByTestId, render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import * as useGetProcessedDataList from "shared/hooks/useGetProcessedDataList";
+import * as usePredictFile from "shared/hooks/usePredictFile";
 import ProcessedDataPage from "./ProcessedDataPage";
 
-test("TID 3.16 Render ProcessDataPage Components", () => {
-  const { getByText, getByTestId, getByLabelText } = renderWithProvider(
-    <ProcessedDataPage />,
-  );
+// jest.mock("shared/hooks/useGetProcessedDataList");
+// jest.mock("shared/hooks/usePredictFile");
 
-  // radials rendering and verifying that 1 can be checked at a time
-  const SVMRad = getByLabelText("SVM");
-  const RandomRad = getByLabelText("Random Forest");
-  const DecissionRad = getByLabelText("Decission Tree");
-  getByText("SVM");
+describe("Processed Data Page", () => {
+  it("Should properly display the processed data page", () => {
+    const mockFitbitFiles = [
+      {
+        id: 123,
+        data: null,
+        predictedData: null,
+        dateTime: new Date("2023-01-01"),
+      },
+      {
+        id: 321,
+        data: null,
+        predictedData: null,
+        dateTime: new Date("2023-04-21"),
+      },
+    ];
 
-  userEvent.click(SVMRad);
-  expect(SVMRad).toBeChecked();
-  expect(RandomRad).not.toBeChecked();
-  expect(DecissionRad).not.toBeChecked();
+    const mockFitbitData = {
+      uploadedFiles: mockFitbitFiles,
+      isLoading: false,
+      error: null,
+    };
 
-  userEvent.click(RandomRad);
-  expect(SVMRad).not.toBeChecked();
-  expect(RandomRad).toBeChecked();
-  expect(DecissionRad).not.toBeChecked();
+    const mockAppleFiles = [
+      {
+        id: 987,
+        data: null,
+        predictedData: null,
+        dateTime: new Date("2021-01-02"),
+      },
+      {
+        id: 543,
+        data: null,
+        predictedData: null,
+        dateTime: new Date("2003-9-11"),
+      },
+    ];
 
-  userEvent.click(DecissionRad);
-  expect(SVMRad).not.toBeChecked();
-  expect(RandomRad).not.toBeChecked();
-  expect(DecissionRad).toBeChecked();
+    const mockAppleData = {
+      uploadedFiles: mockAppleFiles,
+      isLoading: false,
+      error: null,
+    };
 
-  // buttons rendering
-  const predictButton = getByTestId("Predict_Button");
-  const downloadButton = getByTestId("Download_Button");
-  const deleteButton = getByTestId("Delete_Button");
+    const callMockHandlePredict = jest.fn();
+    const predictMock = {
+      handlePredict: callMockHandlePredict,
+      isLoading: false,
+      error: null,
+    };
 
-  userEvent.click(predictButton);
-  userEvent.click(downloadButton);
-  userEvent.click(deleteButton);
+    jest
+      .spyOn(useGetProcessedDataList, "default")
+      .mockReturnValueOnce(mockFitbitData)
+      .mockReturnValueOnce(mockAppleData);
 
-  // NEXT TEST FUNCTIONALITY
+    jest.spyOn(usePredictFile, "default").mockReturnValue(predictMock);
+
+    const { getByText, getByLabelText } = renderWithProvider(
+      <ProcessedDataPage />,
+    );
+
+    // radials rendering and verifying that 1 can be checked at a time
+    const SVMRad = getByLabelText("SVM");
+    const RandomRad = getByLabelText("Random Forest");
+    const DecissionRad = getByLabelText("Decission Tree");
+    getByText("SVM");
+
+    userEvent.click(SVMRad);
+    expect(SVMRad).toBeChecked();
+    expect(RandomRad).not.toBeChecked();
+    expect(DecissionRad).not.toBeChecked();
+
+    userEvent.click(RandomRad);
+    expect(SVMRad).not.toBeChecked();
+    expect(RandomRad).toBeChecked();
+    expect(DecissionRad).not.toBeChecked();
+
+    userEvent.click(DecissionRad);
+    expect(SVMRad).not.toBeChecked();
+    expect(RandomRad).not.toBeChecked();
+    expect(DecissionRad).toBeChecked();
+
+    // buttons rendering
+    waitFor(() => {
+      getByText("Predict File");
+      getByText("Download File");
+      getByText("DELETE FILE");
+
+      getByText("987");
+      getByText("123");
+      getByText("321");
+      getByText("543");
+
+      getByText("2023/01/01");
+      getByText("2023/04/21");
+      getByText("2021/01/02");
+      getByText("2003/9/11");
+    });
+  });
 });

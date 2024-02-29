@@ -2,13 +2,13 @@ import { useState, useMemo, useEffect } from "react";
 import { getUploadedFiles } from "../Data/index";
 import { RawFileData, WatchType } from "../api";
 
-type UseListUploadedFiles = {
+type UseGetUploadedFiles = {
   uploadedFiles: Array<RawFileData>;
   isLoading: boolean;
   error: string | null;
 };
 
-const useListUploadedFiles = (watchType: WatchType): UseListUploadedFiles => {
+const useGetUploadedFiles = (watchType: WatchType): UseGetUploadedFiles => {
   const [isLoading, setIsLoading] = useState(true);
   const [errorState, setErrorState] = useState<string | null>(null);
   const [uploadedFiles, setUploadedFiles] = useState<Array<RawFileData>>([]);
@@ -38,4 +38,4 @@ const useListUploadedFiles = (watchType: WatchType): UseListUploadedFiles => {
   );
 };
 
-export default useListUploadedFiles;
+export default useGetUploadedFiles;

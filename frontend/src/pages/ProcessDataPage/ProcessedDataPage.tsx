@@ -13,7 +13,7 @@ import {
   ProcessedFileData,
   WatchType,
 } from "shared/api";
-import useListProcessedFiles from "shared/hooks/useGetProcessedDataList";
+import useGetProcessedDataList from "shared/hooks/useGetProcessedDataList";
 import moment from "moment";
 import usePredictedFile from "shared/hooks/usePredictFile";
 // import useDeleteFile from "shared/hooks/useDeleteFile";
@@ -32,10 +32,10 @@ const ProcessedDataPage = function () {
   const { handlePredict } = usePredictedFile();
   // const { handleDelete } = useDeleteFile();
 
-  const { uploadedFiles: fitbitFiles } = useListProcessedFiles(
+  const { uploadedFiles: fitbitFiles } = useGetProcessedDataList(
     WatchType.FITBIT,
   );
-  const { uploadedFiles: appleWatchFiles } = useListProcessedFiles(
+  const { uploadedFiles: appleWatchFiles } = useGetProcessedDataList(
     WatchType.APPLE_WATCH,
   );
 

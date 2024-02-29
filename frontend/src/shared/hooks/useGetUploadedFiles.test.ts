@@ -1,7 +1,7 @@
 import { renderHook } from "@testing-library/react-hooks";
 import { DataType, WatchType } from "shared/api";
 import { waitFor } from "@testing-library/react";
-import useListUploadedFiles from "./useListUploadedFiles";
+import useGetUploadedFiles from "./useGetUploadedFiles";
 import * as API from "../Data/index";
 
 jest.mock("../api");
@@ -22,11 +22,11 @@ const getUploadedFileSpy = jest
   .spyOn(API, "getUploadedFiles")
   .mockImplementation(async () => mockData);
 
-describe("useListGetUploadedFiles", () => {
+describe("useGetUploadedFiles", () => {
   it("should get uploaded files successfully", async () => {
     getUploadedFileSpy.mockResolvedValue(mockData);
 
-    const { result } = renderHook(() => useListUploadedFiles(WatchType.FITBIT));
+    const { result } = renderHook(() => useGetUploadedFiles(WatchType.FITBIT));
 
     expect(getUploadedFileSpy).toHaveBeenCalledTimes(1);
     // expect(getUploadedFileSpy).toHaveBeenCalledWith(mockData.id, mockData.watchType);
@@ -39,7 +39,7 @@ describe("useListGetUploadedFiles", () => {
 
   it("should handle getUploadedFiles when it errors", async () => {
     const { result } = renderHook(() =>
-      useListUploadedFiles(WatchType.APPLE_WATCH),
+      useGetUploadedFiles(WatchType.APPLE_WATCH),
     );
 
     getUploadedFileSpy.mockImplementation(async () => {

@@ -59,7 +59,7 @@ function FileDropZone(): ReactElement {
     return undefined;
   };
 
-  //accept the files that are dropped into the dropzone
+  // accept the files that are dropped into the dropzone
   const onDrop = (acceptedFiles: FileWithPath[]) => {
     rollbar.debug(acceptedFiles);
     if (acceptedFiles?.length) {
@@ -86,7 +86,7 @@ function FileDropZone(): ReactElement {
     }
   };
 
-  //zip a years group of files then send them to the api
+  // zip a years group of files then send them to the api
   const uploadFiles = async (year: string) => {
     const filesToZip = [...filesPerYear[year]];
     const zip = new Zip();
@@ -121,7 +121,7 @@ function FileDropZone(): ReactElement {
     accept: fileType,
   });
 
-  //displays uploaded files grouped by year
+  // displays uploaded files grouped by year
   const acceptedFileItems = Object.keys(filesPerYear).map((year: string) => (
     <div
       key={year}

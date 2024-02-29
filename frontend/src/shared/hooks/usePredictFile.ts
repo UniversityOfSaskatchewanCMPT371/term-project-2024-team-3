@@ -26,7 +26,7 @@ const usePredictedFile = (): UsePredictedFile => {
       await predict(id, model, watchType);
       setErrorState(null);
     } catch (error) {
-      setErrorState("Delete File failed");
+      setErrorState("Predict File failed");
     } finally {
       setIsLoading(false);
     }

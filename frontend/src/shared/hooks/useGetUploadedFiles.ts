@@ -1,14 +1,14 @@
 import { useState, useMemo, useEffect } from "react";
-import { getUploadedFiles } from "shared/Data";
+import { getUploadedFiles } from "../Data/index";
 import { RawFileData, WatchType } from "../api";
 
-type UseListUploadedFiles = {
+type UseGetUploadedFiles = {
   uploadedFiles: Array<RawFileData>;
   isLoading: boolean;
   error: string | null;
 };
 
-const useListUploadedFiles = (watchType: WatchType): UseListUploadedFiles => {
+const useGetUploadedFiles = (watchType: WatchType): UseGetUploadedFiles => {
   const [isLoading, setIsLoading] = useState(true);
   const [errorState, setErrorState] = useState<string | null>(null);
   const [uploadedFiles, setUploadedFiles] = useState<Array<RawFileData>>([]);
@@ -18,8 +18,10 @@ const useListUploadedFiles = (watchType: WatchType): UseListUploadedFiles => {
       .then((data) => {
         setUploadedFiles(data.list);
       })
-      .catch((error) => {
-        setErrorState(error);
+      .catch((error: Error) => {
+        setErrorState(
+          `An error occured while getting uploaded files: ${error.toString}`,
+        );
       })
       .finally(() => {
         setIsLoading(false);
@@ -36,4 +38,4 @@ const useListUploadedFiles = (watchType: WatchType): UseListUploadedFiles => {
   );
 };
 
-export default useListUploadedFiles;
+export default useGetUploadedFiles;

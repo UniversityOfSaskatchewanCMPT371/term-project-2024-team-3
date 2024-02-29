@@ -1,13 +1,10 @@
 import React from "react";
 import { renderWithProvider, waitFor } from "shared/util/tests/render";
-// import { getByLabelText, getByTestId, render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import * as useGetProcessedDataList from "shared/hooks/useGetProcessedDataList";
 import * as usePredictFile from "shared/hooks/usePredictFile";
 import ProcessedDataPage from "./ProcessedDataPage";
 
-// jest.mock("shared/hooks/useGetProcessedDataList");
-// jest.mock("shared/hooks/usePredictFile");
 
 const mockFitbitFiles = [
   {

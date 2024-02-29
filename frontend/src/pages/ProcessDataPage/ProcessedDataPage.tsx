@@ -16,7 +16,6 @@ import {
 import useGetProcessedDataList from "shared/hooks/useGetProcessedDataList";
 import moment from "moment";
 import usePredictedFile from "shared/hooks/usePredictFile";
-// import useDeleteFile from "shared/hooks/useDeleteFile";
 import { useRollbar } from "@rollbar/react";
 import styles from "./ProcessedDataPage.module.css";
 
@@ -30,7 +29,6 @@ const ProcessedDataPage = function () {
   );
 
   const { handlePredict } = usePredictedFile();
-  // const { handleDelete } = useDeleteFile();
 
   const { uploadedFiles: fitbitFiles } = useGetProcessedDataList(
     WatchType.FITBIT,

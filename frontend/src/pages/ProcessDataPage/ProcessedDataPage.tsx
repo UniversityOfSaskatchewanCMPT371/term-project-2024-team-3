@@ -7,8 +7,13 @@ import {
   Button,
   Container,
 } from "@mui/material";
-import { DataType, PredictionType, RawFileData, WatchType } from "shared/api";
-import useListUploadedFiles from "shared/hooks/useListUploadedFiles";
+import {
+  DataType,
+  PredictionType,
+  ProcessedFileData,
+  WatchType,
+} from "shared/api";
+import useListProcessedFiles from "shared/hooks/useGetProcessedDataList";
 import usePredictedFile from "shared/hooks/usePredictFile";
 import useDeleteFile from "shared/hooks/useDeleteFile";
 import { useRollbar } from "@rollbar/react";
@@ -26,16 +31,16 @@ const ProcessedDataPage = function () {
   const { handlePredict } = usePredictedFile();
   const { handleDelete } = useDeleteFile();
 
-  const { uploadedFiles: fitbitFiles } = useListUploadedFiles(WatchType.FITBIT);
-  const { uploadedFiles: appleWatchFiles } = useListUploadedFiles(
+  const { uploadedFiles: fitbitFiles } = useListProcessedFiles(
+    WatchType.FITBIT,
+  );
+  const { uploadedFiles: appleWatchFiles } = useListProcessedFiles(
     WatchType.APPLE_WATCH,
   );
 
-  console.log(appleWatchFiles);
-
   const appleWatchProcessedFiles =
     appleWatchFiles?.length !== 0
-      ? appleWatchFiles.map((file: RawFileData) => ({
+      ? appleWatchFiles.map((file: ProcessedFileData) => ({
           ...file,
           watch: DataType.APPLE_WATCH,
         }))
@@ -43,7 +48,7 @@ const ProcessedDataPage = function () {
 
   const fitbitProcessedFiles =
     fitbitFiles?.length !== 0
-      ? fitbitFiles.map((file: RawFileData) => ({
+      ? fitbitFiles.map((file: ProcessedFileData) => ({
           ...file,
           watch: DataType.FITBIT,
         }))
@@ -88,7 +93,7 @@ const ProcessedDataPage = function () {
    *  Maps the list of files to a list of radial selectors for the files list
    */
   const getRendersOfFiles = () => {
-    renders = files.map((file: RawFileData) => {
+    renders = files.map((file: ProcessedFileData) => {
       const date = file.dateTime;
 
       let dateString;
@@ -132,13 +137,7 @@ const ProcessedDataPage = function () {
       <Container className={styles.containerDiv}>
         <div className={styles.action_bar}>
           <FormControl component="fieldset">
-            <RadioGroup
-              row
-              defaultValue="svm"
-              // onChange={() => {
-
-              // }}
-            >
+            <RadioGroup row defaultValue="svm">
               <FormControlLabel
                 value="svm"
                 onClick={() => setSelectedModel(PredictionType.SVM)}

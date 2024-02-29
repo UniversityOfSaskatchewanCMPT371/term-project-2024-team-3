@@ -2,13 +2,15 @@ import { useState, useMemo, useEffect } from "react";
 import { getProcessedDataList } from "../Data/index";
 import { ProcessedFileData, WatchType } from "../api";
 
-type UseListProcessedFiles = {
+type UseGetProcessedDataList = {
   uploadedFiles: Array<ProcessedFileData>;
   isLoading: boolean;
   error: string | null;
 };
 
-const useListProcessedFiles = (watchType: WatchType): UseListProcessedFiles => {
+const useGetProcessedDataList = (
+  watchType: WatchType,
+): UseGetProcessedDataList => {
   const [isLoading, setIsLoading] = useState(true);
   const [errorState, setErrorState] = useState<string | null>(null);
   const [uploadedFiles, setUploadedFiles] = useState<Array<ProcessedFileData>>(
@@ -40,4 +42,4 @@ const useListProcessedFiles = (watchType: WatchType): UseListProcessedFiles => {
   );
 };
 
-export default useListProcessedFiles;
+export default useGetProcessedDataList;

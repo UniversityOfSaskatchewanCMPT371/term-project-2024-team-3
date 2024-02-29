@@ -1,7 +1,8 @@
 import { renderHook } from "@testing-library/react-hooks";
+import { PredictionType, WatchType } from "shared/api";
+import { waitFor } from "@testing-library/react";
 import usePredictFile from "./usePredictFile";
 import * as API from "../Data/index";
-import { PredictionType, WatchType } from "shared/api";
 
 const mockSetStorage = jest.fn();
 
@@ -11,7 +12,7 @@ jest.mock("usehooks-ts", () => ({
 }));
 
 const predictFileSpy = jest
-  .spyOn(API, "deleteFile")
+  .spyOn(API, "predict")
   .mockImplementation(async () => {});
 
 const mockData = {
@@ -33,11 +34,14 @@ describe("usePredictFile", () => {
     expect(predictFileSpy).toHaveBeenCalledTimes(1);
     expect(predictFileSpy).toHaveBeenCalledWith(
       mockData.id,
+      mockData.model,
       mockData.watchType,
     );
 
-    expect(result.current.isLoading).toBe(false);
-    expect(result.current.error).toBe(null);
+    waitFor(() => {
+      expect(result.current.isLoading).toBe(false);
+      expect(result.current.error).toBe(null);
+    });
   });
 
   it("should handle predict when it errors", async () => {
@@ -53,7 +57,9 @@ describe("usePredictFile", () => {
     );
 
     expect(predictFileSpy).toHaveBeenCalledTimes(1);
-    expect(result.current.isLoading).toBe(false);
-    expect(result.current.error).toEqual("Predict File failed");
+    waitFor(() => {
+      expect(result.current.isLoading).toBe(false);
+      expect(result.current.error).toEqual("Predict File failed");
+    });
   });
 });

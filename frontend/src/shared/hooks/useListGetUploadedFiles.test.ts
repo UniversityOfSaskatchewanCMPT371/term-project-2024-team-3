@@ -1,14 +1,10 @@
 import { renderHook } from "@testing-library/react-hooks";
+import { DataType, WatchType } from "shared/api";
+import { waitFor } from "@testing-library/react";
 import useListUploadedFiles from "./useListUploadedFiles";
 import * as API from "../Data/index";
-import { DataType, WatchType } from "shared/api";
-
-const mockSetStorage = jest.fn();
 
 jest.mock("../api");
-jest.mock("usehooks-ts", () => ({
-  useLocalStorage: () => ["", mockSetStorage],
-}));
 
 const mockData = {
   list: [
@@ -28,26 +24,35 @@ const getUploadedFileSpy = jest
 
 describe("useListGetUploadedFiles", () => {
   it("should get uploaded files successfully", async () => {
-    const { result } = renderHook(useListUploadedFiles);
+    getUploadedFileSpy.mockResolvedValue(mockData);
+
+    const { result } = renderHook(() => useListUploadedFiles(WatchType.FITBIT));
 
     expect(getUploadedFileSpy).toHaveBeenCalledTimes(1);
     // expect(getUploadedFileSpy).toHaveBeenCalledWith(mockData.id, mockData.watchType);
 
-    expect(result.current.isLoading).toBe(false);
-    expect(result.current.error).toBe(null);
+    waitFor(() => {
+      expect(result.current.isLoading).toBe(false);
+      expect(result.current.error).toBe(null);
+    });
   });
 
   it("should handle getUploadedFiles when it errors", async () => {
-    const { result } = renderHook(useListUploadedFiles);
+    const { result } = renderHook(() =>
+      useListUploadedFiles(WatchType.APPLE_WATCH),
+    );
 
     getUploadedFileSpy.mockImplementation(async () => {
       throw new Error("Delete failed");
     });
 
     expect(getUploadedFileSpy).toHaveBeenCalledTimes(1);
-    expect(result.current.isLoading).toBe(false);
-    expect(result.current.error).toEqual(
-      `An error occured while getting uploaded files: Delete failed`,
-    );
+
+    waitFor(() => {
+      expect(result.current.isLoading).toBe(false);
+      expect(result.current.error).toEqual(
+        `An error occured while getting uploaded files: Delete failed`,
+      );
+    });
   });
 });

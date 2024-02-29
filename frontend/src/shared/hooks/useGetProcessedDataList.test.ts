@@ -1,14 +1,11 @@
 import { renderHook } from "@testing-library/react-hooks";
+import { WatchType } from "shared/api";
+import { waitFor } from "@testing-library/react";
 import useGetProcessedDataList from "./useGetProcessedDataList";
 import * as API from "../Data/index";
 // import { DataType, WatchType } from "shared/api";
 
-const mockSetStorage = jest.fn();
-
 jest.mock("../api");
-jest.mock("usehooks-ts", () => ({
-  useLocalStorage: () => ["", mockSetStorage],
-}));
 
 const mockData = {
   list: [
@@ -30,26 +27,36 @@ const getProcessedFilesSpy = jest
   .spyOn(API, "getProcessedDataList")
   .mockImplementation(async () => mockData);
 
-describe("useListGetUploadedFiles", () => {
-  it("should get uploaded files successfully", async () => {
-    const { result } = renderHook(useGetProcessedDataList);
+describe("useListGetProcessedFiles", () => {
+  it("should get processed files successfully", async () => {
+    getProcessedFilesSpy.mockResolvedValue(mockData);
+
+    const { result } = renderHook(() =>
+      useGetProcessedDataList(WatchType.APPLE_WATCH),
+    );
 
     expect(getProcessedFilesSpy).toHaveBeenCalledTimes(1);
-    expect(result.current.isLoading).toBe(false);
+    waitFor(() => {
+      expect(result.current.isLoading).toBe(false);
+    });
     expect(result.current.error).toBe(null);
   });
 
-  it("should handle getUploadedFiles when it errors", async () => {
-    const { result } = renderHook(useGetProcessedDataList);
-
+  it("should handle getProcessedFiles when it errors", async () => {
     getProcessedFilesSpy.mockImplementation(async () => {
-      throw new Error("Delete failed");
+      throw new Error("Getting processed failed");
     });
 
-    expect(getProcessedFilesSpy).toHaveBeenCalledTimes(1);
-    expect(result.current.isLoading).toBe(false);
-    expect(result.current.error).toEqual(
-      `An error occured while getting uploaded files: Delete failed`,
+    const { result } = renderHook(() =>
+      useGetProcessedDataList(WatchType.APPLE_WATCH),
     );
+
+    expect(getProcessedFilesSpy).toHaveBeenCalledTimes(1);
+    waitFor(() => {
+      expect(result.current.isLoading).toBe(false);
+      expect(result.current.error).toEqual(
+        `An error occured while getting processed files Getting processed failed`,
+      );
+    });
   });
 });

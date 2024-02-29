@@ -9,63 +9,63 @@ import ProcessedDataPage from "./ProcessedDataPage";
 // jest.mock("shared/hooks/useGetProcessedDataList");
 // jest.mock("shared/hooks/usePredictFile");
 
+const mockFitbitFiles = [
+  {
+    id: 123,
+    data: null,
+    predictedData: null,
+    dateTime: new Date("2023-01-01"),
+  },
+  {
+    id: 321,
+    data: null,
+    predictedData: null,
+    dateTime: new Date("2023-04-21"),
+  },
+];
+
+const mockFitbitData = {
+  uploadedFiles: mockFitbitFiles,
+  isLoading: false,
+  error: null,
+};
+
+const mockAppleFiles = [
+  {
+    id: 987,
+    data: null,
+    predictedData: null,
+    dateTime: new Date("2021-01-02"),
+  },
+  {
+    id: 543,
+    data: null,
+    predictedData: null,
+    dateTime: new Date("2003-9-11"),
+  },
+];
+
+const mockAppleData = {
+  uploadedFiles: mockAppleFiles,
+  isLoading: false,
+  error: null,
+};
+
+const callMockHandlePredict = jest.fn();
+const predictMock = {
+  handlePredict: callMockHandlePredict,
+  isLoading: false,
+  error: null,
+};
+
 describe("Processed Data Page", () => {
   it("Should properly display the processed data page", () => {
-    const mockFitbitFiles = [
-      {
-        id: 123,
-        data: null,
-        predictedData: null,
-        dateTime: new Date("2023-01-01"),
-      },
-      {
-        id: 321,
-        data: null,
-        predictedData: null,
-        dateTime: new Date("2023-04-21"),
-      },
-    ];
-
-    const mockFitbitData = {
-      uploadedFiles: mockFitbitFiles,
-      isLoading: false,
-      error: null,
-    };
-
-    const mockAppleFiles = [
-      {
-        id: 987,
-        data: null,
-        predictedData: null,
-        dateTime: new Date("2021-01-02"),
-      },
-      {
-        id: 543,
-        data: null,
-        predictedData: null,
-        dateTime: new Date("2003-9-11"),
-      },
-    ];
-
-    const mockAppleData = {
-      uploadedFiles: mockAppleFiles,
-      isLoading: false,
-      error: null,
-    };
-
-    const callMockHandlePredict = jest.fn();
-    const predictMock = {
-      handlePredict: callMockHandlePredict,
-      isLoading: false,
-      error: null,
-    };
-
     jest
       .spyOn(useGetProcessedDataList, "default")
-      .mockReturnValueOnce(mockFitbitData)
-      .mockReturnValueOnce(mockAppleData);
+      .mockImplementationOnce(() => mockFitbitData)
+      .mockImplementation(() => mockAppleData);
 
-    jest.spyOn(usePredictFile, "default").mockReturnValue(predictMock);
+    jest.spyOn(usePredictFile, "default").mockImplementation(() => predictMock);
 
     const { getByText, getByLabelText } = renderWithProvider(
       <ProcessedDataPage />,

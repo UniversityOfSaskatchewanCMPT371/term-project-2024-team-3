@@ -1,7 +1,7 @@
 import { renderHook } from "@testing-library/react-hooks";
+import { WatchType } from "shared/api";
 import useDeleteFile from "./useDeleteFile";
 import * as API from "../Data/index";
-import { WatchType } from "shared/api";
 
 const mockSetStorage = jest.fn();
 

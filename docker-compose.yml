@@ -1,19 +1,6 @@
 version: "3.8"
 
 services:
-  webapp:
-    container_name: webapp-dev
-    image: webapp-dev
-    build:
-      context: ./frontend
-      target: development
-    volumes:
-      - ./frontend/src:/app/src
-    ports:
-      - 3000:3000
-    environment:
-       - WATCHPACK_POLLING=true
-
   cache:
     image: redis:6.2-alpine
     restart: always
@@ -51,6 +38,9 @@ services:
   
   backend:
     container_name: backend-dev
+    environment:
+        - POSTGRESQL_URL=jdbc:postgresql://postgres-db:5432/beapengine?user=root&password=root
+        - PG_CRYPTO_KEY=123
     build:
       context: ./backend
     volumes:
@@ -72,4 +62,3 @@ volumes:
 
 networks:
   spring:
-    external: true

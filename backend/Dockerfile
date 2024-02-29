@@ -9,14 +9,6 @@ RUN mvn clean install
 
 FROM tomcat:9.0-jre11
 
-WORKDIR /usr/local/tomcat/webapps
-
-# Remove default Tomcat webapp
-RUN rm -rf ROOT
-
-# Deploy your WAR file
-COPY --from=build /app/target/BeaplabEngine-0.0.1-SNAPSHOT.war ROOT.war
-
 RUN apt-get update && \
     apt-get install -y r-base && \
     apt-get install -y r-cran-rjava && \
@@ -41,6 +33,14 @@ RUN apt-get update && \
 
 COPY ./r-requirements/requirements-src.R .
 RUN Rscript requirements-src.R
+
+WORKDIR /usr/local/tomcat/webapps
+
+# Remove default Tomcat webapp
+RUN rm -rf ROOT
+
+# Deploy your WAR file
+COPY --from=build /app/target/BeaplabEngine-0.0.1-SNAPSHOT.war ROOT.war
 
 EXPOSE 8080
 

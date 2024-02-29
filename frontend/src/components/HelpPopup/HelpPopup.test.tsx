@@ -1,10 +1,10 @@
 import React from "react";
-import { render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { renderWithProvider } from "shared/util/tests/render";
 import HelpPopup from "./HelpPopup";
 
 test("TID 3.1. Renders HelpPopup component", () => {
-  const { getByText, getByTestId } = render(<HelpPopup />);
+  const { getByText, getByTestId } = renderWithProvider(<HelpPopup />);
   // clicking the popup expand button
   getByTestId("popupButton");
   let button = getByTestId("popupButton");

@@ -1,5 +1,5 @@
 import React from "react";
-import { render } from "@testing-library/react";
+import { renderWithProvider } from "shared/util/tests/render";
 import FileUploadPage from "./FileUploadPage";
 
 jest.mock(
@@ -11,6 +11,6 @@ jest.mock(
 );
 
 test("TID 1.1. Renders FileUploadPage components", () => {
-  const { getByText } = render(<FileUploadPage />);
+  const { getByText } = renderWithProvider(<FileUploadPage />);
   getByText("FileDropZone");
 });

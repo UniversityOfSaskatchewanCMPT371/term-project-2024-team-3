@@ -69,7 +69,7 @@ const ProcessedDataPage = function () {
     if (currentFile) {
       const { id, watch } = currentFile;
       const lowerCaseWatch = watch.toLowerCase();
-      await handlePredict(id, selectedModel, lowerCaseWatch);
+      handlePredict(id, selectedModel, lowerCaseWatch);
     }
   };
 

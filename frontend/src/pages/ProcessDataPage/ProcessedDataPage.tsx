@@ -14,10 +14,28 @@ const ProcessedDataPage = function () {
     const [currentFile, setCurrentFile] = useState<any>();
     const [selectedModel, setSelectedModel] = useState<PredictionType>(PredictionType.SVM);
 
+    // ensuring correct initialization of state.
+    console.assert(currentFile === undefined, "currentFile should be undefined initially");
+    console.assert(
+        selectedModel === PredictionType.SVM,
+        "selectedModel should be initialized to PredictionType.SVM",
+    );
+
     const { handlePredict } = usePredictedFile();
 
     const { uploadedFiles: fitbitFiles } = useGetProcessedDataList(WatchType.FITBIT);
     const { uploadedFiles: appleWatchFiles } = useGetProcessedDataList(WatchType.APPLE_WATCH);
+
+    const handleModelChange = (model: PredictionType) => {
+        // ensure that the selected model belongs to one of the acceptable types
+        console.assert(
+            model === PredictionType.SVM ||
+                model === PredictionType.RANDOM_FOREST ||
+                model === PredictionType.DECISSION_TREE,
+            "Invalid prediction model selected",
+        );
+        setSelectedModel(model);
+    };
 
     const appleWatchProcessedFiles =
         appleWatchFiles?.length !== 0
@@ -47,6 +65,8 @@ const ProcessedDataPage = function () {
      */
     const predictFile = async (event: React.MouseEvent) => {
         event.preventDefault();
+        // make sure a file is selected before you attempt to predict it
+        console.assert(currentFile !== undefined, "A file should be selected before predicting");
         if (currentFile) {
             const { id, watch } = currentFile;
             const lowerCaseWatch = watch.toLowerCase();
@@ -59,6 +79,8 @@ const ProcessedDataPage = function () {
      */
     const downloadFile = (event: React.MouseEvent) => {
         event.preventDefault();
+        // make sure a file is selected before you attempt to download it
+        console.assert(currentFile !== undefined, "A file should be selected before downloading");
     };
 
     /**
@@ -67,6 +89,8 @@ const ProcessedDataPage = function () {
      */
     const deleteFile = (event: React.MouseEvent) => {
         event.preventDefault();
+        // make sure a file is selected before you attempt to delete it
+        console.assert(currentFile !== undefined, "A file should be selected before deleting");
         // if (currentFile) {
         //   const { id, watch } = currentFile;
         //   const lowerCaseWatch = watch.toLowerCase();
@@ -78,6 +102,7 @@ const ProcessedDataPage = function () {
      *  Maps the list of files to a list of radial selectors for the files list
      */
     const getRendersOfFiles = () => {
+        console.assert(files.length > 0, "Files array should contain data for rendering");
         renders = files.map((file: ProcessedFileData) => {
             const date = moment(file.dateTime ?? "");
             let dateString;
@@ -124,7 +149,7 @@ const ProcessedDataPage = function () {
                         <RadioGroup row defaultValue="svm">
                             <FormControlLabel
                                 value="svm"
-                                onClick={() => setSelectedModel(PredictionType.SVM)}
+                                onClick={() => handleModelChange(PredictionType.SVM)}
                                 label="SVM"
                                 labelPlacement="end"
                                 control={
@@ -141,7 +166,7 @@ const ProcessedDataPage = function () {
                             />
                             <FormControlLabel
                                 value="randomForest"
-                                onClick={() => setSelectedModel(PredictionType.RANDOM_FOREST)}
+                                onClick={() => handleModelChange(PredictionType.RANDOM_FOREST)}
                                 label="Random Forest"
                                 labelPlacement="end"
                                 control={
@@ -158,7 +183,7 @@ const ProcessedDataPage = function () {
                             />
                             <FormControlLabel
                                 value="decissionTree"
-                                onClick={() => setSelectedModel(PredictionType.DECISSION_TREE)}
+                                onClick={() => handleModelChange(PredictionType.DECISSION_TREE)}
                                 label="Decission Tree"
                                 labelPlacement="end"
                                 control={

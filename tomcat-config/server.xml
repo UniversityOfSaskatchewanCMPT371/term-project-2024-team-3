@@ -72,14 +72,16 @@
                maxParameterCount="1000"
                />
 
-     <Connector port="8443" protocol="org.apache.coyote.http11.Http11NioProtocol"
-               maxThreads="150" SSLEnabled="true">
-        <SSLHostConfig>
-            <Certificate certificateFile="conf/cert.pem"
-                 certificateKeyFile="conf/privkey.pem"
-                 certificateChainFile="conf/chain.pem" />
-        </SSLHostConfig>
-    </Connector>
+     <Connector port="8443" protocol="org.apache.coyote.http11.Http11AprProtocol"
+              maxThreads="150" SSLEnabled="true" >
+	   <UpgradeProtocol className="org.apache.coyote.http2.Http2Protocol" />
+		 <SSLHostConfig>
+       <Certificate certificateKeyFile="/etc/letsencrypt/live/beapengine.com/privkey.pem"
+                    certificateFile="/etc/letsencrypt/live/beapengine.com/cert.pem"
+                    certificateChainFile="/etc/letsencrypt/live/beapengine.com/chain.pem"
+                    type="RSA" />
+			</SSLHostConfig>
+	</Connector>
                
     <!-- A "Connector" using the shared thread pool-->
     <!--

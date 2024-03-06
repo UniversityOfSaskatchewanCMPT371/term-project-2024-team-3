@@ -30,5 +30,5 @@ COPY ./tomcat-config/web.xml /usr/local/tomcat/webapps/ROOT/WEB-INF/
 COPY --from=backend-build /app/target/BeaplabEngine-0.0.1-SNAPSHOT.war /usr/local/tomcat/webapps/api.war
 COPY --from=react-build /app/build /usr/local/tomcat/webapps/ROOT
 
-EXPOSE 8080
+EXPOSE 80
 CMD ["catalina.sh", "run"]

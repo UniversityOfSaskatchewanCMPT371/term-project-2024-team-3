@@ -71,6 +71,16 @@
                redirectPort="8443"
                maxParameterCount="1000"
                />
+
+     <Connector port="8443" protocol="org.apache.coyote.http11.Http11NioProtocol"
+               maxThreads="150" SSLEnabled="true">
+        <SSLHostConfig>
+            <Certificate certificateFile="conf/cert.pem"
+                 certificateKeyFile="conf/privkey.pem"
+                 certificateChainFile="conf/chain.pem" />
+        </SSLHostConfig>
+    </Connector>
+               
     <!-- A "Connector" using the shared thread pool-->
     <!--
     <Connector executor="tomcatThreadPool"

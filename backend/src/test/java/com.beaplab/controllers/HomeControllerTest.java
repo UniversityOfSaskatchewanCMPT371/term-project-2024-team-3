@@ -1,4 +1,4 @@
-package com.beaplab.tests.controller;
+package com.beaplab.controllers;
 
 import com.beaplab.BeaplabEngine.controller.HomeController;
 import org.junit.jupiter.api.Test;

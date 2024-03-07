@@ -1,5 +1,3 @@
-package com.beaplab.controllers;
-
 import com.beaplab.BeaplabEngine.controller.HomeController;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.web.servlet.MockMvc;

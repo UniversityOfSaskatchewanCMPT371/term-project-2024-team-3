@@ -24,7 +24,7 @@ const useLogin = (): UseLogin => {
         setIsLoading(true);
         try {
             const data = await login(username, password);
-            const expiresAt = moment().utc().add(1, "hours");
+            const expiresAt = moment().utc().add(30, "minutes");
             setErrorState(null);
             setUserId(data.userId);
             setExpiresAt(expiresAt.utc().format());

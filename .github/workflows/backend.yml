@@ -16,11 +16,11 @@ jobs:
           java-version: "11"
           distribution: "temurin"
           cache: maven
-      - name: Build with Maven
+      - name: Build backend
         run: |
           cd backend
           mvn -B package --file pom.xml
-      - name: Build with Maven
+      - name: Run Test
         run: |
           cd backend
           mvn test

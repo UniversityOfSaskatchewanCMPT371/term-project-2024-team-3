@@ -43,9 +43,9 @@ describe("useLogin", () => {
         await result.current.handleLogin(username, password);
 
         expect(loginSpy).toHaveBeenCalledWith(username, password);
-        expect(mockSetStorage.mock.calls).toEqual([[123], ["2024-01-02T10:30:00Z"]]);
+        expect(mockSetStorage.mock.calls).toEqual([[123], ["2024-01-02T11:00:00Z"]]);
         expect(mockSetCookies).toHaveBeenCalledWith("SESSION", "mockToken", {
-            expires: new Date("2024-01-02T10:30:00.000Z"),
+            expires: new Date("2024-01-02T11:00:00.000Z"),
         });
 
         expect(result.current.isLoading).toBe(false);

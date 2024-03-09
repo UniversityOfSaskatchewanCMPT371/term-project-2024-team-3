@@ -1,7 +1,7 @@
 name: deploy-digital-ocean
 on:
   workflow_run:
-    workflows: [frontend, playwright]
+    workflows: [frontend, playwright, backend]
     branches: [master]
     types:
       - completed

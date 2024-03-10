@@ -1,8 +1,3 @@
-/*
- * Developed by Arastoo Bozorgi.
- * a.bozorgi67@gmail.com
- */
-
 package com.beaplab.BeaplabEngine.controller;
 
 import com.beaplab.BeaplabEngine.constants.BeapEngineConstants;
@@ -26,14 +21,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import springfox.documentation.annotations.ApiIgnore;
-
-import java.io.Serializable;
 import java.util.List;
-import java.util.UUID;
 
 @Controller
-//@RequestMapping(BeapEngineConstants.AUTH_INTERCEPTOR_PATTERN)
-//@Secured("ROLE_ADMIN")
 @ApiIgnore
 public class UserController {
 

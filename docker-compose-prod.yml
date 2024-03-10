@@ -14,14 +14,19 @@ services:
 
   beapengineapp:
     container_name: beapengineapp-prod
+    environment:
+        - POSTGRESQL_URL=${POSTGRESQL_URL}
+        - PG_CRYPTO_KEY=${PG_CRYPTO_KEY}
     restart: always
     build:
       context: .
       dockerfile: Dockerfile.prod
     volumes:
+      - /etc/letsencrypt:/etc/letsencrypt
       - ./services/ml-service:/usr/local/tomcat/webapps/ml-service
     ports:
-      - 8080:8080
+      - 80:80
+      - 443:8443
     networks:
       - spring
     depends_on:

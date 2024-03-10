@@ -1,33 +1,55 @@
 import moment from "moment";
 import { renderHook } from "@testing-library/react-hooks";
+import { waitFor } from "@testing-library/react";
 import useIsUserLoggedIn from "./useIsUserLoggedIn";
 
-const mockSetStorage = jest.fn();
-jest.mock("usehooks-ts", () => ({
-  useLocalStorage: () => ["", mockSetStorage],
-  useReadLocalStorage: () => "2024-01-01T00:00:00Z",
+const mockRemoveCookies = jest.fn();
+const removeLocalStorageSpy = jest.spyOn(Storage.prototype, "removeItem");
+
+jest.mock("react-cookie", () => ({
+    useCookies: () => ["", jest.fn(), mockRemoveCookies],
 }));
 
 describe("useIsUserLoggedIn", () => {
-  it("returns false and clears storage and cookie when expiresAt is in the past", () => {
-    const pastTime = moment("2024-01-02T00:00:00Z").valueOf();
+    it("returns false and clears storage and cookie when expiresAt is in the past", () => {
+        const currentTime = moment("2024-01-02T00:00:00Z").valueOf();
 
-    jest.spyOn(moment, "now").mockImplementation(() => pastTime);
+        jest.spyOn(Storage.prototype, "getItem")
+            .mockReturnValueOnce("2024-01-01T00:00:00Z")
+            .mockReturnValueOnce("100");
 
-    const { result } = renderHook(useIsUserLoggedIn);
+        jest.spyOn(moment, "now").mockImplementation(() => currentTime);
 
-    expect(mockSetStorage.mock.calls).toEqual([[""], [-1]]);
-    expect(result.current).toBe(false);
-  });
+        const hook = renderHook(useIsUserLoggedIn);
 
-  it("returns true when user is logged in and expiresAt is in the future", () => {
-    const currentTime = moment("2023-12-31T23:59:59Z").valueOf();
+        expect(removeLocalStorageSpy).toHaveBeenNthCalledWith(1, "expires_at");
+        expect(removeLocalStorageSpy).toHaveBeenNthCalledWith(2, "user_id");
+        expect(mockRemoveCookies).toHaveBeenCalledWith("SESSION");
 
-    jest.spyOn(moment, "now").mockImplementation(() => currentTime);
+        // Mock getItem to be removed for expires at and user id to be removed
+        jest.spyOn(Storage.prototype, "getItem").mockReturnValue(null);
 
-    const { result } = renderHook(useIsUserLoggedIn);
+        hook.rerender();
 
-    expect(mockSetStorage).not.toHaveBeenCalled();
-    expect(result.current).toBe(true);
-  });
+        waitFor(() => {
+            expect(removeLocalStorageSpy).not.toHaveBeenCalled();
+            expect(mockRemoveCookies).not.toHaveBeenCalled();
+        });
+        expect(hook.result.current).toBe(false);
+    });
+
+    it("returns true when user is logged in and expiresAt is in the future", () => {
+        const currentTime = moment("2023-12-31T23:59:59Z").valueOf();
+        jest.spyOn(Storage.prototype, "getItem")
+            .mockReturnValueOnce('"2024-01-01T00:00:00Z"')
+            .mockReturnValue("100");
+
+        jest.spyOn(moment, "now").mockImplementation(() => currentTime);
+
+        const { result } = renderHook(useIsUserLoggedIn);
+
+        expect(removeLocalStorageSpy).not.toHaveBeenCalled();
+        expect(mockRemoveCookies).not.toHaveBeenCalled();
+        expect(result.current).toBe(true);
+    });
 });

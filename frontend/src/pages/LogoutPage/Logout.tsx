@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useLogout from "../../shared/hooks/useLogout";
+import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner"; // adjust the path as needed
 
-function Logout() {
+function Logout(): React.ReactElement | null {
     const navigate = useNavigate();
     const { handleLogout, isLoading, error } = useLogout();
 
@@ -16,7 +17,12 @@ function Logout() {
     }, [handleLogout, navigate]);
 
     if (isLoading) {
-        return <div>Logging out...</div>; // This can be replaced in the future with a loading spinner
+        return (
+            <div>
+                <p>Logging out...</p>
+                <LoadingSpinner loading={isLoading} />
+            </div>
+        );
     }
 
     if (error) {

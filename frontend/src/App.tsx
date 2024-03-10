@@ -6,7 +6,7 @@ import ProtectedRoute from "components/Authentication/ProtectedRoute";
 import rollbarConfig from "shared/config/rollbar";
 import Navbar from "./components/Navbar/Navbar";
 import LoginForm from "./pages/LoginPage/components/LoginForm";
-import Logout from "./Logout";
+import Logout from "./pages/LogoutPage/Logout";
 import ProcessedDataPage from "./pages/ProcessDataPage/ProcessedDataPage";
 import PredictedDataPage from "./pages/PredictedDataPage/PredictedDataPage";
 import FileUploadPage from "./pages/FileUploadPage/FileUploadPage";

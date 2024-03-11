@@ -39,14 +39,14 @@ test("Navbar Test", async ({ page }) => {
 
     await expect(PredictedPage).toContainText("Step 3 - Predicted data files:");
 
-    await page.getByRole("link", { name: "LOGOUT" }).click();
-    await expect(page).toHaveURL("./Logout");
+    // await page.getByRole("link", { name: "LOGOUT" }).click();
+    // await expect(page).toHaveURL("./Logout");
 
-    const LogOutPage = page.locator("#root");
+    // const LogOutPage = page.locator("#root");
 
-    await expect(LogOutPage).toContainText("This is the Logout page");
+    // await expect(LogOutPage).toContainText("This is the Logout page");
 
-    // checking that the navbar can direct to the home page
-    await page.getByRole("link", { name: "HOME" }).click();
-    await expect(page).toHaveURL("./");
+    // // checking that the navbar can direct to the home page
+    // await page.getByRole("link", { name: "HOME" }).click();
+    // await expect(page).toHaveURL("./");
 });

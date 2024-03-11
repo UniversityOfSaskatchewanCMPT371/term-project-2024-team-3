@@ -23,6 +23,12 @@ test(" TID 1.4. renders all links", () => {
     const predictedFilesLink = screen.getByText(/PREDICTED FILES/i);
     expect(predictedFilesLink).toBeInTheDocument();
 
-    const logoutLink = screen.getByText(/LOGOUT/i);
-    expect(logoutLink).toBeInTheDocument();
+    // const logoutLink = screen.getByText(/LOGOUT/i);
+    // expect(logoutLink).toBeInTheDocument();
+
+    const beapLogoImage = screen.getByAltText(/beapLogo/i);
+    expect(beapLogoImage).toBeInTheDocument();
+
+    const profileLogoImage = screen.getByAltText(/profileLogo/i);
+    expect(profileLogoImage).toBeInTheDocument();
 });

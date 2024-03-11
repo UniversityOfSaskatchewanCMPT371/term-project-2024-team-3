@@ -1,29 +1,30 @@
-import { renderHook } from "@testing-library/react-hooks";
+import { renderHook, act } from "@testing-library/react-hooks";
 import useLogout from "./useLogout";
 import * as API from "../api";
 
-const mockSetStorage = jest.fn();
 const mockRemoveCookies = jest.fn();
 
 jest.mock("../api");
-jest.mock("usehooks-ts", () => ({
-    useLocalStorage: () => ["", mockSetStorage],
-}));
-
 jest.mock("react-cookie", () => ({
     useCookies: () => ["", jest.fn(), mockRemoveCookies],
 }));
 
 const logoutSpy = jest.spyOn(API, "logout").mockImplementation(async () => {});
+const removeLocalStorageSpy = jest.spyOn(Storage.prototype, "removeItem");
 
 describe("useLogout", () => {
     it("should handle logout successfully", async () => {
-        const { result } = renderHook(useLogout);
+        const { result, waitForNextUpdate } = renderHook(useLogout);
 
-        await result.current.handleLogout();
+        act(() => {
+            result.current.handleLogout();
+        });
+
+        await waitForNextUpdate();
 
         expect(logoutSpy).toHaveBeenCalledTimes(1);
-        expect(mockSetStorage.mock.calls).toEqual([[""], [-1]]);
+        expect(removeLocalStorageSpy).toHaveBeenNthCalledWith(1, "expires_at");
+        expect(removeLocalStorageSpy).toHaveBeenNthCalledWith(2, "user_id");
         expect(mockRemoveCookies).toHaveBeenCalledWith("SESSION");
 
         expect(result.current.isLoading).toBe(false);
@@ -31,15 +32,20 @@ describe("useLogout", () => {
     });
 
     it("should handle logout when it errors", async () => {
-        const { result } = renderHook(useLogout);
+        const { result, waitForNextUpdate } = renderHook(useLogout);
 
         logoutSpy.mockImplementation(async () => {
             throw new Error("Logout failed");
         });
-        await result.current.handleLogout();
+
+        act(() => {
+            result.current.handleLogout();
+        });
+
+        await waitForNextUpdate();
 
         expect(logoutSpy).toHaveBeenCalledTimes(1);
-        expect(mockSetStorage).not.toHaveBeenCalled();
+        expect(removeLocalStorageSpy).not.toHaveBeenCalled();
         expect(mockRemoveCookies).not.toHaveBeenCalled();
         expect(result.current.isLoading).toBe(false);
         expect(result.current.error).toBe("Logout failed. Please try again.");

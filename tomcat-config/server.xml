@@ -68,11 +68,11 @@
     -->
     <Connector port="80" protocol="HTTP/1.1"
                connectionTimeout="20000"
-               redirectPort="8443"
+               redirectPort="443"
                maxParameterCount="1000"
                />
 
-     <Connector port="8443" protocol="org.apache.coyote.http11.Http11AprProtocol"
+     <Connector port="443" protocol="org.apache.coyote.http11.Http11AprProtocol"
               maxThreads="150" SSLEnabled="true" >
 	   <UpgradeProtocol className="org.apache.coyote.http2.Http2Protocol" />
 		 <SSLHostConfig>

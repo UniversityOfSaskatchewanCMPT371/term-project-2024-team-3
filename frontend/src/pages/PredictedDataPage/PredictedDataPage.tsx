@@ -20,9 +20,19 @@ const PredictedDataPage = function () {
                 </div>
                 <div className={styles.container}>
                     <h1>Files: </h1>
-                    <Button variant="contained" className={styles.downloadBtn}>
-                        Download File
-                    </Button>
+                    <div>
+                        <Button variant="contained" className={styles.downloadBtn}>
+                            Download File(s)
+                        </Button>
+                        <Button
+                            variant="contained"
+                            // onClick={refreshFileList}
+                            className={styles.predictBtn}
+                            // data-testid="Refresh_Button"
+                        >
+                            Refresh List
+                        </Button>
+                    </div>
                 </div>
                 <List className={styles.list} />
                 <div className={styles.bannerinfo}>

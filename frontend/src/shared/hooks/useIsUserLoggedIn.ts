@@ -1,26 +1,28 @@
+import { useEffect } from "react";
 import moment from "moment";
-import { useReadLocalStorage, useLocalStorage } from "usehooks-ts";
 import { useCookies } from "react-cookie";
 
 const useIsUserLoggedIn = () => {
-  const expiresAt = useReadLocalStorage("expires_at");
-  const userId = useReadLocalStorage("user_id");
-  const [, setExpiresAt] = useLocalStorage("expires_at", "");
-  const [, setUserId] = useLocalStorage("user_id", -1);
-  const [, , removeCookie] = useCookies(["SESSION"]);
+    const expiresAt = localStorage.getItem("expires_at");
+    const userId = localStorage.getItem("user_id");
+    const [, , removeCookie] = useCookies(["SESSION"]);
 
-  if (!expiresAt || userId === -1) {
-    return false;
-  }
+    useEffect(() => {
+        const expired =
+            expiresAt &&
+            moment()
+                .utc()
+                .isAfter(moment(expiresAt?.replace(/"/g, "")).utc());
 
-  if (expiresAt && moment().isAfter(moment(expiresAt))) {
-    setExpiresAt("");
-    setUserId(-1);
-    removeCookie("SESSION");
-    return false;
-  }
+        if (expired) {
+            localStorage.removeItem("expires_at");
+            localStorage.removeItem("user_id");
+            removeCookie("SESSION");
+            window.location.reload();
+        }
+    }, [expiresAt, removeCookie]);
 
-  return true;
+    return !!expiresAt && userId !== null;
 };
 
 export default useIsUserLoggedIn;

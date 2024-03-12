@@ -1,35 +1,41 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../Authentication/useAuth";
 import "../../styles/navbar.css";
 
-function Navbar(): React.ReactElement {
-  /* Add your routes and their names here and edit as needed. These were made with test data to make sure it was functioning */
+function Navbar(): React.ReactElement | null {
+    const { isAuthenticated } = useAuth(); // use the useAuth hook to get the current user
+    // If the user is not logged in, don't render the navbar
+    if (!isAuthenticated) {
+        return null;
+    }
+    /* Add your routes and their names here and edit as needed. These were made with test data to make sure it was functioning */
 
-  const routes = [
-    { path: "/", name: "HOME" },
-    { path: "/FileUploadPage", name: "FILE UPLOAD" },
-    { path: "/ProcessedDataPage", name: "PROCESSED FILES" },
-    { path: "/PredictedDataPage", name: "PREDICTED FILES" },
-    { path: "/Logout", name: "LOGOUT", className: "logout-link" },
-  ];
+    const routes = [
+        { path: "/", name: "HOME" },
+        { path: "/FileUploadPage", name: "FILE UPLOAD" },
+        { path: "/ProcessedDataPage", name: "PROCESSED FILES" },
+        { path: "/PredictedDataPage", name: "PREDICTED FILES" },
+        { path: "/Logout", name: "LOGOUT", className: "logout-link" },
+    ];
 
-  return (
-    <div>
-      <nav className="navbar navbar-expand-lg navbar-light bg-success-light">
-        <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
-          <div className="navbar-nav">
-            {routes.map((route) => (
-              <div className="mr-4" key={route.path}>
-                <Link to={route.path} className="nav-link">
-                  {route.name}
-                </Link>
-              </div>
-            ))}
-          </div>
+    return (
+        <div>
+            <nav className="navbar navbar-expand-lg navbar-light bg-success-light">
+                <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
+                    <div className="navbar-nav">
+                        {routes.map((route) => (
+                            <div className="mr-4" key={route.path}>
+                                <Link to={route.path} className="nav-link">
+                                    {route.name}
+                                </Link>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </nav>
         </div>
-      </nav>
-    </div>
-  );
+    );
 }
 
 export default Navbar;

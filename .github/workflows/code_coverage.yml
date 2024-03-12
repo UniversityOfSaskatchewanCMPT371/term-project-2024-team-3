@@ -11,4 +11,5 @@ jobs:
         with:
           package-manager: yarn
           working-directory: ./frontend
-          custom-title: Coverage report for frontend
+          test-script: yarn test --coverage --watchAll --silent
+          custom-title: Frontend Code Coverage Report

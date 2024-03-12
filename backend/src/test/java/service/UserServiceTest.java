@@ -19,7 +19,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 
 import static org.junit.Assert.*;
-import static utils.MockFactory.*;
+import static utils.UserMockFactory.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)

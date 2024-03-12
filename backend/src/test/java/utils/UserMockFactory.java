@@ -8,14 +8,14 @@ import com.beaplab.BeaplabEngine.model.AccessGroup;
 import com.beaplab.BeaplabEngine.model.RawData;
 import com.beaplab.BeaplabEngine.model.Role;
 import com.beaplab.BeaplabEngine.model.User;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.sql.Timestamp;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
-public class MockFactory {
+public class UserMockFactory {
     public static RawData mockRawData(RawData.dataType watchType) {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, 2023);
@@ -177,5 +177,30 @@ public class MockFactory {
                 userName,
                 "password123"
         );
+    }
+
+    public static List<GrantedAuthority> mockAuthorities(Set<Role> roles) {
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        for (Role role : roles) {
+            authorities.add(new SimpleGrantedAuthority(role.getRoleName()));
+        }
+        return authorities;
+    }
+
+    public static UserDetails mockUserDetails(User user) {
+        boolean enabled = true;
+        boolean accountNonExpired = true;
+        boolean credentialsNonExpired = true;
+        boolean accountNonLocked = true;
+        return  new org.springframework.security.core.userdetails.User
+                (
+                        user.getUsername(),
+                        user.getPassword().toLowerCase(),
+                        enabled,
+                        accountNonExpired,
+                        credentialsNonExpired,
+                        accountNonLocked,
+                        mockAuthorities(user.getRoleIDs())
+                );
     }
 }

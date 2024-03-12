@@ -11,8 +11,6 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'success'}}
     runs-on: beapengine
     steps:
-      - name: Add permissions
-        run: chown -R autodeploy:autodeploy /home/autodeploy/actions-runner/_work/term-project-2024-team-3/term-project-2024-team-3/services/ml-service/
       - name: Checkout
         uses: actions/checkout@v4
       - name: Create .env

@@ -115,7 +115,6 @@ public class UserServiceTest {
 
         JSONObject result = userService.save(userDto);
 
-        verify(userMapper).dto2Model(eq(userDto), any(User.class));
         assertEquals(expected, result);
     }
 

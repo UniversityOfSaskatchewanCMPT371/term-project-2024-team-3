@@ -27,3 +27,11 @@ jobs:
         run: |
           cd frontend
           yarn run test
+      - name: Frontend code coverage
+        uses: ArtiomTr/jest-coverage-report-action@v2
+        with:
+          package-manager: yarn
+          skip-step: all
+          working-directory: ./frontend
+          test-script: yarn test
+          custom-title: Frontend Code Coverage Report

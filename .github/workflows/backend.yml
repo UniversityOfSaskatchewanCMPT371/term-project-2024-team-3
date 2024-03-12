@@ -24,3 +24,11 @@ jobs:
         run: |
           cd backend
           mvn test
+      - name: Backend code coverage
+        id: jacoco
+        uses: madrapps/jacoco-report@v1.6.1
+        with:
+          paths: ${{ github.workspace }}/**/build/reports/jacoco/testCoverage/testCoverage.xml
+          token: ${{ secrets.GITHUB_TOKEN }}
+          title: Backend Code Coverage
+          update-comment: true

@@ -44,7 +44,7 @@ test("Navbar Test", async ({ page }) => {
 
     const LogOutPage = page.locator("#root");
 
-    await expect(LogOutPage).toContainText("This is the Logout page");
+    await expect(LogOutPage).toContainText("Logging out...");
 
     // checking that the navbar can direct to the home page
     await page.getByRole("link", { name: "HOME" }).click();

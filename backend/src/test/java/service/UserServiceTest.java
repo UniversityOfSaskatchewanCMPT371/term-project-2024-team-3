@@ -17,9 +17,11 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import static org.junit.Assert.*;
 import static utils.UserMockFactory.*;
+import static utils.TestHelper.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -157,7 +159,32 @@ public class UserServiceTest {
 
     @Test
     public void testValidLogin() {
+        User user = mockUser();
+        UserDto userDto = mockUserDto();
+        UserDetails userDetails = mockUserDetails(user);
+        JSONObject expected = new JSONObject();
 
+        expected.put(BeapEngineConstants.SUCCESS_STR, true);
+        expected.put("status_code", HttpStatus.OK.value());
+        expected.put("Authorities", userDetails.getAuthorities());
+        expected.put("userDetails", userDetails);
+        expected.put("userDto", userDto);
+
+        when(userDao.findByUserPass(user.getUsername(), user.getPassword())).thenReturn(user);
+        when(userMapper.model2Dto(Mockito.<User>anyObject(), Mockito.any(UserDto.class))).thenReturn(userDto);
+        when(userMapper.dto2Model(Mockito.<UserDto>anyObject(), Mockito.any(User.class))).thenReturn(user);
+        when(incorrectLoginsService.getByUserId(Mockito.anyLong())).thenReturn(
+                mockIncorrectLoginsDto(
+                        userDto,
+                        false,
+                        0,
+                        getTimestamp(2023, 0, 1)
+                )
+        );
+
+        JSONObject results = userService.login(user.getUsername(), user.getPassword());
+
+        assertEquals(results, expected);
     }
 
     @Test

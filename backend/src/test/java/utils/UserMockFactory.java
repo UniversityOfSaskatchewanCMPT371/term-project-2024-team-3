@@ -1,9 +1,6 @@
 package utils;
 
-import com.beaplab.BeaplabEngine.metadata.AccessGroupDto;
-import com.beaplab.BeaplabEngine.metadata.RawDataDto;
-import com.beaplab.BeaplabEngine.metadata.RoleDto;
-import com.beaplab.BeaplabEngine.metadata.UserDto;
+import com.beaplab.BeaplabEngine.metadata.*;
 import com.beaplab.BeaplabEngine.model.AccessGroup;
 import com.beaplab.BeaplabEngine.model.RawData;
 import com.beaplab.BeaplabEngine.model.Role;
@@ -202,5 +199,20 @@ public class UserMockFactory {
                         accountNonLocked,
                         mockAuthorities(user.getRoleIDs())
                 );
+    }
+
+    public static IncorrectLoginsDto mockIncorrectLoginsDto(
+            UserDto userDto,
+            boolean isLocked,
+            int attemptsIncorrect,
+            Timestamp lockedDate
+    ) {
+        return new IncorrectLoginsDto(
+                1L,
+                userDto,
+                isLocked,
+                attemptsIncorrect,
+                lockedDate
+        );
     }
 }

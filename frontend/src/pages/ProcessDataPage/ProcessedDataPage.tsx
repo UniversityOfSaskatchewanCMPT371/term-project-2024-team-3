@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { RadioGroup, FormControl, FormControlLabel, Radio, Button, Container } from "@mui/material";
-import { DataType, PredictionType, ProcessedFileData, WatchType } from "shared/api";
+import { DataType, PredictionType, ProcessedFileData, WatchType, DownloadType } from "shared/api";
 import useGetProcessedDataList from "shared/hooks/useGetProcessedDataList";
 import moment from "moment";
 import usePredictedFile from "shared/hooks/usePredictFile";
+import useDownload from "shared/hooks/useDownload";
 import { useRollbar } from "@rollbar/react";
 import styles from "./ProcessedDataPage.module.css";
 
@@ -22,8 +23,10 @@ const ProcessedDataPage = function () {
     );
 
     const { handlePredict } = usePredictedFile();
+    const { handleDownload } = useDownload();
 
     const { uploadedFiles: fitbitFiles } = useGetProcessedDataList(WatchType.FITBIT);
+
     const { uploadedFiles: appleWatchFiles } = useGetProcessedDataList(WatchType.APPLE_WATCH);
 
     const handleModelChange = (model: PredictionType) => {
@@ -81,21 +84,11 @@ const ProcessedDataPage = function () {
         event.preventDefault();
         // make sure a file is selected before you attempt to download it
         console.assert(currentFile !== undefined, "A file should be selected before downloading");
-    };
-
-    /**
-     * deletes a file
-     * NOTE: The delete route in the back-end does not exist, but the hook works
-     */
-    const deleteFile = (event: React.MouseEvent) => {
-        event.preventDefault();
-        // make sure a file is selected before you attempt to delete it
-        console.assert(currentFile !== undefined, "A file should be selected before deleting");
-        // if (currentFile) {
-        //   const { id, watch } = currentFile;
-        //   const lowerCaseWatch = watch.toLowerCase();
-        //   handleDelete(id, lowerCaseWatch);
-        // }
+        if (currentFile) {
+            const { id, watch } = currentFile;
+            const stringID = id.toString();
+            handleDownload(stringID, DownloadType.PROCESS, watch);
+        }
     };
 
     /**
@@ -223,15 +216,6 @@ const ProcessedDataPage = function () {
                             data-testid="Download_Button"
                         >
                             Download File
-                        </Button>
-                        <Button
-                            className={styles.goToPredicted}
-                            variant="contained"
-                            href="/PredictedDataPage"
-                            onClick={deleteFile}
-                            data-testid="Delete_Button"
-                        >
-                            DELETE FILE{" "}
                         </Button>
                     </div>
                 </div>

@@ -1,16 +1,8 @@
-/*
- * Developed by Arastoo Bozorgi.
- * a.bozorgi67@gmail.com
- */
-
 package com.beaplab.BeaplabEngine.service;
 
-import com.beaplab.BeaplabEngine.authentication.MyAuthentication;
 import com.beaplab.BeaplabEngine.constants.BeapEngineConstants;
 import com.beaplab.BeaplabEngine.metadata.IncorrectLoginsDto;
-import com.beaplab.BeaplabEngine.metadata.LoginUserDto;
 import com.beaplab.BeaplabEngine.metadata.UserDto;
-import com.beaplab.BeaplabEngine.model.IncorrectLogins;
 import com.beaplab.BeaplabEngine.model.Role;
 import com.beaplab.BeaplabEngine.model.User;
 import com.beaplab.BeaplabEngine.repository.UserDao;
@@ -21,15 +13,12 @@ import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
-import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -42,29 +31,14 @@ public class UserService implements UserDetailsService {
 
     final static Logger logger = LogManager.getLogger(UserService.class.getName());
 
-    /**
-     * injecting UserDao into this class
-     */
     @Autowired
     private UserDao userDao;
 
-    /**
-     * injecting UserMapper into this class
-     */
     @Autowired
     private UserMapper userMapper;
 
-
     @Autowired
     private IncorrectLoginsService incorrectLoginsService;
-
-
-    /**
-     * injecting MyAuthentication into this class
-     */
-    @Autowired
-    private MyAuthentication myAuthentication;
-
 
     /**
      * retrieving a list of type User
@@ -73,8 +47,7 @@ public class UserService implements UserDetailsService {
     public List<UserDto> list() {
         logger.info("in UserService: list");
 
-        List<UserDto> userDtos = userMapper.model2Dto(userDao.list(), new ArrayList<UserDto>());
-        return userDtos;
+        return userMapper.model2Dto(userDao.list(), new ArrayList<UserDto>());
     }
 
 

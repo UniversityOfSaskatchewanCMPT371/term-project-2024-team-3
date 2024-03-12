@@ -17,7 +17,6 @@ public class HomeController {
         logger.info("in HomeController");
 
         String message = "This message is returned from HomeController.";
-        String message2 = "WAT";
         ModelAndView model = new ModelAndView("Index");
         model.addObject("message", message);
         return model;

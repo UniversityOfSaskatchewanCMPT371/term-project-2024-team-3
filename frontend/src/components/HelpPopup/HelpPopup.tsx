@@ -1,8 +1,14 @@
 import React from "react";
 import { useRollbar } from "@rollbar/react";
+import { useAuth } from "../Authentication/useAuth";
 import styles from "./HelpPopup.module.css";
 
-function HelpPopup(): React.ReactElement {
+function HelpPopup(): React.ReactElement | null {
+    const { isAuthenticated } = useAuth(); // use the useAuth hook to get the current user
+    // If the user is not logged in, don't render the help popup
+    if (!isAuthenticated) {
+        return null;
+    }
     const rollbar = useRollbar();
 
     let renders;

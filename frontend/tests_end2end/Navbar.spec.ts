@@ -40,7 +40,7 @@ test("Navbar Test", async ({ page }) => {
     await expect(PredictedPage).toContainText("Step 3 - Predicted data files:");
 
     await page.getByRole("link", { name: "LOGOUT" }).click();
-    await expect(page).toHaveURL("./Logout");
+    await expect(page).toHaveURL("./");
 
     const LogOutPage = page.locator("#root");
 

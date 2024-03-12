@@ -87,10 +87,7 @@ public class UserService implements UserDetailsService {
      */
     private boolean usernameExist(String username) {
         User user = userDao.findByUsername(username);
-        if (user != null) {
-            return true;
-        }
-        return false;
+        return user != null;
     }
 
 
@@ -117,6 +114,7 @@ public class UserService implements UserDetailsService {
 
         Long uuid = Long.parseLong(id);
         User user = userDao.get(uuid);
+        System.out.println(user != null);
         if(user != null)
             return userMapper.model2Dto(user, new UserDto());
         return null;

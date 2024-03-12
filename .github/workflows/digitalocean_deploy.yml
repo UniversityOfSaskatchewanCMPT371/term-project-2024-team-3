@@ -8,9 +8,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 16
+      - name: Add permissions
+        run: sudo chown -R autodeploy:autodeploy /home/autodeploy/actions-runner/_work/term-project-2024-team-3/term-project-2024-team-3/services/ml-service/
       - name: Create .env
         run: |
           echo "POSTGRESQL_URL=${{ secrets.POSTGRESQL_URL }}" > .env

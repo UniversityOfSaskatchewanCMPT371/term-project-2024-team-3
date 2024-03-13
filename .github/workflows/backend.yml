@@ -14,11 +14,12 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: "11"
-          distribution: "temurin"
+          distribution: "oracle"
           cache: maven
       - name: Build and test backend
         run: |
           cd backend
+          mvn dependecy:resolve
           mvn -B package --file pom.xml
       - name: Run Code Coverage
         run: |

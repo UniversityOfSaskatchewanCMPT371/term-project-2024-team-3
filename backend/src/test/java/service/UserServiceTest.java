@@ -145,7 +145,7 @@ public class UserServiceTest {
 
     @Test
     /*
-     * Preconditions: None
+     * Preconditions: User exists in the database
      * Post-conditions: User details are updated
      */
     public void testUpdate() {

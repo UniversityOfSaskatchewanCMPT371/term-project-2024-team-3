@@ -50,6 +50,10 @@ public class AccessGroupServiceTest {
     }
 
 
+    /**
+     * Preconditions: Access Groups List is not empty
+     * Post-conditions: Returns a list of AccessGroupDto Objects
+     */
     @Test
     public void testList() {
         List<AccessGroup> accessGroups = new ArrayList<>();
@@ -69,6 +73,10 @@ public class AccessGroupServiceTest {
 
         assertEquals(expected, result);
     }
+    /**
+     * Preconditions: Access Groups List is empty
+     * Post-conditions: Returns an empty list
+     */
     @Test
     public void testListEmpty(){
         List<AccessGroup> accessGroups = new ArrayList<>();
@@ -80,14 +88,24 @@ public class AccessGroupServiceTest {
 
     }
 
+    /**
+     * Preconditions: Access Group does not exist in the database
+     * Post-conditions: New Access Group is saved successfully
+     */
     @Test
     public void testSave(){
 
         AccessGroupDto accessGroupDto = mockAccessGroupDto();
+        AccessGroup accessGroup = mockAccessGroup();
+
+        accessGroup.setId(1L);
 
         Serializable expected = 1L;
 
-        when(accessGroupDao.save(Mockito.any(AccessGroup.class))).thenReturn(1L);
+        when(accessGroupMapper.dto2Model(Mockito.<AccessGroupDto>anyObject(),
+                Mockito.<AccessGroup>anyObject())).thenReturn(accessGroup);
+
+        when(accessGroupDao.save(Mockito.any(AccessGroup.class))).thenReturn(accessGroup.getId());
 
         Serializable result  = accessGroupService.save(accessGroupDto);
 
@@ -98,8 +116,74 @@ public class AccessGroupServiceTest {
 
     }
 
+    /**
+     * Precondition : Access Group exists in the database
+     * Post-condition: Access Group details are updated
+     */
     @Test
-    public void testUpdate(){}
+    public void testUpdate(){
+
+        AccessGroupDto accessGroupDto = mockAccessGroupDto();
+
+        accessGroupService.update(accessGroupDto);
+        verify(accessGroupMapper).dto2Model(eq(accessGroupDto),any(AccessGroup.class));
+    }
+
+    /**
+     * Precondition : Access Group exists in the database
+     * Post-condition: Returns AccessGroupDto object
+     */
+    @Test
+    public void testGet(){
+
+        AccessGroup accessGroup = mockAccessGroup();
+
+        AccessGroupDto expected = mockAccessGroupDto();
+
+        when(accessGroupDao.get(anyLong())).thenReturn(accessGroup);
+
+        when(accessGroupMapper.model2Dto(Mockito.<AccessGroup>anyObject(),
+                Mockito.<AccessGroupDto>anyObject())).thenReturn(expected);
+
+        AccessGroupDto result = accessGroupService.get("1");
+
+        assertEquals(expected,result);
+
+
+    }
+
+    /**
+     * Precondition : Access Group does not exist in the database
+     * Post-condition: Returns null
+     */
+    @Test
+    public void testGetNull(){
+
+            when(accessGroupDao.get(anyLong())).thenReturn(null);
+
+            AccessGroupDto result  = accessGroupService.get("1");
+
+            assertNull(result);
+
+
+        }
+
+
+        /**
+        * Precondition : Access Group exists in the database
+        * Post-condition: Access Group is deleted from the database
+        */
+        @Test
+        public void testDelete(){
+
+            String id = "1";
+
+            accessGroupService.delete(id);
+
+            verify(accessGroupDao).delete(eq(Long.parseLong((id))));
+
+        }
+
 
 
 }

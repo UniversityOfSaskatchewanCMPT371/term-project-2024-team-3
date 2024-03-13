@@ -64,8 +64,8 @@
 
 		<dependency>
 			<groupId>com.rollbar</groupId>
-			<artifactId>rollbar-spring-webmvc</artifactId>
-			<version>1.10.0</version>
+			<version>[1.0,)</version>
+			<artifactId>rollbar-java</artifactId>
 		</dependency>
 
 		<dependency>

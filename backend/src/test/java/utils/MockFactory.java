@@ -151,31 +151,6 @@ public class MockFactory {
         );
     }
 
-    public static UserDto mockUserDto(
-            String firstName,
-            String lastName,
-            String userName
-    ) {
-        Set<AccessGroupDto> accessGroups = new HashSet<>();
-        accessGroups.add(mockAccessGroupDto());
-
-        Set<RoleDto> roles = new HashSet<>();
-        roles.add(mockRoleDto());
-
-        Set<RawDataDto> rawData = new HashSet<>();
-        rawData.add(mockRawDataDto(RawData.dataType.FitBit));
-        return new UserDto(
-                1L,
-                firstName,
-                lastName,
-                accessGroups,
-                roles,
-                rawData,
-                userName,
-                "password123"
-        );
-    }
-
     public static List<GrantedAuthority> mockAuthorities(Set<Role> roles) {
         List<GrantedAuthority> authorities = new ArrayList<>();
         for (Role role : roles) {

@@ -42,7 +42,7 @@ public class UserServiceTest {
     private IncorrectLoginsService incorrectLoginsService;
 
     @Mock
-    Util util;
+    private Util util;
 
     @Before
     public void setUp() {
@@ -240,7 +240,7 @@ public class UserServiceTest {
                 mockIncorrectLoginsDto(
                         userDto,
                         true,
-                        0,
+                        2,
                         getTimestamp(2023, 0, 1, 0, 0)
                 )
         );
@@ -248,52 +248,204 @@ public class UserServiceTest {
 
         JSONObject results = userService.login(user.getUsername(), user.getPassword());
 
+        ArgumentCaptor<IncorrectLoginsDto> argument = ArgumentCaptor.forClass(IncorrectLoginsDto.class);
+        verify(incorrectLoginsService).update(argument.capture());
         assertEquals(results, expected);
-        verify(incorrectLoginsService).update(Matchers.<IncorrectLoginsDto>any());
+        assertEquals(0, argument.getValue().getIncorrectAttempts());
+        assertFalse(argument.getValue().getLocked());
+        assertNull(argument.getValue().getLockedDate());
     }
 
     @Test
     public void testInvalidLogin() {
+        User user = mockUser();
+        UserDto userDto = mockUserDto();
+        JSONObject expected = new JSONObject();
 
+        expected.put(BeapEngineConstants.SUCCESS_STR, false);
+        expected.put("status_code", HttpStatus.UNAUTHORIZED.value());
+        expected.put("message", "invalid username or password");
+
+        when(userDao.findByUserPass(user.getUsername(), user.getPassword())).thenReturn(null);
+        when(userDao.findByUsername(user.getUsername())).thenReturn(user);
+        when(userMapper.model2Dto(Mockito.<User>anyObject(), Mockito.<UserDto>anyObject())).thenReturn(userDto);
+        when(incorrectLoginsService.getByUserId(Mockito.anyLong())).thenReturn(
+                mockIncorrectLoginsDto(
+                        userDto,
+                        false,
+                        0,
+                        getTimestamp(2023, 0, 1, 0, 0)
+                )
+        );
+
+        JSONObject result = userService.login(user.getUsername(), user.getPassword());
+
+        ArgumentCaptor<IncorrectLoginsDto> argument = ArgumentCaptor.forClass(IncorrectLoginsDto.class);
+        verify(incorrectLoginsService).update(argument.capture());
+        assertEquals(result, expected);
+        assertEquals(1, argument.getValue().getIncorrectAttempts());
     }
 
     @Test
     public void testInvalidLoginFirstTime() {
+        User user = mockUser();
+        UserDto userDto = mockUserDto();
+        JSONObject expected = new JSONObject();
 
-    }
+        expected.put(BeapEngineConstants.SUCCESS_STR, false);
+        expected.put("status_code", HttpStatus.UNAUTHORIZED.value());
+        expected.put("message", "invalid username or password");
 
-    @Test
-    public void testInvalidLoginAttempt() {
+        when(userDao.findByUserPass(user.getUsername(), user.getPassword())).thenReturn(null);
+        when(userDao.findByUsername(user.getUsername())).thenReturn(user);
+        when(userMapper.model2Dto(Mockito.<User>anyObject(), Mockito.<UserDto>anyObject())).thenReturn(userDto);
 
+        when(incorrectLoginsService.getByUserId(Mockito.anyLong())).thenReturn(null);
+
+        JSONObject result = userService.login(user.getUsername(), user.getPassword());
+
+        ArgumentCaptor<IncorrectLoginsDto> argument = ArgumentCaptor.forClass(IncorrectLoginsDto.class);
+        verify(incorrectLoginsService).save(argument.capture());
+        assertEquals(result, expected);
+        assertEquals(1, argument.getValue().getIncorrectAttempts());
+        assertEquals(userDto, argument.getValue().getUserDto());
+        assertFalse(argument.getValue().getLocked());
+        assertNull(argument.getValue().getLockedDate());
     }
 
     @Test
     public void testInvalidLoginLocked() {
+        User user = mockUser();
+        UserDto userDto = mockUserDto();
+        JSONObject expected = new JSONObject();
 
+        expected.put(BeapEngineConstants.SUCCESS_STR, false);
+        expected.put("status_code", HttpStatus.LOCKED.value());
+        expected.put("message", "Your account is locked for 24 hours.");
+
+        when(userDao.findByUserPass(user.getUsername(), user.getPassword())).thenReturn(null);
+        when(userDao.findByUsername(user.getUsername())).thenReturn(user);
+        when(userMapper.model2Dto(Mockito.<User>anyObject(), Mockito.<UserDto>anyObject())).thenReturn(userDto);
+        when(util.dateDifference(Mockito.<Date>any(), Mockito.<Date>any())).thenReturn(2L);
+        when(incorrectLoginsService.getByUserId(Mockito.anyLong())).thenReturn(
+                mockIncorrectLoginsDto(
+                        userDto,
+                        true,
+                        0,
+                        getTimestamp(2023, 0, 1, 0, 0)
+                )
+        );
+
+        JSONObject result = userService.login(user.getUsername(), user.getPassword());
+
+        assertEquals(result, expected);
+    }
+
+    @Test
+    public void testInvalidLoginUnlock() {
+        User user = mockUser();
+        UserDto userDto = mockUserDto();
+        UserDetails userDetails = mockUserDetails(user);
+        JSONObject expected = new JSONObject();
+
+        expected.put(BeapEngineConstants.SUCCESS_STR, true);
+        expected.put("status_code", HttpStatus.OK.value());
+        expected.put("Authorities", userDetails.getAuthorities());
+        expected.put("userDetails", userDetails);
+        expected.put("userDto", userDto);
+
+        when(userDao.findByUserPass(user.getUsername(), user.getPassword())).thenReturn(null);
+        when(userDao.findByUsername(user.getUsername())).thenReturn(user);
+        when(userMapper.model2Dto(Mockito.<User>anyObject(), Mockito.<UserDto>anyObject())).thenReturn(userDto);
+        when(userMapper.dto2Model(Mockito.<UserDto>anyObject(), Mockito.<User>anyObject())).thenReturn(user);
+
+        when(util.dateDifference(Mockito.<Date>any(), Mockito.<Date>any())).thenReturn(24L);
+        when(incorrectLoginsService.getByUserId(Mockito.anyLong())).thenReturn(
+                mockIncorrectLoginsDto(
+                        userDto,
+                        true,
+                        0,
+                        getTimestamp(2023, 0, 1, 0, 0)
+                )
+        );
+
+        JSONObject result = userService.login(user.getUsername(), user.getPassword());
+
+        ArgumentCaptor<IncorrectLoginsDto> argument = ArgumentCaptor.forClass(IncorrectLoginsDto.class);
+        verify(incorrectLoginsService).update(argument.capture());
+        assertEquals(result, expected);
+        assertEquals(0, argument.getValue().getIncorrectAttempts());
+        assertNull(argument.getValue().getLockedDate());
+        assertFalse(argument.getValue().getLocked());
     }
 
     @Test
     public void testInvalidUsernameAndPasswordLogin() {
+        User user = mockUser();
+        JSONObject expected = new JSONObject();
 
+        expected.put(BeapEngineConstants.SUCCESS_STR, false);
+        expected.put("status_code", HttpStatus.UNAUTHORIZED.value());
+        expected.put("message", "invalid username or password");
+
+        when(userDao.findByUserPass(user.getUsername(), user.getPassword())).thenReturn(null);
+        when(userDao.findByUsername(user.getUsername())).thenReturn(null);
+
+        JSONObject result = userService.login(user.getUsername(), user.getPassword());
+        assertEquals(result, expected);
     }
 
     @Test
     public void testGetUserByUsername() {
+        User user = mockUser();
+        UserDto userDto = mockUserDto();
 
+        when(userDao.findByUsername(user.getUsername())).thenReturn(user);
+        when(userMapper.model2Dto(Mockito.<User>anyObject(), Mockito.<UserDto>anyObject())).thenReturn(userDto);
+        UserDto result = userService.getUserByUsername(user.getUsername());
+        assertEquals(result, userDto);
     }
 
     @Test
     public void testGetUserByUsernameNull() {
+        String username = "test";
 
+        when(userDao.findByUsername(username)).thenReturn(null);
+
+        UserDto result = userService.getUserByUsername(username);
+        assertNull(result);
     }
 
     @Test
     public void testLoadUserByUsername() {
+        User user = mockUser();
+        UserDetails expected = mockUserDetails(user);
 
+        when(userDao.findByUsername(user.getUsername())).thenReturn(user);
+
+        UserDetails result = userService.loadUserByUsername(user.getUsername());
+        assertEquals(result, expected);
+    }
+
+    @Test
+    public void testLoadUserByUsernameNull() {
+        User user = mockUser();
+
+        when(userDao.findByUsername(user.getUsername())).thenReturn(null);
+
+        UserDetails result = userService.loadUserByUsername(user.getUsername());
+        assertNull(result);
     }
 
     @Test
     public void testLoadUserDetails() {
+        UserDto userDto = mockUserDto();
+        User user = mockUser();
+        UserDetails expected = mockUserDetails(user);
 
+        when(userMapper.dto2Model(Mockito.<UserDto>anyObject(), Mockito.<User>anyObject())).thenReturn(user);
+
+        UserDetails result = userService.loadUserDetails(userDto);
+        assertEquals(result, expected);
     }
 }

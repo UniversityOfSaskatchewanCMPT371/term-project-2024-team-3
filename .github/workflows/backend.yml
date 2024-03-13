@@ -21,7 +21,7 @@ jobs:
       - name: Build and test backend
         run: |
           cd backend
-          mvn dependecy:resolve
+          mvn dependency:resolve
           mvn -B package --file pom.xml
       - name: Run Code Coverage
         run: |

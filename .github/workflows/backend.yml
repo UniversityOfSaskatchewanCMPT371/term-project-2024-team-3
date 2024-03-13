@@ -5,7 +5,9 @@ on:
       - master
   pull_request:
     paths:
-      - "backend/*"
+      - "**/*.java"
+      - "**/*.properties"
+      - "**/pom.xml"
 
 jobs:
   build-and-test:

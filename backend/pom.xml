@@ -316,7 +316,7 @@
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.8.7</version>
+				<version>0.8.5</version>
 				<executions>
 					<execution>
 						<goals>
@@ -336,5 +336,26 @@
 
 		</plugins>
 	</build>
+
+	<reporting>
+        <plugins>
+
+           <!-- see pom.xml for rest of reporting section -->
+
+           <!-- generate the coverage report using Jacoco -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <!-- select non-aggregate reports -->
+                            <report>report</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+        </plugins>
+    </reporting>
 
 </project>

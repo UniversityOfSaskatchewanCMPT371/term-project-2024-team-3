@@ -1,11 +1,13 @@
 package service;
 
 import com.beaplab.BeaplabEngine.constants.BeapEngineConstants;
+import com.beaplab.BeaplabEngine.metadata.IncorrectLoginsDto;
 import com.beaplab.BeaplabEngine.metadata.UserDto;
 import com.beaplab.BeaplabEngine.model.User;
 import com.beaplab.BeaplabEngine.repository.UserDao;
 import com.beaplab.BeaplabEngine.service.IncorrectLoginsService;
 import com.beaplab.BeaplabEngine.service.UserService;
+import com.beaplab.BeaplabEngine.util.Util;
 import com.beaplab.BeaplabEngine.util.error.UserAlreadyExistException;
 import com.beaplab.BeaplabEngine.util.objectMapper.UserMapper;
 import org.json.simple.JSONObject;
@@ -15,12 +17,13 @@ import org.junit.runner.RunWith;
 import org.mockito.*;
 import org.mockito.runners.MockitoJUnitRunner;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import static org.junit.Assert.*;
-import static utils.UserMockFactory.*;
+import static utils.MockFactory.*;
 import static utils.TestHelper.*;
 import static org.mockito.Mockito.*;
 
@@ -37,6 +40,9 @@ public class UserServiceTest {
 
     @Mock
     private IncorrectLoginsService incorrectLoginsService;
+
+    @Mock
+    Util util;
 
     @Before
     public void setUp() {
@@ -178,7 +184,7 @@ public class UserServiceTest {
                         userDto,
                         false,
                         0,
-                        getTimestamp(2023, 0, 1)
+                        getTimestamp(2023, 0, 1, 0, 0)
                 )
         );
 
@@ -189,12 +195,61 @@ public class UserServiceTest {
 
     @Test
     public void testValidLoginLocked() {
+        User user = mockUser();
+        UserDto userDto = mockUserDto();
+        JSONObject expected = new JSONObject();
 
+        expected.put(BeapEngineConstants.SUCCESS_STR, false);
+        expected.put("status_code", HttpStatus.LOCKED.value());
+        expected.put("message", "Your account is locked for 24 hours.");
+
+        when(util.dateDifference(Matchers.<Date>any(), Matchers.<Date>any())).thenReturn(0L);
+        when(userDao.findByUserPass(user.getUsername(), user.getPassword())).thenReturn(user);
+        when(userMapper.model2Dto(Mockito.<User>anyObject(), Mockito.any(UserDto.class))).thenReturn(userDto);
+        when(incorrectLoginsService.getByUserId(Mockito.anyLong())).thenReturn(
+                mockIncorrectLoginsDto(
+                        userDto,
+                        true,
+                        0,
+                        getTimestamp(2023, 0, 1, 30, 9)
+                )
+        );
+
+        JSONObject results = userService.login(user.getUsername(), user.getPassword());
+
+        assertEquals(results, expected);
     }
 
     @Test
     public void testValidLoginWithUnlock() {
+        User user = mockUser();
+        UserDto userDto = mockUserDto();
+        UserDetails userDetails = mockUserDetails(user);
+        JSONObject expected = new JSONObject();
 
+        expected.put(BeapEngineConstants.SUCCESS_STR, true);
+        expected.put("status_code", HttpStatus.OK.value());
+        expected.put("Authorities", userDetails.getAuthorities());
+        expected.put("userDetails", userDetails);
+        expected.put("userDto", userDto);
+
+        when(userDao.findByUserPass(user.getUsername(), user.getPassword())).thenReturn(user);
+        when(userMapper.model2Dto(Mockito.<User>anyObject(), Mockito.any(UserDto.class))).thenReturn(userDto);
+        when(userMapper.dto2Model(Mockito.<UserDto>anyObject(), Mockito.any(User.class))).thenReturn(user);
+        when(incorrectLoginsService.getByUserId(Mockito.anyLong())).thenReturn(
+                mockIncorrectLoginsDto(
+                        userDto,
+                        true,
+                        0,
+                        getTimestamp(2023, 0, 1, 0, 0)
+                )
+        );
+        when(util.dateDifference(Matchers.<Date>any(), Matchers.<Date>any())).thenReturn(25L);
+
+        JSONObject results = userService.login(user.getUsername(), user.getPassword());
+
+        assertEquals(results, expected);
+        verify(incorrectLoginsService).update(Matchers.<IncorrectLoginsDto>any());
     }
 
     @Test

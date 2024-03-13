@@ -12,7 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.sql.Timestamp;
 import java.util.*;
 
-public class UserMockFactory {
+public class MockFactory {
     public static RawData mockRawData(RawData.dataType watchType) {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, 2023);

@@ -4,6 +4,8 @@ on:
     branches:
       - master
   pull_request:
+    paths:
+      - "backend/*"
 
 jobs:
   build-and-test:
@@ -14,7 +16,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: "11"
-          distribution: "oracle"
+          distribution: "corretto"
           cache: maven
       - name: Build and test backend
         run: |

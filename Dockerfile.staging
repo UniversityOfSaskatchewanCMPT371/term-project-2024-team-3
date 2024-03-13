@@ -1,0 +1,14 @@
+FROM node:18-alpine AS development
+
+ENV NODE_ENV development
+
+WORKDIR /app
+COPY ./frontend/package.json .
+COPY ./frontend/yarn.lock .
+RUN yarn install
+
+COPY ./frontend/. .
+
+EXPOSE 3000
+
+CMD [ "yarn", "start" ]

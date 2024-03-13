@@ -28,6 +28,7 @@
   "include": [
     "src",
     "playwright.config.ts",
-    "tests_end2end/*"
+    "tests_end2end/*",
+    "global-playwright-setup.ts"
   ]
 }

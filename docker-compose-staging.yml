@@ -1,0 +1,65 @@
+version: "3.8"
+
+services:
+  webapp:
+      container_name: webapp-dev
+      image: webapp-dev
+      build:
+        context: .
+        dockerfile: Dockerfile.staging
+      volumes:
+        - ./frontend/src:/app/src
+      ports:
+        - 3000:3000
+
+  cache:
+    image: redis:6.2-alpine
+    restart: always
+    ports:
+      - 6379:6379
+    command: [ "redis-server", "--protected-mode", "no" ]
+    volumes: 
+      - cache:/data
+    networks:
+      - spring
+
+  postgres-db:
+    image: postgres:15-alpine
+    restart: always
+    ports:
+      - 5432:5432
+    volumes:
+      - ./backend/db-scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_USER=root
+      - POSTGRES_DB=beapengine
+    networks:
+      - spring
+  
+  backend:
+    container_name: backend-dev
+    environment:
+        - POSTGRESQL_URL=jdbc:postgresql://postgres-db:5432/beapengine?user=root&password=root
+        - PG_CRYPTO_KEY=123
+    build:
+      context: ./backend
+    volumes:
+      - ./services/ml-service:/usr/local/tomcat/webapps/ml-service
+    ports:
+      - 8080:8080
+    networks:
+      - spring
+    depends_on:
+      - cache
+      - postgres-db
+    ulimits:
+      nofile:
+        soft: 1000
+        hard: 2000
+  
+volumes:
+  cache:
+
+networks:
+  spring:

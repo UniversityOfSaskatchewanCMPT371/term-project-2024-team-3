@@ -7,6 +7,8 @@ const PredictedDataPage = function () {
     const rollbar = useRollbar();
     rollbar.debug("Reached Predicted Data page");
 
+    // const [availableFiles, setAvailableFilesDisplay] = useState({}); // we need filetype (to know which service) and id
+
     return (
         <div>
             <Container className={styles.container}>

@@ -14,6 +14,7 @@ import com.beaplab.BeaplabEngine.service.IncorrectLoginsService;
 import com.beaplab.BeaplabEngine.service.LoginUserService;
 import com.beaplab.BeaplabEngine.service.UserService;
 import com.beaplab.BeaplabEngine.util.objectMapper.UserMapper;
+import com.rollbar.notifier.Rollbar;
 import io.swagger.annotations.ApiOperation;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -44,6 +45,7 @@ public class LoginUserController {
     
     final static Logger logger = LogManager.getLogger(LoginUserController.class.getName());
 
+    Rollbar rollbar;
     /**
      * injecting LoginUserService into this class
      */
@@ -89,6 +91,7 @@ public class LoginUserController {
         logger.info("in LoginUserController/getLoginView");
 
         ModelAndView model = new ModelAndView("login");
+        rollbar.debug("in LoginUserController/getLoginView");
         return model;
     }
 

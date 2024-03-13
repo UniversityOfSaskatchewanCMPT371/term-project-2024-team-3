@@ -1,9 +1,6 @@
 package utils;
 
-import com.beaplab.BeaplabEngine.metadata.AccessGroupDto;
-import com.beaplab.BeaplabEngine.metadata.RawDataDto;
-import com.beaplab.BeaplabEngine.metadata.RoleDto;
-import com.beaplab.BeaplabEngine.metadata.UserDto;
+import com.beaplab.BeaplabEngine.metadata.*;
 import com.beaplab.BeaplabEngine.model.AccessGroup;
 import com.beaplab.BeaplabEngine.model.RawData;
 import com.beaplab.BeaplabEngine.model.Role;
@@ -15,7 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.sql.Timestamp;
 import java.util.*;
 
-public class UserMockFactory {
+public class MockFactory {
     public static RawData mockRawData(RawData.dataType watchType) {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, 2023);
@@ -154,31 +151,6 @@ public class UserMockFactory {
         );
     }
 
-    public static UserDto mockUserDto(
-            String firstName,
-            String lastName,
-            String userName
-    ) {
-        Set<AccessGroupDto> accessGroups = new HashSet<>();
-        accessGroups.add(mockAccessGroupDto());
-
-        Set<RoleDto> roles = new HashSet<>();
-        roles.add(mockRoleDto());
-
-        Set<RawDataDto> rawData = new HashSet<>();
-        rawData.add(mockRawDataDto(RawData.dataType.FitBit));
-        return new UserDto(
-                1L,
-                firstName,
-                lastName,
-                accessGroups,
-                roles,
-                rawData,
-                userName,
-                "password123"
-        );
-    }
-
     public static List<GrantedAuthority> mockAuthorities(Set<Role> roles) {
         List<GrantedAuthority> authorities = new ArrayList<>();
         for (Role role : roles) {
@@ -202,5 +174,20 @@ public class UserMockFactory {
                         accountNonLocked,
                         mockAuthorities(user.getRoleIDs())
                 );
+    }
+
+    public static IncorrectLoginsDto mockIncorrectLoginsDto(
+            UserDto userDto,
+            boolean isLocked,
+            int attemptsIncorrect,
+            Timestamp lockedDate
+    ) {
+        return new IncorrectLoginsDto(
+                1L,
+                userDto,
+                isLocked,
+                attemptsIncorrect,
+                lockedDate
+        );
     }
 }

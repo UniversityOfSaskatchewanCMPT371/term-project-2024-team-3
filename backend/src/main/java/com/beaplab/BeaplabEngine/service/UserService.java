@@ -6,6 +6,7 @@ import com.beaplab.BeaplabEngine.metadata.UserDto;
 import com.beaplab.BeaplabEngine.model.Role;
 import com.beaplab.BeaplabEngine.model.User;
 import com.beaplab.BeaplabEngine.repository.UserDao;
+import com.beaplab.BeaplabEngine.util.Util;
 import com.beaplab.BeaplabEngine.util.error.UserAlreadyExistException;
 import com.beaplab.BeaplabEngine.util.objectMapper.UserMapper;
 import org.apache.log4j.LogManager;
@@ -39,6 +40,9 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     private IncorrectLoginsService incorrectLoginsService;
+
+    @Autowired
+    private Util util;
 
     /**
      * retrieving a list of type User
@@ -114,7 +118,6 @@ public class UserService implements UserDetailsService {
 
         Long uuid = Long.parseLong(id);
         User user = userDao.get(uuid);
-        System.out.println(user != null);
         if(user != null)
             return userMapper.model2Dto(user, new UserDto());
         return null;
@@ -155,7 +158,7 @@ public class UserService implements UserDetailsService {
             if (incorrectLoginsDto != null) {
                 if (incorrectLoginsDto.getLocked()) { // account is locked
                     Date currentDate = new Date();
-                    long difference = dateDifference(incorrectLoginsDto.getLockedDate(), currentDate);
+                    long difference = util.dateDifference(incorrectLoginsDto.getLockedDate(), currentDate);
                     if (difference > 23) { // unlock the account
                         incorrectLoginsDto.setLocked(false);
                         incorrectLoginsDto.setIncorrectAttempts(0);
@@ -203,7 +206,7 @@ public class UserService implements UserDetailsService {
 
                     if (incorrectLoginsDto.getLocked()) { // account is locked
                         Date currentDate = new Date();
-                        long difference = dateDifference(incorrectLoginsDto.getLockedDate(), currentDate);
+                        long difference = util.dateDifference(incorrectLoginsDto.getLockedDate(), currentDate);
 
                         if (difference > 23) { // unlock the account
                             incorrectLoginsDto.setLocked(false);
@@ -332,14 +335,6 @@ public class UserService implements UserDetailsService {
             authorities.add(new SimpleGrantedAuthority(role.getRoleName()));
         }
         return authorities;
-    }
-
-
-    private long dateDifference(Date start, Date end) {
-
-        long diff = end.getTime() - start.getTime();
-        long diffHours = diff / (60 * 60 * 1000);
-        return diffHours;
     }
 
 }

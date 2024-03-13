@@ -154,7 +154,7 @@
   
   .form-box {
     width: 525px;
-    height: 380px;
+    height: 480px;
     border: 1px solid #ddd;
     padding: 40px;
     padding-top: 32px;
@@ -243,11 +243,13 @@
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    justify-content: top;
+    margin-top: 30px;
+    align-items: left;
+    margin-left: 70px;
   }
   
-  .cta-box {
+  /* .cta-box {
     display: flex;
     background-color: #FF7572;
     width: 380px;
@@ -258,7 +260,7 @@
     margin-bottom: 50px;
     margin-left: 75px;
   }
-  
+   */
   .tabs {
     display: flex;
     width: 305px;
@@ -320,7 +322,7 @@
     color: white;
   }
   
-  .cta-box {
+  /* .cta-box {
   display: grid;
   flex-direction: column;
   justify-content: center;
@@ -332,7 +334,7 @@
   height: 67px;
   margin-bottom: 50px;
   margin-left: 75px;
-}
+} */
 
 .cta-text {
   color: white;
@@ -370,3 +372,87 @@
   font-weight: 500;
 }
 
+.right-section .research-msg {
+  margin-left: 74px;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.right-section .helpful-msg {
+  font-weight: bold;
+  font-size: 19px;
+}
+
+
+.right-section .text-slider .fwd-bck-container {
+  display: flex;
+  margin-left: auto;
+  padding-right: 80px;
+}
+
+.right-section .text-slider .fwd-bck-container .button-img{
+  width: 50px;
+  height: 50px;
+  border: none;
+  border-style: none;
+  background: none;
+  padding: 0;
+}
+
+.right-section .text-slider .fwd-bck-container .arrow-img{
+  width: 40px;
+  height: 40px;
+}
+
+.text-container{
+  /* background-color: blue; */
+  margin-right: auto;
+}
+
+.sign-in-button{
+    margin-top: 100px;
+}
+
+.first-input-field{
+  margin-top: 40px;
+} 
+
+.cta-box {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #ddd;
+  background-color: #FF7572;
+  border-radius: 5px;
+  width: 640px;
+  height: 67px;
+  margin-bottom: 50px;
+  margin-left: 75px;
+  padding: 20px 10px;
+}
+
+.password-mismatch-message{
+  border: 1px solid #ff0000; /* Red border */
+  background-color: #ffe6e6; /* Light red background */
+  color: #ff0000; /* Red text */
+  padding: 8px 12px; /* Padding for text */
+  margin-top: 4px; /* Spacing from the input field */
+  font-size: 14px; /* Font size */
+  font-weight: bold; /* Bold text */
+}
+
+.confirm-input{
+  margin-left: 10px;
+}
+
+.checkbox-error-message{
+  border: 1px solid #ff0000; /* Red border */
+  background-color: #ffe6e6; /* Light red background */
+  color: #ff0000; /* Red text */
+  padding: 8px 12px; /* Padding for text */
+  margin-top: 4px; /* Spacing from the input field */
+  font-size: 14px; /* Font size */
+  font-weight: bold; /* Bold text */
+  font-style: italic;
+}

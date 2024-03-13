@@ -1,4 +1,4 @@
-/* Reset and global styles */
+  /* Reset and global styles */
 * {
   box-sizing: border-box;
 }
@@ -222,7 +222,7 @@ input[type="password"] {
 }
 
 .username-field {
-  margin:0;
+  margin:1110;
 }
 
 /* Chrome, Firefox, Opera, Safari 10.1+ */
@@ -261,6 +261,46 @@ p {
   font-weight: 400;
 }
 
+.right-section .research-msg {
+  margin-left: 74px;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.right-section .helpful-msg {
+  font-weight: bold;
+  font-size: 19px;
+}
+
+.right-section .text-slider .fwd-bck-container {
+  display: flex;
+  margin-left: auto;
+  padding-right: 80px;
+}
+
+.right-section .text-slider .fwd-bck-container .button-img{
+  width: 50px;
+  height: 50px;
+  border: none;
+  border-style: none;
+  background: none;
+  padding: 0;
+}
+
+.right-section .text-slider .fwd-bck-container .arrow-img{
+  width: 40px;
+  height: 40px;
+}
+
+.text-container{
+  /* background-color: blue; */
+  margin-right: auto;
+}
+
+.sign-up-button{
+    margin-top: 100px;
+}
+
 .cta-text {
   color: white;
 }
@@ -269,20 +309,10 @@ p {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.cta-box {
-  display: flex;
-  background-color: #FF7572;
-  width: 380px;
-  height: 67px;
-  padding: 20px 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  margin-bottom: 50px;
-  margin-left: 75px;
+  justify-content: top;
+  margin-top: 30px;
+  align-items: left;
+  margin-left: 70px;
 }
 
 .tabs {
@@ -345,6 +375,21 @@ p {
 }
 
 .cta-box {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #ddd;
+  background-color: #FF7572;
+  border-radius: 5px;
+  width: 640px;
+  height: 67px;
+  margin-bottom: 50px;
+  margin-left: 75px;
+  padding: 20px 10px;
+}
+
+/* .cta-box {
   display: grid;
   flex-direction: column;
   justify-content: center;
@@ -356,7 +401,7 @@ p {
   height: 67px;
   margin-bottom: 50px;
   margin-left: 75px;
-}
+} */
 
 .cta-text {
   color: white;
@@ -369,3 +414,6 @@ p {
   font-weight: 500;
 }
 
+.first-input-field{
+  margin-top: 55px;
+} 

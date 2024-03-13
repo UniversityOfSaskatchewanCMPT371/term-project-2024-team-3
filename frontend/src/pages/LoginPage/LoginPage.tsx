@@ -3,6 +3,8 @@ import { GoogleLogin } from "react-google-login";
 import useLogin from "shared/hooks/useLogin";
 import { useNavigate } from "react-router-dom";
 import styles from "./LoginPage.module.css";
+import leftArrow from "../../assets/left-arrow.png";
+import rightArrow from "../../assets/right-arrow.png";
 
 const CLIENT_ID = "827529413912-celsdkun_YOUR_API_KEY_lsn28.apps.googleusercontent.com";
 
@@ -28,10 +30,14 @@ function LoginPage() {
     };
 
     const handleNext = () => {
+        // Ensure texts array is not empty
+        console.assert(texts.length > 0, "texts array should not be empty");
         setCurrentIndex((currentIndex + 1) % texts.length);
     };
 
     const handlePrevious = () => {
+        // Ensure texts array is not empty
+        console.assert(texts.length > 0, "texts array should not be empty");
         setCurrentIndex((currentIndex - 1 + texts.length) % texts.length);
     };
 
@@ -52,6 +58,14 @@ function LoginPage() {
     // Add this function
     const handleSubmit = async (event: FormEvent) => {
         event.preventDefault();
+        console.assert(
+            typeof username === "string" && username !== "",
+            "username should be a non-null string",
+        );
+        console.assert(
+            typeof password === "string" && password !== "",
+            "password should be a non-null string",
+        );
         await handleLogin(username, password);
     };
 
@@ -99,7 +113,7 @@ function LoginPage() {
                                 Personal User
                             </button>
                         </div>
-                        <div className={styles["input-field"]}>
+                        <div className={`${styles["input-field"]} ${styles["first-input-field"]}`}>
                             <label htmlFor="username">Username</label>
                             <input
                                 id="username"
@@ -122,6 +136,7 @@ function LoginPage() {
                         <div className={styles["button-container"]}>
                             <p className={styles["forgot-password"]}>Forgot password?</p>
                             <button
+                                data-testid="submitButton"
                                 type="submit"
                                 className={`${styles.button} ${styles["sign-in"]}`}
                             >
@@ -135,15 +150,29 @@ function LoginPage() {
                         <span className={styles.beap}>BEAP</span>
                         <span className={styles.engine}>ENGINE</span>
                     </h1>
-                    <p>JOIN OUR RESEARCH PROJECT</p>
+                    <p className={styles["research-msg"]}>JOIN OUR RESEARCH PROJECT</p>
                     <div className={styles["text-slider"]}>
-                        <button type="button" onClick={handlePrevious}>
-                            ←
-                        </button>
-                        <p>{texts[currentIndex]}</p>
-                        <button type="button" onClick={handleNext}>
-                            →
-                        </button>
+                        <p data-testid="textZone" className={styles["helpful-msg"]}>
+                            {texts[currentIndex]}
+                        </p>
+                        <div className={styles["fwd-bck-container"]}>
+                            <button
+                                data-testid="previousButton"
+                                type="button"
+                                className={styles["button-img"]}
+                                onClick={handlePrevious}
+                            >
+                                <img className={styles["arrow-img"]} src={leftArrow} alt="arrow" />
+                            </button>
+                            <button
+                                data-testid="forwardButton"
+                                type="button"
+                                className={styles["button-img"]}
+                                onClick={handleNext}
+                            >
+                                <img className={styles["arrow-img"]} src={rightArrow} alt="arrow" />
+                            </button>
+                        </div>
                     </div>
                     <div className={styles["cta-box"]}>
                         <div className={styles["text-container"]}>
@@ -154,7 +183,7 @@ function LoginPage() {
                         </div>
                         <button
                             type="button"
-                            className={`${styles.button} ${styles["sign-up"]}`}
+                            className={`${styles.button} ${styles["sign-up"]} ${styles["sign-up-button"]}`}
                             onClick={handleSignUpClick}
                         >
                             Sign Up

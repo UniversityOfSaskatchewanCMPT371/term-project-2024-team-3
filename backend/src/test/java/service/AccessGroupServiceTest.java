@@ -131,7 +131,7 @@ public class AccessGroupServiceTest {
 
     /**
      * Precondition : Access Group exists in the database
-     * Post-condition: Returns AccessGroupDto object
+     * Post-condition: Returns AccessGroupDto object based on its id
      */
     @Test
     public void testGet(){

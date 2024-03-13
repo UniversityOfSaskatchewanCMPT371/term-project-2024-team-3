@@ -50,6 +50,10 @@ public class UserServiceTest {
     }
 
     @Test
+    /*
+     * Preconditions: User list is not empty
+     * Post-conditions: Returns a list of UserDto objects
+     */
     public void testList() {
         List<User> users = new ArrayList<>();
 
@@ -78,6 +82,10 @@ public class UserServiceTest {
     }
 
     @Test
+    /*
+     * Preconditions: User list is empty
+     * Post-conditions: Returns an empty list
+     */
     public void testListEmpty() {
         List<User> users = new ArrayList<>();
         when(userDao.list()).thenReturn(users);
@@ -88,6 +96,10 @@ public class UserServiceTest {
     }
 
     @Test
+    /*
+     * Preconditions: User does not exist in the database
+     * Post-conditions: New user is saved successfully
+     */
     public void testSave() throws UserAlreadyExistException {
         User user = mockUser();
         UserDto userDto = mockUserDto();
@@ -108,6 +120,10 @@ public class UserServiceTest {
     }
 
     @Test
+    /*
+     * Preconditions: User already exists in the database
+     * Post-conditions: Returns error message indicating user already exists
+     */
     public void testSaveUserAlreadyExists() throws UserAlreadyExistException {
         User user = mockUser();
         UserDto userDto = mockUserDto();
@@ -127,6 +143,10 @@ public class UserServiceTest {
     }
 
     @Test
+    /*
+     * Preconditions: None
+     * Post-conditions: User details are updated
+     */
     public void testUpdate() {
         UserDto userDto = mockUserDto();
 
@@ -135,6 +155,10 @@ public class UserServiceTest {
     }
 
     @Test
+    /*
+     * Preconditions: User exists in the database
+     * Post-conditions: Returns UserDto object
+     */
     public void testGet() {
         User user = mockUser();
         UserDto expected = mockUserDto();
@@ -148,6 +172,10 @@ public class UserServiceTest {
     }
 
     @Test
+    /*
+     * Preconditions: User does not exist in the database
+     * Post-conditions: Returns null
+     */
     public void testGetNull() {
         when(userDao.get(1L)).thenReturn(null);
 
@@ -156,6 +184,10 @@ public class UserServiceTest {
     }
 
     @Test
+    /*
+     * Preconditions: User exists in database
+     * Post-conditions: User is deleted in database
+     */
     public void testDelete() {
         String id = "1";
 
@@ -164,6 +196,10 @@ public class UserServiceTest {
     }
 
     @Test
+    /*
+     * Preconditions: User exists in the database and credentials are valid
+     * Post-conditions: Returns JSONObject indicating successful login
+     */
     public void testValidLogin() {
         User user = mockUser();
         UserDto userDto = mockUserDto();
@@ -194,6 +230,10 @@ public class UserServiceTest {
     }
 
     @Test
+    /*
+     * Preconditions: User account is locked
+     * Post-conditions: Returns JSONObject indicating account is locked
+     */
     public void testValidLoginLocked() {
         User user = mockUser();
         UserDto userDto = mockUserDto();
@@ -221,6 +261,10 @@ public class UserServiceTest {
     }
 
     @Test
+    /*
+     * Preconditions: User account is locked and unlock time has passed
+     * Post-conditions: Returns JSONObject indicating successful login and account is unlocked
+     */
     public void testValidLoginWithUnlock() {
         User user = mockUser();
         UserDto userDto = mockUserDto();
@@ -257,6 +301,10 @@ public class UserServiceTest {
     }
 
     @Test
+    /*
+     * Preconditions: Username is invalid
+     * Post-conditions: Returns JSONObject indicating invalid login attempt
+     */
     public void testInvalidLogin() {
         User user = mockUser();
         UserDto userDto = mockUserDto();
@@ -287,6 +335,10 @@ public class UserServiceTest {
     }
 
     @Test
+    /*
+     * Preconditions: Username is invalid and is the first invalid attempt
+     * Post-conditions: Returns JSONObject indicating invalid login attempt and increments incorrect attempt count
+     */
     public void testInvalidLoginFirstTime() {
         User user = mockUser();
         UserDto userDto = mockUserDto();
@@ -314,6 +366,10 @@ public class UserServiceTest {
     }
 
     @Test
+    /*
+     * Preconditions: Invalid login and user account is already locked and unlock time has not past
+     * Post-conditions: Returns JSONObject indicating account is locked
+     */
     public void testInvalidLoginLocked() {
         User user = mockUser();
         UserDto userDto = mockUserDto();
@@ -342,6 +398,10 @@ public class UserServiceTest {
     }
 
     @Test
+    /*
+     * Preconditions: User account is locked and unlock time has passed
+     * Post-conditions: Returns JSONObject indicating invalid login and account is unlocked
+     */
     public void testInvalidLoginUnlock() {
         User user = mockUser();
         UserDto userDto = mockUserDto();
@@ -380,6 +440,10 @@ public class UserServiceTest {
     }
 
     @Test
+    /*
+     * Preconditions: User credentials are invalid and user does not exist
+     * Post-conditions: Returns JSONObject indicating invalid login attempt
+     */
     public void testInvalidUsernameAndPasswordLogin() {
         User user = mockUser();
         JSONObject expected = new JSONObject();
@@ -396,6 +460,10 @@ public class UserServiceTest {
     }
 
     @Test
+    /*
+     * Preconditions: User exists in the database
+     * Post-conditions: Returns UserDto object
+     */
     public void testGetUserByUsername() {
         User user = mockUser();
         UserDto userDto = mockUserDto();
@@ -407,6 +475,10 @@ public class UserServiceTest {
     }
 
     @Test
+    /*
+     * Preconditions: User does not exist in the database
+     * Post-conditions: Returns null
+     */
     public void testGetUserByUsernameNull() {
         String username = "test";
 
@@ -417,6 +489,10 @@ public class UserServiceTest {
     }
 
     @Test
+    /*
+     * Preconditions: User exists in the database
+     * Post-conditions: Returns UserDetails object
+     */
     public void testLoadUserByUsername() {
         User user = mockUser();
         UserDetails expected = mockUserDetails(user);
@@ -428,6 +504,10 @@ public class UserServiceTest {
     }
 
     @Test
+    /*
+     * Preconditions: User does not exist in the database
+     * Post-conditions: Returns null
+     */
     public void testLoadUserByUsernameNull() {
         User user = mockUser();
 
@@ -438,6 +518,10 @@ public class UserServiceTest {
     }
 
     @Test
+    /*
+     * Preconditions: UserDto and User objects are properly mapped
+     * Post-conditions: Returns UserDetails object
+     */
     public void testLoadUserDetails() {
         UserDto userDto = mockUserDto();
         User user = mockUser();

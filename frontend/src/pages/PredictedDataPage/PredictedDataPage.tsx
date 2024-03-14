@@ -12,6 +12,7 @@ import { useRollbar } from "@rollbar/react";
 import { FileData, WatchType } from "shared/api";
 // import useGetPredictedDataList from "shared/hooks/useGetPredictedDataList";
 import moment from "moment";
+import useGetPredictedDataList from "shared/hooks/useGetPredictedDataList";
 import styles from "./PredictedDataPage.module.css";
 
 type PredictedFileWithType = FileData & { watch: WatchType; name: String; isSelected: boolean };
@@ -21,7 +22,7 @@ const PredictedDataPage = function () {
     rollbar.debug("Reached Predicted Data page");
 
     // #TODO download selected files
-    // #TODO refresh
+    // #TODO refresh predicted file list
 
     const selectedFiles: { [index: number]: PredictedFileWithType } = {};
 
@@ -46,38 +47,38 @@ const PredictedDataPage = function () {
     // #endregion
 
     // #region Predicted Files List
-    // const { uploadedFiles: fitBitFiles } = useGetPredictedDataList(WatchType.FITBIT); // mock this for testing
-    // const { uploadedFiles: appleWatchFiles } = useGetPredictedDataList(WatchType.APPLE_WATCH);
+    const { uploadedFiles: fitBitFiles } = useGetPredictedDataList(WatchType.FITBIT);
+    const { uploadedFiles: appleWatchFiles } = useGetPredictedDataList(WatchType.APPLE_WATCH);
 
-    const fitBitFiles = [
-        {
-            id: 123,
-            data: new Uint8Array([1, 2]),
-            predictionType: null,
-            dateTime: new Date(),
-        },
-        {
-            id: 456,
-            data: new Uint8Array([5, 6]),
-            predictionType: null,
-            dateTime: new Date(),
-        },
-    ];
+    // const fitBitFiles = [ //mock data
+    //     {
+    //         id: 123,
+    //         data: new Uint8Array([1, 2]),
+    //         predictionType: null,
+    //         dateTime: new Date(),
+    //     },
+    //     {
+    //         id: 456,
+    //         data: new Uint8Array([5, 6]),
+    //         predictionType: null,
+    //         dateTime: new Date(),
+    //     },
+    // ];
 
-    const appleWatchFiles = [
-        {
-            id: 123,
-            data: new Uint8Array([1, 2]),
-            predictionType: null,
-            dateTime: new Date(),
-        },
-        {
-            id: 456,
-            data: new Uint8Array([5, 6]),
-            predictionType: null,
-            dateTime: new Date(),
-        },
-    ];
+    // const appleWatchFiles = [
+    //     {
+    //         id: 123,
+    //         data: new Uint8Array([1, 2]),
+    //         predictionType: null,
+    //         dateTime: new Date(),
+    //     },
+    //     {
+    //         id: 456,
+    //         data: new Uint8Array([5, 6]),
+    //         predictionType: null,
+    //         dateTime: new Date(),
+    //     },
+    // ];
 
     const appleWatchPredictedFiles: Array<PredictedFileWithType> =
         appleWatchFiles?.length !== 0

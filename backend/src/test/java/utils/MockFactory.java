@@ -2,6 +2,7 @@ package utils;
 
 import com.beaplab.BeaplabEngine.metadata.*;
 import com.beaplab.BeaplabEngine.model.AccessGroup;
+import com.beaplab.BeaplabEngine.model.LoginUser;
 import com.beaplab.BeaplabEngine.model.RawData;
 import com.beaplab.BeaplabEngine.model.Role;
 import com.beaplab.BeaplabEngine.model.User;
@@ -189,5 +190,9 @@ public class MockFactory {
                 attemptsIncorrect,
                 lockedDate
         );
+    }
+
+    public static LoginUser mockLoginUser(User user, Date date, String passwordToken){
+        return new LoginUser(user, date, passwordToken);
     }
 }

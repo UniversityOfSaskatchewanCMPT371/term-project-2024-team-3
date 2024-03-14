@@ -69,7 +69,7 @@ describe("API Tests", () => {
         const firstName = "Test";
         const lastName = "User";
 
-        await expect(signUp(username, password, firstName, lastName)).resolves.not.toThrow();
+        await expect(signUp(firstName, lastName, username, password)).resolves.not.toThrow();
         expect(api.post).toHaveBeenCalledWith(
             "/user",
             {
@@ -97,7 +97,7 @@ describe("API Tests", () => {
         const firstName = "Test";
         const lastName = "User";
 
-        await expect(signUp(username, password, firstName, lastName)).rejects.toThrow(
+        await expect(signUp(firstName, lastName, username, password)).rejects.toThrow(
             "Signup failed",
         );
         expect(api.post).toHaveBeenCalledWith(

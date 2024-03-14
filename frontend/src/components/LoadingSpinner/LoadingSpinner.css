@@ -1,0 +1,25 @@
+.spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* This will cover the full viewport height */
+  }
+  
+  @media (max-width: 600px) {
+    .spinner div {
+      transform: scale(0.5);
+    }
+  }
+  
+  @media (min-width: 601px) and (max-width: 1024px) {
+    .spinner div {
+      transform: scale(0.75);
+    }
+  }
+  
+  @media (min-width: 1025px) {
+    .spinner div {
+      transform: scale(1);
+    }
+  }
+  

@@ -1,7 +1,8 @@
 import React from "react";
-import { render, fireEvent } from "@testing-library/react";
+import { fireEvent } from "@testing-library/react";
 import * as useSignUp from "shared/hooks/useSignup";
 import { BrowserRouter as Router } from "react-router-dom";
+import { renderWithProvider } from "shared/util/tests/render";
 import SignUpPage from "./SIgnUpPage";
 
 const mockHandleSignup = jest.fn();
@@ -15,7 +16,7 @@ describe("SignUpPage component", () => {
     // Test rendering and initial state
     test("renders login form with initial state", () => {
         const { getAllByText, getByTestId, getByLabelText, getByText, getByPlaceholderText } =
-            render(
+            renderWithProvider(
                 <Router>
                     <SignUpPage />
                 </Router>,
@@ -48,7 +49,7 @@ describe("SignUpPage component", () => {
 
     // Test user interactions and state changes
     test("allows user to type in first name, last name, username and password fields", () => {
-        const { getByPlaceholderText } = render(
+        const { getByPlaceholderText } = renderWithProvider(
             <Router>
                 <SignUpPage />
             </Router>,
@@ -71,13 +72,13 @@ describe("SignUpPage component", () => {
         expect(lastNameInput).toHaveValue("testlastname");
     });
 
-    // Test form submission
+    // Test form submission with passing conditions
     test("test that button submits form with first name, last name, username and password on click", () => {
         // Mock handleSignup function
         const signupSpy = jest.spyOn(useSignUp, "default");
         signupSpy.mockReturnValue(signupMock);
 
-        const { getByTestId, getByPlaceholderText } = render(
+        const { getByTestId, getByPlaceholderText } = renderWithProvider(
             <Router>
                 <SignUpPage />
             </Router>,
@@ -117,9 +118,115 @@ describe("SignUpPage component", () => {
         );
     });
 
+    // Test form submission with privacy policy unaccepted
+    test("test that form is not submitted if privacy policy is not agreed to", () => {
+        // Mock handleSignup function
+        const signupSpy = jest.spyOn(useSignUp, "default");
+        signupSpy.mockReturnValue(signupMock);
+
+        const { getByText, getByTestId, getByPlaceholderText } = renderWithProvider(
+            <Router>
+                <SignUpPage />
+            </Router>,
+        );
+        const usernameInput = getByPlaceholderText("Enter your username");
+        const passwordInput = getByPlaceholderText("Enter your password");
+        const passwordConfirmationInput = getByPlaceholderText("Confirm your password");
+        const firstNameInput = getByPlaceholderText("Enter your first name");
+        const lastNameInput = getByPlaceholderText("Enter your last name");
+
+        // Simulate user input in username and password fields
+        fireEvent.change(usernameInput, { target: { value: "testuser" } });
+        fireEvent.change(passwordInput, { target: { value: "testpassword" } });
+        fireEvent.change(passwordConfirmationInput, { target: { value: "testpassword" } });
+        fireEvent.change(firstNameInput, { target: { value: "testfirstname" } });
+        fireEvent.change(lastNameInput, { target: { value: "testlastname" } });
+
+        // Simulate form submission by clicking the submit button
+        const submitButton = getByTestId("submitButton");
+        fireEvent.click(submitButton);
+
+        // Ensure that the unchecked privacy policy error appears
+        expect(getByText("Please accept the privacy policy.")).toBeInTheDocument();
+    });
+
+    // Test form submission with unmatching password confirmation
+    test("test that form info is not submitted if passwords don't match", () => {
+        // Mock handleSignup function
+        const signupSpy = jest.spyOn(useSignUp, "default");
+        signupSpy.mockReturnValue(signupMock);
+
+        const { getByText, getByTestId, getByPlaceholderText } = renderWithProvider(
+            <Router>
+                <SignUpPage />
+            </Router>,
+        );
+        const usernameInput = getByPlaceholderText("Enter your username");
+        const passwordInput = getByPlaceholderText("Enter your password");
+        const passwordConfirmationInput = getByPlaceholderText("Confirm your password");
+        const firstNameInput = getByPlaceholderText("Enter your first name");
+        const lastNameInput = getByPlaceholderText("Enter your last name");
+        const policyAgreementCheckButton = getByTestId("policyAgreementCheck");
+
+        // Simulate user input in username and password fields
+        fireEvent.change(usernameInput, { target: { value: "testuser" } });
+        fireEvent.change(passwordInput, { target: { value: "testpassword" } });
+        fireEvent.change(passwordConfirmationInput, { target: { value: "unmatchingpassword" } });
+        fireEvent.change(firstNameInput, { target: { value: "testfirstname" } });
+        fireEvent.change(lastNameInput, { target: { value: "testlastname" } });
+        fireEvent.click(policyAgreementCheckButton);
+
+        // Simulate form submission by clicking the submit button
+        const submitButton = getByTestId("submitButton");
+        fireEvent.click(submitButton);
+
+        // Ensure that the unmatching password error div appears
+        expect(getByText("Passwords do not match")).toBeInTheDocument();
+    });
+
+    // Test form submission with unfilled fields
+    test("test that form does not work if an element is missing", () => {
+        // Mock handleSignup function
+        const signupSpy = jest.spyOn(useSignUp, "default");
+        signupSpy.mockReturnValue(signupMock);
+
+        const { getByTestId, getByPlaceholderText } = renderWithProvider(
+            <Router>
+                <SignUpPage />
+            </Router>,
+        );
+        const usernameInput = getByPlaceholderText("Enter your username");
+        const passwordInput = getByPlaceholderText("Enter your password");
+        const firstNameInput = getByPlaceholderText("Enter your first name");
+        const lastNameInput = getByPlaceholderText("Enter your last name");
+        const policyAgreementCheckButton = getByTestId("policyAgreementCheck");
+
+        // Simulate user input in username and password fields
+        fireEvent.change(usernameInput, { target: { value: "testuser" } });
+        fireEvent.change(passwordInput, { target: { value: "testpassword" } });
+        fireEvent.change(firstNameInput, { target: { value: "testfirstname" } });
+        fireEvent.change(lastNameInput, { target: { value: "testlastname" } });
+        fireEvent.click(policyAgreementCheckButton);
+
+        // Simulate form submission by clicking the submit button
+        const submitButton = getByTestId("submitButton");
+        fireEvent.click(submitButton);
+
+        // Ensure that the handleLogin function is called with the correct arguments
+        expect(mockHandleSignup).not.toHaveBeenCalledWith(
+            "testfirstname",
+            "testlastname",
+            "testuser",
+            "testpassword",
+        );
+    });
+
     // Test rotator belt for text display
     it("test that the rotator buttons change the text on the screen", () => {
-        const { getByTestId } = render(
+        const signupSpy = jest.spyOn(useSignUp, "default");
+        signupSpy.mockReturnValue(signupMock);
+
+        const { getByTestId } = renderWithProvider(
             <Router>
                 <SignUpPage />
             </Router>,
@@ -151,3 +258,5 @@ describe("SignUpPage component", () => {
         expect(updatedTextContent3).toEqual(updatedTextContent);
     });
 });
+
+// Please fill out this field.

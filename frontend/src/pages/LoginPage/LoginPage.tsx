@@ -2,6 +2,7 @@ import React, { useState, FormEvent } from "react";
 import { GoogleLogin } from "react-google-login";
 import useLogin from "shared/hooks/useLogin";
 import { useNavigate } from "react-router-dom";
+import { useRollbar } from "@rollbar/react";
 import styles from "./LoginPage.module.css";
 import leftArrow from "../../assets/left-arrow.png";
 import rightArrow from "../../assets/right-arrow.png";
@@ -17,6 +18,9 @@ const texts = [
 ];
 
 function LoginPage() {
+    const rollbar = useRollbar();
+    rollbar.debug("Reached Login page");
+
     const [userType, setUserType] = useState("researcher");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -32,12 +36,18 @@ function LoginPage() {
     const handleNext = () => {
         // Ensure texts array is not empty
         console.assert(texts.length > 0, "texts array should not be empty");
+        if (!(texts.length > 0)) {
+            rollbar.error("Assertion failed: text display array is empty");
+        }
         setCurrentIndex((currentIndex + 1) % texts.length);
     };
 
     const handlePrevious = () => {
         // Ensure texts array is not empty
         console.assert(texts.length > 0, "texts array should not be empty");
+        if (!(texts.length > 0)) {
+            rollbar.error("Assertion failed: text display array is empty");
+        }
         setCurrentIndex((currentIndex - 1 + texts.length) % texts.length);
     };
 
@@ -53,6 +63,7 @@ function LoginPage() {
     // Error Handler
     const responseGoogleError = (response: any) => {
         console.error(response);
+        rollbar.error(response);
     };
 
     // Add this function
@@ -66,6 +77,13 @@ function LoginPage() {
             typeof password === "string" && password !== "",
             "password should be a non-null string",
         );
+        // Log to Rollbar if the assertion fails
+        if (typeof username !== "string" || username === "") {
+            rollbar.error("Assertion failed: username should be a non-null string");
+        }
+        if (typeof password !== "string" || password === "") {
+            rollbar.error("Assertion failed: password should be a non-null string");
+        }
         await handleLogin(username, password);
     };
 
@@ -182,6 +200,7 @@ function LoginPage() {
                             <p className={styles["cta-text"]}>Get started for free</p>
                         </div>
                         <button
+                            data-testid="signupNavigate"
                             type="button"
                             className={`${styles.button} ${styles["sign-up"]} ${styles["sign-up-button"]}`}
                             onClick={handleSignUpClick}

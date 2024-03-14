@@ -1,7 +1,8 @@
 import React from "react";
-import { render, fireEvent } from "@testing-library/react";
+import { fireEvent } from "@testing-library/react";
 import * as useLogin from "shared/hooks/useLogin";
 import { BrowserRouter as Router } from "react-router-dom";
+import { renderWithProvider } from "shared/util/tests/render";
 import LoginPage from "./LoginPage";
 
 const mockHandleLogin = jest.fn();
@@ -14,11 +15,12 @@ const loginMock = {
 describe("LoginPage component", () => {
     // Test rendering and initial state
     test("renders login form with initial state", () => {
-        const { getAllByText, getByLabelText, getByText, getByPlaceholderText } = render(
-            <Router>
-                <LoginPage />
-            </Router>,
-        );
+        const { getAllByText, getByLabelText, getByText, getByPlaceholderText } =
+            renderWithProvider(
+                <Router>
+                    <LoginPage />
+                </Router>,
+            );
 
         // Ensure necessary elements are present
         expect(getByLabelText("Username")).toBeInTheDocument();
@@ -41,7 +43,7 @@ describe("LoginPage component", () => {
 
     // Test user interactions and state changes
     test("allows user to type in username and password fields", () => {
-        const { getByPlaceholderText } = render(
+        const { getByPlaceholderText } = renderWithProvider(
             <Router>
                 <LoginPage />
             </Router>,
@@ -65,7 +67,7 @@ describe("LoginPage component", () => {
 
         loginSpy.mockReturnValue(loginMock);
 
-        const { getByTestId, getByPlaceholderText } = render(
+        const { getByTestId, getByPlaceholderText } = renderWithProvider(
             <Router>
                 <LoginPage />
             </Router>,
@@ -110,7 +112,7 @@ describe("LoginPage component", () => {
 
         loginSpy.mockReturnValue(loginMock);
 
-        const { getByTestId } = render(
+        const { getByTestId } = renderWithProvider(
             <Router>
                 <LoginPage />
             </Router>,

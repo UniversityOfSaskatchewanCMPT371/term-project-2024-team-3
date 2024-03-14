@@ -2,6 +2,7 @@ import React, { useState, FormEvent } from "react";
 import { GoogleLogin } from "react-google-login";
 import useSignup from "shared/hooks/useSignup";
 import { useNavigate } from "react-router-dom";
+import { useRollbar } from "@rollbar/react";
 import styles from "./SignUpPage.module.css";
 import leftArrow from "../../assets/left-arrow.png";
 import rightArrow from "../../assets/right-arrow.png";
@@ -17,6 +18,9 @@ const texts = [
 ];
 
 function SignUpPage() {
+    const rollbar = useRollbar();
+    rollbar.debug("Reached Signup page");
+
     const [userType, setUserType] = useState("researcher");
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
@@ -39,10 +43,20 @@ function SignUpPage() {
         navigate("/login");
     };
     const handleNext = () => {
+        // Ensure texts array is not empty
+        console.assert(texts.length > 0, "texts array should not be empty");
+        if (!(texts.length > 0)) {
+            rollbar.error("Assertion failed: text display array is empty");
+        }
         setCurrentIndex((currentIndex + 1) % texts.length);
     };
 
     const handlePrevious = () => {
+        // Ensure texts array is not empty
+        console.assert(texts.length > 0, "texts array should not be empty");
+        if (!(texts.length > 0)) {
+            rollbar.error("Assertion failed: text display array is empty");
+        }
         setCurrentIndex((currentIndex - 1 + texts.length) % texts.length);
     };
 
@@ -58,22 +72,42 @@ function SignUpPage() {
     // Error Handler
     const responseGoogleError = (response: any) => {
         console.error(response);
+        rollbar.error(response);
     };
 
     // Add this function
     const handleSubmit = async (event: FormEvent) => {
         event.preventDefault();
         setFormSubmitAttempted(true);
+        console.assert(typeof username === "string", "username should be a non-null string");
+        console.assert(typeof firstName === "string", "first name should be a non-null string");
+        console.assert(typeof lastName === "string", "last name should be a non-null string");
+        console.assert(typeof password === "string", "password should be a non-null string");
+        // Log to Rollbar if any of the assertion fails
+        if (typeof username !== "string") {
+            rollbar.error("Assertion failed: username should be a non-null string");
+        }
+        if (typeof firstName !== "string") {
+            rollbar.error("Assertion failed: first name should be a non-null string");
+        }
+        if (typeof lastName !== "string") {
+            rollbar.error("Assertion failed: last name should be a non-null string");
+        }
+        if (typeof password !== "string") {
+            rollbar.error("Assertion failed: password should be a non-null string");
+        }
         // Check if password and password confirmation match
         if (password !== passwordConfirmation) {
             // Show an error message or handle the validation as per your UI/UX requirements
-            console.error("Password and password confirmation do not match!");
+            // console.error("Password and password confirmation do not match!");
+            rollbar.error("Password and password confirmation do not match!");
             return;
         }
         // check if the user has accepted the privacy policy
         if (!policyChecked) {
             // send an error if they haven't
-            console.error("Please accept the privacy policy before proceeding!");
+            // console.error("Please accept the privacy policy before proceeding!");
+            rollbar.error("Please accept the privacy policy before proceeding!");
             return;
         }
 

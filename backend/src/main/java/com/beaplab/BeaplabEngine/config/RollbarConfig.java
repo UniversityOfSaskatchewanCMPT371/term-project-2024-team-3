@@ -4,15 +4,23 @@ import static com.rollbar.notifier.config.ConfigBuilder.withAccessToken;
 import com.rollbar.notifier.Rollbar;
 import com.rollbar.notifier.config.Config;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
+
+@Configuration
+@ComponentScan("com.beaplab.BeaplabEngine")
+@PropertySource("classpath:rollbar.properties")
 public class RollbarConfig {
 
+  @Autowired
+  Environment environment;
 
   public Rollbar rollbar() {
-
-    // Your ACCESS TOKEN is: e83a48370766458c8f32aa8089ba6352
-    // Make sure to keep this secure
-    Config config = withAccessToken("e83a48370766458c8f32aa8089ba6352")
-    .environment("qa")
+    Config config = withAccessToken(environment.getProperty("access.token"))
+    .environment("backend")
     .codeVersion("1.0.0")
     .build();
 

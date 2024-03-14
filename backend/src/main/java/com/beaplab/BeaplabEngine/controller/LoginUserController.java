@@ -128,7 +128,7 @@ public class LoginUserController {
 
         if (!usersSessions.isEmpty()){
             logger.info("A valid session exists for username: " + username);
-            rollbar.info("A valid session exists for username: " + username)
+            rollbar.info("A valid session exists for username: " + username);
             Authentication authToken = (Authentication) request.getSession(false).getAttribute("token");
             logger.info("auth: " + authToken);
             rollbar.info("auth: " + authToken);

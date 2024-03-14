@@ -7,7 +7,6 @@ import SignUpPage from "pages/SignUpPage/SIgnUpPage";
 import rollbarConfig from "shared/config/rollbar";
 import LoadingSpinner from "components/LoadingSpinner/LoadingSpinner";
 import Navbar from "./components/Navbar/Navbar";
-import LoginForm from "./pages/LoginPage/components/LoginForm";
 import Logout from "./pages/LogoutPage/Logout";
 import ProcessedDataPage from "./pages/ProcessDataPage/ProcessedDataPage";
 import PredictedDataPage from "./pages/PredictedDataPage/PredictedDataPage";

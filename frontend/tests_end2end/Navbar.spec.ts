@@ -1,10 +1,10 @@
 import { test, expect } from "@playwright/test";
-import { setupMockLogin } from "./utils";
+import { setupLogin } from "./utils";
 // import exp from "constants";
 // import { title } from "process";
 
 test("Navbar Test", async ({ page }) => {
-    await setupMockLogin(page);
+    await setupLogin(page);
     // Navigate to the website
     await page.goto("./");
 

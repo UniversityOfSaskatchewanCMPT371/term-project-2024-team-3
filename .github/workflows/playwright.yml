@@ -3,7 +3,7 @@ on:
   push:
     branches:
       - master
-  pull_request:
+      - release/*
 
 jobs:
   test:
@@ -14,21 +14,5 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
-      - name: Install dependencies
-        run: |
-          cd frontend 
-          npm install -g yarn && yarn
-      - name: Install Playwright Browsers
-        run: |
-          cd frontend 
-          yarn playwright install --with-deps
-      - name: Run Playwright tests
-        run: |
-          cd frontend 
-          yarn playwright test
-      - uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: playwright-report
-          path: playwright-report/
-          retention-days: 30
+      - name: Build and run tests
+        run: docker-compose -p beapengine-staging -f docker-compose-staging.yml up --build --abort-on-container-exit

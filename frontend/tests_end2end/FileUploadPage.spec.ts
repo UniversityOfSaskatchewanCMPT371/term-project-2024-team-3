@@ -2,10 +2,10 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 import { test, expect } from "@playwright/test";
 import { WatchType } from "shared/api";
-import { setupMockLogin, setupMockUpload } from "./utils";
+import { setupLogin, setupMockUpload } from "./utils";
 
 test("File Upload Page Test", async ({ page }) => {
-    await setupMockLogin(page);
+    await setupLogin(page);
 
     // go to File Upload Page
     await page.goto("./FileUploadPage");
@@ -38,7 +38,7 @@ test("File Upload Page Test", async ({ page }) => {
 
 test("Test Uploading Fitbit Files", async ({ page }) => {
     await setupMockUpload(page, WatchType.FITBIT);
-    await setupMockLogin(page);
+    await setupLogin(page);
 
     // go to File Upload Page
     await page.goto("./FileUploadPage");
@@ -144,7 +144,7 @@ test("Test Uploading Fitbit Files", async ({ page }) => {
 
 test("Test Uploading Applewatch Files", async ({ page }) => {
     await setupMockUpload(page, WatchType.FITBIT);
-    await setupMockLogin(page);
+    await setupLogin(page);
 
     // go to File Upload Page
     await page.goto("./FileUploadPage");

@@ -29,10 +29,20 @@ function LoginPage() {
 
     const [currentIndex, setCurrentIndex] = useState(0);
 
+    /**
+     * Handles the sign-up click event.
+     * Navigates to the sign-up page.
+     */
     const handleSignUpClick = () => {
         navigate("/signup");
     };
 
+    /**
+     * Handles the click event to navigate to the next text.
+     * Ensures that the texts array is not empty.
+     * @pre texts array must not be empty
+     * @post Advances currentIndex to the next index in the texts array.
+     */
     const handleNext = () => {
         // Ensure texts array is not empty
         console.assert(texts.length > 0, "texts array should not be empty");
@@ -42,6 +52,12 @@ function LoginPage() {
         setCurrentIndex((currentIndex + 1) % texts.length);
     };
 
+    /**
+     * Handles the click event to navigate to the previous text.
+     * Ensures that the texts array is not empty.
+     * @pre texts array must not be empty
+     * @post Decreases currentIndex to the previous index in the texts array.
+     */
     const handlePrevious = () => {
         // Ensure texts array is not empty
         console.assert(texts.length > 0, "texts array should not be empty");
@@ -51,7 +67,11 @@ function LoginPage() {
         setCurrentIndex((currentIndex - 1 + texts.length) % texts.length);
     };
 
-    // Success Handler
+    /**
+     * Success handler for Google login response.
+     * Logs user information to the console.
+     * @param response - Response object containing user profile information
+     */
     const responseGoogleSuccess = (response: any) => {
         const userInfo = {
             name: response.profileObj.name,
@@ -60,13 +80,21 @@ function LoginPage() {
         console.log(userInfo);
     };
 
-    // Error Handler
+    /**
+     * Error handler for Google login response.
+     * Logs the error response to the console and Rollbar.
+     * @param response - Error response object
+     */
     const responseGoogleError = (response: any) => {
         console.error(response);
         rollbar.error(response);
     };
 
-    // Add this function
+    /**
+     * Handles form submission for login.
+     * Validates username and password before attempting login.
+     * @param event - Form submission event
+     */
     const handleSubmit = async (event: FormEvent) => {
         event.preventDefault();
         console.assert(

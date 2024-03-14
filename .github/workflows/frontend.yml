@@ -4,6 +4,9 @@ on:
     branches:
       - master
   pull_request:
+    paths:
+      - "**/*.ts"
+      - "**/*.tsx"
 
 jobs:
   build-and-test:
@@ -26,4 +29,11 @@ jobs:
       - name: Run Unit and Integration Tests
         run: |
           cd frontend
-          yarn run test
+          yarn test --ci --json --coverage --testLocationInResults --outputFile=report.json
+      - name: Frontend code coverage
+        uses: ArtiomTr/jest-coverage-report-action@v2
+        with:
+          package-manager: yarn
+          skip-step: all
+          working-directory: ./frontend
+          custom-title: Frontend Code Coverage Report

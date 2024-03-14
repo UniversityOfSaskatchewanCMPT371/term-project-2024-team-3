@@ -5,8 +5,10 @@ import { Provider, ErrorBoundary } from "@rollbar/react";
 import ProtectedRoute from "components/Authentication/ProtectedRoute";
 import SignUpPage from "pages/SignUpPage/SIgnUpPage";
 import rollbarConfig from "shared/config/rollbar";
+import LoadingSpinner from "components/LoadingSpinner/LoadingSpinner";
 import Navbar from "./components/Navbar/Navbar";
-import Logout from "./Logout";
+import LoginForm from "./pages/LoginPage/components/LoginForm";
+import Logout from "./pages/LogoutPage/Logout";
 import ProcessedDataPage from "./pages/ProcessDataPage/ProcessedDataPage";
 import PredictedDataPage from "./pages/PredictedDataPage/PredictedDataPage";
 import FileUploadPage from "./pages/FileUploadPage/FileUploadPage";
@@ -28,7 +30,9 @@ function App(): React.ReactElement<typeof Router> {
                             <Route path="/" element={<HomePage />} />
                             <Route path="/login" element={<LoginPage />} />
                             <Route path="/logout" element={<Logout />} />
+
                             <Route path="/signup" element={<SignUpPage />} />
+                            <Route path="/loading" element={<LoadingSpinner loading />} />
                             <Route
                                 path="/ProcessedDataPage"
                                 element={

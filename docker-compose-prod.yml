@@ -26,7 +26,7 @@ services:
       - ./services/ml-service:/usr/local/tomcat/webapps/ml-service
     ports:
       - 80:80
-      - 443:8443
+      - 443:443
     networks:
       - spring
     depends_on:

@@ -4,6 +4,10 @@ on:
     branches:
       - master
   pull_request:
+    paths:
+      - "**/*.java"
+      - "**/*.properties"
+      - "**/pom.xml"
 
 jobs:
   build-and-test:
@@ -16,11 +20,19 @@ jobs:
           java-version: "11"
           distribution: "temurin"
           cache: maven
-      - name: Build backend
+      - name: Build and test backend
         run: |
           cd backend
-          mvn -B package --file pom.xml
-      - name: Run Test
+          mvn clean install
+      - name: Run Code Coverage
         run: |
           cd backend
-          mvn test
+          mvn clean test
+      - name: Backend code coverage
+        id: jacoco
+        uses: madrapps/jacoco-report@v1.6.1
+        with:
+          paths: ${{ github.workspace }}/backend/target/site/jacoco/jacoco.xml
+          token: ${{ secrets.GITHUB_TOKEN }}
+          title: Backend Code Coverage Report
+          update-comment: true

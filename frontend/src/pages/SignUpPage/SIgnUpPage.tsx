@@ -284,13 +284,6 @@ function SignUpPage() {
                                 <img className={styles["arrow-img"]} src={rightArrow} alt="arrow" />
                             </button>
                         </div>
-                        {/* <button type="button" onClick={handlePrevious}>
-                            ←
-                        </button>
-                        <p>{texts[currentIndex]}</p>
-                        <button type="button" onClick={handleNext}>
-                            →
-                        </button> */}
                     </div>
                     <div className={styles["cta-box"]}>
                         <div className={styles["text-container"]}>

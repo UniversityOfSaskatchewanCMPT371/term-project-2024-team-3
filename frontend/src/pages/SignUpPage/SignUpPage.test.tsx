@@ -3,7 +3,7 @@ import { fireEvent } from "@testing-library/react";
 import * as useSignUp from "shared/hooks/useSignup";
 import { BrowserRouter as Router } from "react-router-dom";
 import { renderWithProvider } from "shared/util/tests/render";
-import SignUpPage from "./SIgnUpPage";
+import SignUpPage from "./SignUpPage";
 
 const mockHandleSignup = jest.fn();
 const signupMock = {

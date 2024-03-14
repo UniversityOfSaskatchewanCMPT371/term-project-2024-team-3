@@ -3,7 +3,7 @@ import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Provider, ErrorBoundary } from "@rollbar/react";
 import ProtectedRoute from "components/Authentication/ProtectedRoute";
-import SignUpPage from "pages/SignUpPage/SIgnUpPage";
+import SignUpPage from "pages/SignUpPage/SignUpPage";
 import rollbarConfig from "shared/config/rollbar";
 import LoadingSpinner from "components/LoadingSpinner/LoadingSpinner";
 import Navbar from "./components/Navbar/Navbar";

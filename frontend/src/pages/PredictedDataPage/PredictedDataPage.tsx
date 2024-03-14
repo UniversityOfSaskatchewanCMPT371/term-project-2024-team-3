@@ -1,14 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import {
     Button,
+    Checkbox,
     Container,
-    FormControlLabel,
     List,
     ListItem,
     ListItemIcon,
     ListItemText,
-    Radio,
-    RadioGroup,
 } from "@mui/material";
 import { useRollbar } from "@rollbar/react";
 import { FileData, WatchType } from "shared/api";
@@ -22,6 +20,32 @@ const PredictedDataPage = function () {
     const rollbar = useRollbar();
     rollbar.debug("Reached Predicted Data page");
 
+    // #TODO download selected files
+    // #TODO refresh
+
+    const selectedFiles: { [index: number]: PredictedFileWithType } = {};
+
+    // #region Checkbox state and event handler
+    const [checked, setChecked] = useState<Array<Number>>([]);
+
+    const handleToggle = (value: number) => () => {
+        const currentIndex = checked.indexOf(value);
+        const newChecked = [...checked];
+
+        if (currentIndex === -1) {
+            newChecked.push(value);
+            selectedFiles[value].isSelected = true;
+        } else {
+            newChecked.splice(currentIndex, 1);
+            selectedFiles[value].isSelected = false;
+        }
+
+        setChecked(newChecked);
+    };
+
+    // #endregion
+
+    // #region Predicted Files List
     // const { uploadedFiles: fitBitFiles } = useGetPredictedDataList(WatchType.FITBIT); // mock this for testing
     // const { uploadedFiles: appleWatchFiles } = useGetPredictedDataList(WatchType.APPLE_WATCH);
 
@@ -83,39 +107,44 @@ const PredictedDataPage = function () {
 
     const availableFilesDisplay =
         availableFiles.length > 0 ? (
-            availableFiles.map((file) => (
-                <ListItem
-                    key={file.id.toString()}
-                    style={{ paddingTop: "0px", paddingBottom: "0px", cursor: "pointer" }}
-                    // onClick={ () => {file.isSelected = !file.isSelected} }
-                >
-                    <ListItemIcon>
-                        <RadioGroup>
-                            <FormControlLabel
-                                label="" // find out what this property is for
-                                value=""
-                                control={<Radio color="primary" />}
-                                labelPlacement="start"
-                                checked={file.isSelected}
+            availableFiles.map((file, i) => {
+                selectedFiles[i] = file;
+                return (
+                    <ListItem
+                        key={file.id.toString()}
+                        style={{ paddingTop: "0px", paddingBottom: "0px", cursor: "pointer" }}
+                        onClick={handleToggle(i)}
+                        dense
+                    >
+                        <ListItemIcon>
+                            <Checkbox
+                                edge="start"
+                                checked={checked.indexOf(i) !== -1}
+                                tabIndex={-1}
+                                disableRipple
                             />
-                        </RadioGroup>
-                    </ListItemIcon>
-                    <ListItemText primary={`${file.watch} - ${file.id}`} />
-                    {file.dateTime ? (
-                        <ListItemText
-                            primary={moment(file.dateTime).format("ddd, D MMM YYYY, hh:mm:ss A")}
-                        />
-                    ) : (
-                        ""
-                    )}
-                </ListItem>
-            ))
+                        </ListItemIcon>
+                        <ListItemText primary={`${file.watch} - ${file.id}`} />
+                        {file.dateTime ? (
+                            <ListItemText
+                                primary={moment(file.dateTime).format(
+                                    "ddd, D MMM YYYY, hh:mm:ss A",
+                                )}
+                            />
+                        ) : (
+                            ""
+                        )}
+                    </ListItem>
+                );
+            })
         ) : (
             <li className={styles.list} style={{ marginTop: "15px" }}>
                 No files
             </li>
         );
     console.log(availableFilesDisplay);
+    // #endregion
+
     return (
         <div>
             <Container className={styles.container}>

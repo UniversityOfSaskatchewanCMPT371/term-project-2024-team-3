@@ -1,118 +1,127 @@
 import React from "react";
 import { render, fireEvent } from "@testing-library/react";
-import * as useLogin from "shared/hooks/useLogin";
+import * as useSignUp from "shared/hooks/useSignup";
 import { BrowserRouter as Router } from "react-router-dom";
-import LoginPage from "./LoginPage";
+import SignUpPage from "./SIgnUpPage";
 
-const mockHandleLogin = jest.fn();
-const loginMock = {
-    handleLogin: mockHandleLogin,
+const mockHandleSignup = jest.fn();
+const signupMock = {
+    handleSignup: mockHandleSignup,
     isLoading: false,
     error: null,
 };
 
-describe("LoginPage component", () => {
+describe("SignUpPage component", () => {
     // Test rendering and initial state
     test("renders login form with initial state", () => {
-        const { getAllByText, getByLabelText, getByText, getByPlaceholderText } = render(
-            <Router>
-                <LoginPage />
-            </Router>,
-        );
+        const { getAllByText, getByTestId, getByLabelText, getByText, getByPlaceholderText } =
+            render(
+                <Router>
+                    <SignUpPage />
+                </Router>,
+            );
 
         // Ensure necessary elements are present
-        expect(getByLabelText("Username")).toBeInTheDocument();
-        expect(getByLabelText("Password")).toBeInTheDocument();
-        expect(getAllByText("Sign In")).toHaveLength(2);
-        expect(getByText("Log into your existing BEAPENGINE account")).toBeInTheDocument();
-        expect(getByText("Login with Google")).toBeInTheDocument();
+        expect(getByTestId("researcherButton")).toBeInTheDocument();
+        expect(getByTestId("personalUserButton")).toBeInTheDocument();
+        expect(getByTestId("firstName")).toBeInTheDocument();
+        expect(getByTestId("lastName")).toBeInTheDocument();
+        expect(getByTestId("userName")).toBeInTheDocument();
+        expect(getByTestId("password")).toBeInTheDocument();
+        expect(getByLabelText("Confirm")).toBeInTheDocument();
+        expect(getByTestId("policyAgreementLink")).toBeInTheDocument();
+        expect(getByTestId("policyAgreementCheck")).toBeInTheDocument();
+        expect(getAllByText("Sign Up")).toHaveLength(2);
+        expect(getByText("Log into your BEAPENGINE account")).toBeInTheDocument();
         expect(getByText("OR")).toBeInTheDocument();
-        expect(getByText("Researcher")).toBeInTheDocument();
-        expect(getByText("Personal User")).toBeInTheDocument();
+        expect(getByTestId("navigateSignIn")).toBeInTheDocument();
         expect(getByText("BEAP")).toBeInTheDocument();
         expect(getByText("ENGINE")).toBeInTheDocument();
         expect(getByText("JOIN OUR RESEARCH PROJECT")).toBeInTheDocument();
-        expect(getByText("Get started for free")).toBeInTheDocument();
 
         // Ensure form inputs are initially empty
         expect(getByPlaceholderText("Enter your username")).toHaveValue("");
         expect(getByPlaceholderText("Enter your password")).toHaveValue("");
+        expect(getByPlaceholderText("Enter your first name")).toHaveValue("");
+        expect(getByPlaceholderText("Enter your last name")).toHaveValue("");
     });
 
     // Test user interactions and state changes
-    test("allows user to type in username and password fields", () => {
+    test("allows user to type in first name, last name, username and password fields", () => {
         const { getByPlaceholderText } = render(
             <Router>
-                <LoginPage />
+                <SignUpPage />
             </Router>,
         );
         const usernameInput = getByPlaceholderText("Enter your username");
         const passwordInput = getByPlaceholderText("Enter your password");
+        const firstNameInput = getByPlaceholderText("Enter your first name");
+        const lastNameInput = getByPlaceholderText("Enter your last name");
 
         // Simulate user input in username and password fields
         fireEvent.change(usernameInput, { target: { value: "testuser" } });
         fireEvent.change(passwordInput, { target: { value: "testpassword" } });
+        fireEvent.change(firstNameInput, { target: { value: "testfirstname" } });
+        fireEvent.change(lastNameInput, { target: { value: "testlastname" } });
 
         // Ensure the input values are updated
         expect(usernameInput).toHaveValue("testuser");
         expect(passwordInput).toHaveValue("testpassword");
+        expect(firstNameInput).toHaveValue("testfirstname");
+        expect(lastNameInput).toHaveValue("testlastname");
     });
 
     // Test form submission
-    test("test that button submits form with username and password on click", () => {
-        // Mock handleLogin function
-        const loginSpy = jest.spyOn(useLogin, "default");
-
-        loginSpy.mockReturnValue(loginMock);
+    test("test that button submits form with first name, last name, username and password on click", () => {
+        // Mock handleSignup function
+        const signupSpy = jest.spyOn(useSignUp, "default");
+        signupSpy.mockReturnValue(signupMock);
 
         const { getByTestId, getByPlaceholderText } = render(
             <Router>
-                <LoginPage />
+                <SignUpPage />
             </Router>,
         );
         const usernameInput = getByPlaceholderText("Enter your username");
         const passwordInput = getByPlaceholderText("Enter your password");
+        const passwordConfirmationInput = getByPlaceholderText("Confirm your password");
+        const firstNameInput = getByPlaceholderText("Enter your first name");
+        const lastNameInput = getByPlaceholderText("Enter your last name");
+        const policyAgreementCheckButton = getByTestId("policyAgreementCheck");
 
         // Simulate user input in username and password fields
         fireEvent.change(usernameInput, { target: { value: "testuser" } });
         fireEvent.change(passwordInput, { target: { value: "testpassword" } });
+        fireEvent.change(passwordConfirmationInput, { target: { value: "testpassword" } });
+        fireEvent.change(firstNameInput, { target: { value: "testfirstname" } });
+        fireEvent.change(lastNameInput, { target: { value: "testlastname" } });
+        fireEvent.click(policyAgreementCheckButton);
 
         // Ensure the input values are updated
         expect(usernameInput).toHaveValue("testuser");
         expect(passwordInput).toHaveValue("testpassword");
+        expect(passwordConfirmationInput).toHaveValue("testpassword");
+        expect(firstNameInput).toHaveValue("testfirstname");
+        expect(lastNameInput).toHaveValue("testlastname");
 
         // Simulate form submission by clicking the submit button
         const submitButton = getByTestId("submitButton");
         fireEvent.click(submitButton);
 
         // Ensure that the handleLogin function is called with the correct arguments
-        expect(mockHandleLogin).toHaveBeenCalledWith("testuser", "testpassword");
+        expect(mockHandleSignup).toHaveBeenCalledWith(
+            "testfirstname",
+            "testlastname",
+            "testuser",
+            "testpassword",
+        );
     });
-
-    // // check if the navigation button works as intended
-    // it("should navigate to signup page when button is clicked", () => {
-
-    //     const { getByTestId } = render(
-    //         <Router>
-    //             <LoginPage />
-    //         </Router>,
-    //     );
-
-    //     const signUpNavigateButton = getByTestId("signupNavigate");
-    //     fireEvent.click(signUpNavigateButton);
-    //     // some form of expect here to make sure i went to the right page
-    //     expect(window.location.pathname).toBe('/signup');
-    // });
 
     // Test rotator belt for text display
     it("test that the rotator buttons change the text on the screen", () => {
-        const loginSpy = jest.spyOn(useLogin, "default");
-
-        loginSpy.mockReturnValue(loginMock);
-
         const { getByTestId } = render(
             <Router>
-                <LoginPage />
+                <SignUpPage />
             </Router>,
         );
 

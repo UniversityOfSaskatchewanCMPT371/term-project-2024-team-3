@@ -108,6 +108,7 @@ function SignUpPage() {
                     <form onSubmit={handleSubmit} className={styles["form-box"]}>
                         <div className={styles.tabs}>
                             <button
+                                data-testid="researcherButton"
                                 type="button"
                                 className={`${styles.tab} ${styles.researcher} ${userType === "researcher" ? styles.active : ""}`}
                                 onClick={() => setUserType("researcher")}
@@ -115,6 +116,7 @@ function SignUpPage() {
                                 Researcher
                             </button>
                             <button
+                                data-testid="personalUserButton"
                                 type="button"
                                 className={`${styles.tab} ${styles.personal} ${userType === "personal" ? styles.active : ""}`}
                                 onClick={() => setUserType("personal")}
@@ -125,6 +127,7 @@ function SignUpPage() {
                         <div className={`${styles["input-field"]} ${styles["first-input-field"]}`}>
                             <label htmlFor="firstname">First Name</label>
                             <input
+                                data-testid="firstName"
                                 id="firstName"
                                 type="text"
                                 placeholder="Enter your first name"
@@ -136,6 +139,7 @@ function SignUpPage() {
                         <div className={styles["input-field"]}>
                             <label htmlFor="lastname">Last Name</label>
                             <input
+                                data-testid="lastName"
                                 id="lastName"
                                 type="text"
                                 placeholder="Enter your last name"
@@ -147,6 +151,7 @@ function SignUpPage() {
                         <div className={styles["input-field"]}>
                             <label htmlFor="username">Username</label>
                             <input
+                                data-testid="userName"
                                 id="username"
                                 type="text"
                                 placeholder="Enter your username"
@@ -158,6 +163,7 @@ function SignUpPage() {
                         <div className={styles["input-field"]}>
                             <label htmlFor="password">Password</label>
                             <input
+                                data-testid="password"
                                 id="password"
                                 type="password"
                                 placeholder="Enter your password"
@@ -169,6 +175,7 @@ function SignUpPage() {
                         <div className={`${styles["input-field"]} ${styles["confirm-input"]}`}>
                             <label htmlFor="passwordConfirmation">Confirm</label>
                             <input
+                                data-testid="passwordConfirmation"
                                 id="passwordConfirmation"
                                 type="password"
                                 placeholder="Confirm your password"
@@ -183,10 +190,15 @@ function SignUpPage() {
                             </p>
                         )}
                         <div className={styles["button-container"]}>
-                            <label htmlFor="policyCheck">
+                            <label
+                                data-testid="policyAgreementLink"
+                                id="policyAgreement"
+                                htmlFor="policyCheck"
+                            >
                                 I agree to the terms and privacy policy
                             </label>
                             <input
+                                data-testid="policyAgreementCheck"
                                 id="policyCheck"
                                 type="checkbox"
                                 checked={policyChecked} // Controlled component: value depends on state
@@ -201,6 +213,7 @@ function SignUpPage() {
                         <div className={styles["button-container"]}>
                             <p className={styles["forgot-password"]}>Forgot password?</p>
                             <button
+                                data-testid="submitButton"
                                 type="submit"
                                 className={`${styles.button} ${styles["sign-in"]}`}
                             >
@@ -216,9 +229,12 @@ function SignUpPage() {
                     </h1>
                     <p className={styles["research-msg"]}>JOIN OUR RESEARCH PROJECT</p>
                     <div className={styles["text-slider"]}>
-                        <p className={styles["helpful-msg"]}>{texts[currentIndex]}</p>
+                        <p data-testid="textZone" className={styles["helpful-msg"]}>
+                            {texts[currentIndex]}
+                        </p>
                         <div className={styles["fwd-bck-container"]}>
                             <button
+                                data-testid="previousButton"
                                 type="button"
                                 className={styles["button-img"]}
                                 onClick={handlePrevious}
@@ -226,6 +242,7 @@ function SignUpPage() {
                                 <img className={styles["arrow-img"]} src={leftArrow} alt="arrow" />
                             </button>
                             <button
+                                data-testid="forwardButton"
                                 type="button"
                                 className={styles["button-img"]}
                                 onClick={handleNext}
@@ -251,6 +268,7 @@ function SignUpPage() {
                             </p>
                         </div>
                         <button
+                            data-testid="navigateSignIn"
                             type="button"
                             className={`${styles.button} ${styles["sign-up"]} ${styles["sign-in-button"]}`}
                             onClick={handleLogInClick}

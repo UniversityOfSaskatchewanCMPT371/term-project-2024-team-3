@@ -10,6 +10,7 @@ import com.beaplab.BeaplabEngine.repository.LoginUserDao;
 import com.beaplab.BeaplabEngine.service.IncorrectLoginsService;
 import com.beaplab.BeaplabEngine.service.LoginUserService;
 import com.beaplab.BeaplabEngine.util.Util;
+import com.beaplab.BeaplabEngine.util.error.UserAlreadyExistException;
 import com.beaplab.BeaplabEngine.util.objectMapper.LoginUserMapper;
 import org.json.simple.JSONObject;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,7 @@ import org.junit.runner.RunWith;
 import org.mockito.*;
 import org.mockito.runners.MockitoJUnitRunner;
 
-
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -131,11 +132,11 @@ public class LoginUserTest {
 
         LoginUserDto loginUserDto = mockLoginUserDto();
 
-        JSONObject expected = new JSONObject();
+        Serializable expected = new Long("123456789");
 
-        expected.put(BeapEngineConstants.SUCCESS_STR, true);
-        expected.put("loginUserDto", loginUserDto);
-        expected.put("status_code", HttpStatus.CREATED.value());
+        // expected.put(BeapEngineConstants.SUCCESS_STR, true);
+        // expected.put("loginUserDto", loginUserDto);
+        // expected.put("status_code", HttpStatus.CREATED.value());
 
         when(loginUserDao.get(loginUser.getId())).thenReturn(null);
         when(loginUserMapper.dto2Model(loginUserDto, new LoginUser())).thenReturn(loginUser);
@@ -143,10 +144,9 @@ public class LoginUserTest {
 
 
         // NEED HELP WITH THIS
-        JSONObject result = loginUserService.save(loginUserDto);
+        Serializable result = loginUserService.save(loginUserDto);
 
         assertEquals(expected, result);
-
     }
 
     @Test
@@ -154,7 +154,7 @@ public class LoginUserTest {
      * Preconditions: The LoginUser is already in the database
      * Post-conditions: Returns an error message indicating the LoginUser already exists
      */
-    public void testSaveLoginAlreadyExists(){
+    public void testSaveLoginAlreadyExists() throws UserAlreadyExistException{
         
     }
 
@@ -164,7 +164,10 @@ public class LoginUserTest {
      * Post-conditions: LoginUser details are updated
      */
     public void testUpdate(){
-        
+        LoginUserDto loginUserDto = mockLoginUserDto();
+
+        loginUserService.update(loginUserDto);
+        verify(loginUserMapper).dto2Model(eq(loginUserDto), any(LoginUser.class));
     }
 
     @Test
@@ -173,7 +176,23 @@ public class LoginUserTest {
      * Post-conditions: Returns LoginUserDto object
      */
     public void testGet(){
-        
+        LoginUser loginUser = mockLoginUser( 
+            mockUser(
+                "first",
+                "last",
+                "first-last"
+            ), 
+            "Password"
+            );
+            LoginUserDto expected = mockLoginUserDto();
+            String id="1";
+
+            when(loginUserDao.get(Long.parseLong(id))).thenReturn(loginUser);
+            when(loginUserMapper.model2Dto(eq(loginUser), any(LoginUserDto.class))).thenReturn(expected);
+
+            LoginUserDto result = loginUserService.get(id);
+
+            assertEquals(expected, result);
     }
 
     @Test
@@ -182,7 +201,10 @@ public class LoginUserTest {
      * Post-conditions: Returns null
      */
     public void testGetNull(){
-        
+        when(loginUserDao.get(1L)).thenReturn(null);
+
+        LoginUserDto result = loginUserService.get("1");
+        assertNull(result);
     }
 
     @Test
@@ -191,6 +213,9 @@ public class LoginUserTest {
      * Post-conditions: deletes the LoginUser
      */
     public void testDelete(){
-        
+        String id = "1";
+
+        loginUserService.delete(id);
+        verify(loginUserDao).delete(eq(Long.parseLong(id)));
     }
 }

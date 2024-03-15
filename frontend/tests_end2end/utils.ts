@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable import/prefer-default-export */
 import { Page } from "playwright";
-import { WatchType } from "shared/api";
 
 const setupLogin = async (page: Page): Promise<void> => {
     await page.waitForTimeout(5000);
@@ -12,15 +12,4 @@ const setupLogin = async (page: Page): Promise<void> => {
     await page.waitForTimeout(5000);
 };
 
-const setupMockUpload = async (page: Page, type: WatchType): Promise<void> => {
-    await page.route(`**/rest/beapengine/${type}/upload`, async (route) => {
-        await route.fulfill({
-            status: 200,
-            headers: {
-                "Content-Type": "multipart/form-data",
-            },
-        });
-    });
-};
-
-export { setupLogin, setupMockUpload };
+export { setupLogin };

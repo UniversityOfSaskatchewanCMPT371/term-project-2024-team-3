@@ -141,6 +141,12 @@ public class LoginUserTest {
         when(loginUserMapper.dto2Model(loginUserDto, new LoginUser())).thenReturn(loginUser);
         when(loginUserDao.save(loginUser)).thenReturn(new Long("123456789"));
 
+
+        // NEED HELP WITH THIS
+        JSONObject result = loginUserService.save(loginUserDto);
+
+        assertEquals(expected, result);
+
     }
 
     @Test

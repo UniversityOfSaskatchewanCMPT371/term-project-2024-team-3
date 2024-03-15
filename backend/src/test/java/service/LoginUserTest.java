@@ -32,6 +32,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 import static org.junit.Assert.*;
 import static utils.MockFactory.*;
 import static utils.TestHelper.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
 
@@ -128,19 +130,19 @@ public class LoginUserTest {
             ), 
              "password"
         );
-        loginUser.setId(new Long("123456789"));
+        loginUser.setId(123456789L);
 
         LoginUserDto loginUserDto = mockLoginUserDto();
 
-        Serializable expected = new Long("123456789");
+        Serializable expected = 123456789L;
 
         // expected.put(BeapEngineConstants.SUCCESS_STR, true);
         // expected.put("loginUserDto", loginUserDto);
         // expected.put("status_code", HttpStatus.CREATED.value());
 
         when(loginUserDao.get(loginUser.getId())).thenReturn(null);
-        when(loginUserMapper.dto2Model(loginUserDto, new LoginUser())).thenReturn(loginUser);
-        when(loginUserDao.save(loginUser)).thenReturn(new Long("123456789"));
+        when(loginUserMapper.dto2Model(eq(loginUserDto), any(LoginUser.class))).thenReturn(loginUser);
+        when(loginUserDao.save(loginUser)).thenReturn(123456789L);
 
 
         // NEED HELP WITH THIS
@@ -155,7 +157,24 @@ public class LoginUserTest {
      * Post-conditions: Returns an error message indicating the LoginUser already exists
      */
     public void testSaveLoginAlreadyExists() throws UserAlreadyExistException{
-        
+        LoginUser loginUser = mockLoginUser(
+            mockUser(
+                "michael",
+                "Scott",
+                "The Destroyer"
+            ), 
+            "123"
+            );
+            loginUser.setId(1234L);
+            Serializable expected = loginUser.getId();
+
+            LoginUserDto loginUserDto = mockLoginUserDto();
+
+            when(loginUserDao.get(loginUser.getId())).thenReturn(loginUser);
+            
+            Serializable result = loginUserService.save(loginUserDto);
+
+            assertEquals(expected, result);
     }
 
     @Test

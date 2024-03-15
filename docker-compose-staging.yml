@@ -46,19 +46,6 @@ services:
       nofile:
         soft: 1000
         hard: 2000
-    
-  playwright:
-    ports:
-      - "9323:9323"
-    environment:
-      - CI
-    build:
-      context: .
-      dockerfile: Dockerfile.playwright
-    networks:
-      - spring-staging
-    depends_on:
-      - app-staging
   
 volumes:
   cache:

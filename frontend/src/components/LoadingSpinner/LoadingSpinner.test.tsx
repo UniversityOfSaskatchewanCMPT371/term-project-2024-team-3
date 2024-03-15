@@ -8,12 +8,12 @@ jest.mock("react-spinners", () => ({
 }));
 
 describe("LoadingSpinner", () => {
-    it("renders the HashLoader with correct props when loading is true", () => {
+    it("T4.8 renders the HashLoader with correct props when loading is true", () => {
         render(<LoadingSpinner loading />);
         expect(HashLoader).toHaveBeenCalledWith({ color: "#017176", loading: true, size: 100 }, {});
     });
 
-    it("does not render the HashLoader when loading is false", () => {
+    it("T4.9 does not render the HashLoader when loading is false", () => {
         const { queryByTestId } = render(<LoadingSpinner loading={false} />);
         expect(queryByTestId("mock-hash-loader")).toBeNull();
     });

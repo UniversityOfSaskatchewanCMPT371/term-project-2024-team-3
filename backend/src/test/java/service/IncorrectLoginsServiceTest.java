@@ -2,7 +2,6 @@ package service;
 
 
 import com.beaplab.BeaplabEngine.metadata.IncorrectLoginsDto;
-import com.beaplab.BeaplabEngine.metadata.UserDto;
 import com.beaplab.BeaplabEngine.model.IncorrectLogins;
 import com.beaplab.BeaplabEngine.model.User;
 import com.beaplab.BeaplabEngine.repository.IncorrectLoingsDao;
@@ -13,7 +12,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 

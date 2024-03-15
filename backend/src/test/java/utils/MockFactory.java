@@ -10,6 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -152,6 +153,21 @@ public class MockFactory {
         );
     }
 
+    public static LoginUserDto mockLoginUserDto() {
+        UserDto userDto = mockUserDto();
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, 2023);
+        cal.set(Calendar.MONTH, Calendar.JANUARY);
+        cal.set(Calendar.DAY_OF_MONTH, 11);
+
+        return new LoginUserDto(
+            new Long("12345678910"),
+            userDto,
+            new Date(cal.getTimeInMillis()),
+            "password"
+        );
+    }
+
     public static List<GrantedAuthority> mockAuthorities(Set<Role> roles) {
         List<GrantedAuthority> authorities = new ArrayList<>();
         for (Role role : roles) {
@@ -192,7 +208,11 @@ public class MockFactory {
         );
     }
 
-    public static LoginUser mockLoginUser(User user, Date date, String passwordToken){
-        return new LoginUser(user, date, passwordToken);
+    public static LoginUser mockLoginUser(User user, String passwordToken){
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, 2023);
+        cal.set(Calendar.MONTH, Calendar.JANUARY);
+        cal.set(Calendar.DAY_OF_MONTH, 11);
+        return new LoginUser(user, new Date(cal.getTimeInMillis()), passwordToken);
     }
 }

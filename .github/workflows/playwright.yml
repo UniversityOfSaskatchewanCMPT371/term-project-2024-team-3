@@ -22,7 +22,7 @@ jobs:
         run: |
           echo "ROLLBAR_ACCESS_TOKEN=${{ secrets.ROLLBAR_ACCESS_TOKEN }}" > .env
       - name: Build and run tests
-        run: docker-compose -p beapengine-staging -f docker-compose-staging.yml up --build --abort-on-container-exit
+        run: docker-compose -p beapengine-staging -f docker-compose-staging.yml up --build --abort-on-container-exit -d
       - name: Install dependencies
         run: |
           cd frontend 

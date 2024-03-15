@@ -18,7 +18,7 @@ const mockData = {
 };
 
 describe("useDeleteFile", () => {
-    it("should handle delete successfully", async () => {
+    it("T3.17 should handle delete successfully", async () => {
         const { result } = renderHook(useDeleteFile);
 
         await result.current.handleDelete(mockData.id, mockData.watchType);
@@ -30,7 +30,7 @@ describe("useDeleteFile", () => {
         expect(result.current.error).toBe(null);
     });
 
-    it("should handle delete when it errors", async () => {
+    it("T3.18 should handle delete when it errors", async () => {
         const { result } = renderHook(useDeleteFile);
 
         deleteFileSpy.mockImplementation(async () => {

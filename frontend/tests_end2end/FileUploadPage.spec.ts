@@ -4,7 +4,7 @@ import { test, expect } from "@playwright/test";
 import { WatchType } from "shared/api";
 import { setupMockLogin, setupMockUpload } from "./utils";
 
-test("File Upload Page Test", async ({ page }) => {
+test("T2.8 File Upload Page Test", async ({ page }) => {
     await setupMockLogin(page);
 
     // go to File Upload Page
@@ -36,7 +36,7 @@ test("File Upload Page Test", async ({ page }) => {
     await expect(page.getByTestId("dropZone")).toBeVisible();
 });
 
-test("Test Uploading Fitbit Files", async ({ page }) => {
+test("T4.8 Test Uploading Fitbit Files", async ({ page }) => {
     await setupMockUpload(page, WatchType.FITBIT);
     await setupMockLogin(page);
 
@@ -142,7 +142,7 @@ test("Test Uploading Fitbit Files", async ({ page }) => {
     await expect(page.getByText("Yearless Fitbit Export")).not.toBeVisible();
 });
 
-test("Test Uploading Applewatch Files", async ({ page }) => {
+test("T4.9 Test Uploading Applewatch Files", async ({ page }) => {
     await setupMockUpload(page, WatchType.FITBIT);
     await setupMockLogin(page);
 

@@ -45,9 +45,7 @@ public class IncorrectLoginsService implements BaseService<IncorrectLoginsDto> {
     public List<IncorrectLoginsDto> list() {
         logger.info("in IncorrectLoginsService: list");
 
-        List<IncorrectLoginsDto> incorrectLoginsDtos = incorrectLoginsMapper.model2Dto(incorrectLoginsDao.list(),
-                new ArrayList<IncorrectLoginsDto>());
-        return incorrectLoginsDtos;
+        return incorrectLoginsMapper.model2Dto(incorrectLoginsDao.list(), new ArrayList<IncorrectLoginsDto>());
     }
 
 

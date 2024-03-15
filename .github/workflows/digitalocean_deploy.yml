@@ -18,7 +18,6 @@ jobs:
           echo "POSTGRESQL_URL=${{ secrets.POSTGRESQL_URL }}" > .env
           echo "PG_CRYPTO_KEY=${{ secrets.PG_CRYPTO_KEY }}" >> .env
           echo "ROLLBAR_ACCESS_TOKEN=${{ secrets.ROLLBAR_ACCESS_TOKEN }}" >> .env
-
           cd frontend
           echo "REACT_APP_ROLLBAR_ACCESS_TOKEN=${{ secrets.ROLLBAR_ACCESS_TOKEN }}" > .env
       - name: Build containers

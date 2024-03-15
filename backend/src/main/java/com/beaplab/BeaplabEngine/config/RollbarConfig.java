@@ -22,7 +22,6 @@ public class RollbarConfig {
   @Bean
   public Rollbar rollbar() {
     Config config = withAccessToken(environment.getProperty("access.token"))
-    // Config config = withAccessToken("4617bb59605f4461957fbf85b2463756")
     .environment("backend")
     .codeVersion("1.0.0")
     .build();

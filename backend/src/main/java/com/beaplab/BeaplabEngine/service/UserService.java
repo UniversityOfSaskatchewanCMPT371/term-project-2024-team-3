@@ -118,7 +118,6 @@ public class UserService implements UserDetailsService {
 
         Long uuid = Long.parseLong(id);
         User user = userDao.get(uuid);
-        System.out.println(user != null);
         if(user != null)
             return userMapper.model2Dto(user, new UserDto());
         return null;

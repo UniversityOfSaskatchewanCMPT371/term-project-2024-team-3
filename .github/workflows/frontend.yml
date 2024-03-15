@@ -5,7 +5,8 @@ on:
       - master
   pull_request:
     paths:
-      - "frontend/*"
+      - "**/*.ts"
+      - "**/*.tsx"
 
 jobs:
   build-and-test:

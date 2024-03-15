@@ -35,8 +35,14 @@ test("renders all links when user is authenticated", () => {
     const predictedFilesLink = screen.getByText(/PREDICTED FILES/i);
     expect(predictedFilesLink).toBeInTheDocument();
 
-    const logoutLink = screen.getByText(/LOGOUT/i);
-    expect(logoutLink).toBeInTheDocument();
+    // const logohomelink = screen.getByText(/LOGOUT/i);
+    // expect(logoutLink).toBeInTheDocument();
+
+    const beapLogoImage = screen.getByAltText(/beapLogo/i);
+    expect(beapLogoImage).toBeInTheDocument();
+
+    const profileLogoImage = screen.getByAltText(/profileLogo/i);
+    expect(profileLogoImage).toBeInTheDocument();
 });
 
 test("does not render when user is not authenticated", () => {

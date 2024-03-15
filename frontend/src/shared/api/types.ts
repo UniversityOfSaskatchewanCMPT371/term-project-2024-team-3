@@ -56,6 +56,11 @@ export enum DataType {
     FITBIT = "FitBit",
 }
 
+export enum DownloadType {
+    PROCESS = "process",
+    PREDICT = "predict",
+}
+
 export type RawFileData = {
     id: Number;
     data: Uint8Array | null;

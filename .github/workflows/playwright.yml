@@ -37,7 +37,7 @@ jobs:
           yarn playwright test
       - name: Clean up containers
         if: always()
-        run: docker-compose down
+        run: docker-compose -p beapengine-staging -f docker-compose-staging.yml down
       - uses: actions/upload-artifact@v3
         if: always()
         with:

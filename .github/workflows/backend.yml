@@ -4,6 +4,10 @@ on:
     branches:
       - master
   pull_request:
+    paths:
+      - "**/*.java"
+      - "**/*.properties"
+      - "**/pom.xml"
 
 jobs:
   build-and-test:
@@ -19,7 +23,7 @@ jobs:
       - name: Build and test backend
         run: |
           cd backend
-          mvn -B package --file pom.xml
+          mvn clean install
       - name: Run Code Coverage
         run: |
           cd backend

@@ -64,6 +64,12 @@
 		</dependency>
 
 		<dependency>
+			<groupId>com.rollbar</groupId>
+			<version>[1.0,)</version>
+			<artifactId>rollbar-java</artifactId>
+		</dependency>
+
+		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-messaging</artifactId>
 			<version>${spring.security.version}</version>

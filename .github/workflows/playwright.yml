@@ -18,8 +18,11 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
+      - name: Create .env
+        run: |
+          echo "ROLLBAR_ACCESS_TOKEN=${{ secrets.ROLLBAR_ACCESS_TOKEN }}" > .env
       - name: Build and run tests
-        run: docker-compose -p beapengine-staging -f docker-compose-staging.yml up --build
+        run: docker-compose -p beapengine-staging -f docker-compose-staging.yml up --build --abort-on-container-exit
       - name: Install dependencies
         run: |
           cd frontend 

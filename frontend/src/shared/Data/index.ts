@@ -78,7 +78,7 @@ export const deleteFile = async (id: string, watchType: WatchType): Promise<void
  */
 export async function getUploadedFiles(watchType: WatchType): Promise<RawFilesData> {
     const response = await api.get(`/rest/beapengine/${watchType}/list/raw`);
-    return { list: response.data.list };
+    return { list: response.data.list ?? [] };
 }
 
 /**
@@ -88,7 +88,7 @@ export async function getUploadedFiles(watchType: WatchType): Promise<RawFilesDa
  */
 export async function getPredictedDataList(watchType: WatchType): Promise<PredictedFilesData> {
     const response = await api.get(`/rest/beapengine/${watchType}/list/predicted`);
-    return { list: response.data.list };
+    return { list: response.data.list ?? [] };
 }
 
 /**
@@ -98,5 +98,5 @@ export async function getPredictedDataList(watchType: WatchType): Promise<Predic
  */
 export async function getProcessedDataList(watchType: WatchType): Promise<ProcessedFilesData> {
     const response = await api.get(`/rest/beapengine/${watchType}/list/processed`);
-    return { list: response.data.list };
+    return { list: response.data.list ?? [] };
 }

@@ -42,6 +42,7 @@ function Navbar(): React.ReactElement | null {
                         <img
                             src={profileimage}
                             alt="profileLogo"
+                            data-testid="profile"
                             className="navbar-logo navbar-logout"
                         />
                     </Link>

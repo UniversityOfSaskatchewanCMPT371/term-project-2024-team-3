@@ -6,13 +6,13 @@ services:
     restart: always
     ports:
       - 6379:6379
-    command: ["redis-server", "--protected-mode", "no"]
-    volumes:
+    command: [ "redis-server", "--protected-mode", "no" ]
+    volumes: 
       - cache:/data
     networks:
-      - spring
+      - spring-staging
 
-  postgres-db:
+  postgres-db-staging:
     image: postgres:15-alpine
     restart: always
     ports:
@@ -24,42 +24,32 @@ services:
       - POSTGRES_USER=root
       - POSTGRES_DB=beapengine
     networks:
-      - spring
-
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 8082:8080
-    networks:
-      - spring
-    depends_on:
-      - postgres-db
-
-  backend:
-    container_name: backend-dev
+      - spring-staging
+  
+  app-staging:
     environment:
-      - POSTGRESQL_URL=jdbc:postgresql://postgres-db:5432/beapengine?user=root&password=root
-      - PG_CRYPTO_KEY=123
-      - ROLLBAR_ACCESS_TOKEN=${ROLLBAR_ACCESS_TOKEN}
+        - POSTGRESQL_URL=jdbc:postgresql://postgres-db-staging:5432/beapengine?user=root&password=root
+        - PG_CRYPTO_KEY=123
+        - ROLLBAR_ACCESS_TOKEN=${ROLLBAR_ACCESS_TOKEN}
     build:
-      context: ./backend
+      context: .
+      dockerfile: Dockerfile.staging
     volumes:
       - ./services/ml-service:/usr/local/tomcat/webapps/ml-service
     ports:
       - 8080:8080
     networks:
-      - spring
+      - spring-staging
     depends_on:
       - cache
-      - postgres-db
+      - postgres-db-staging
     ulimits:
       nofile:
         soft: 1000
         hard: 2000
-
+  
 volumes:
   cache:
 
 networks:
-  spring:
+  spring-staging:

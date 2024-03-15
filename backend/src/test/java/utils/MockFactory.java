@@ -1,10 +1,7 @@
 package utils;
 
 import com.beaplab.BeaplabEngine.metadata.*;
-import com.beaplab.BeaplabEngine.model.AccessGroup;
-import com.beaplab.BeaplabEngine.model.RawData;
-import com.beaplab.BeaplabEngine.model.Role;
-import com.beaplab.BeaplabEngine.model.User;
+import com.beaplab.BeaplabEngine.model.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -190,4 +187,20 @@ public class MockFactory {
                 lockedDate
         );
     }
+
+    public static IncorrectLogins mockIncorrectLogins(
+            User user,
+            boolean locked,
+            Timestamp lockedDate,
+            int incorrectAttempts
+    ){
+        return new IncorrectLogins(
+                user,
+                locked,
+                lockedDate,
+                incorrectAttempts
+        );
+    }
+
+
 }

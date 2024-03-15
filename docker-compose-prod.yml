@@ -17,6 +17,7 @@ services:
     environment:
         - POSTGRESQL_URL=${POSTGRESQL_URL}
         - PG_CRYPTO_KEY=${PG_CRYPTO_KEY}
+        - ROLLBAR_ACCESS_TOKEN=${ROLLBAR_ACCESS_TOKEN}
     restart: always
     build:
       context: .

@@ -10,7 +10,7 @@ RUN yarn install
 
 COPY ./frontend/. .
 
-RUN yarn build
+RUN yarn build:staging
 
 FROM maven:3.8.4-openjdk-11 AS backend-build
 WORKDIR /app
@@ -25,10 +25,9 @@ WORKDIR /usr/local/tomcat/webapps
 RUN rm -rf ROOT
 RUN rm -rf /usr/local/tomcat/webapps/ROOT
 
-COPY ./tomcat-config/production/server.xml /usr/local/tomcat/conf/server.xml
-COPY ./tomcat-config/production/web.xml /usr/local/tomcat/webapps/ROOT/WEB-INF/
+COPY ./tomcat-config/staging/web.xml /usr/local/tomcat/webapps/ROOT/WEB-INF/
 COPY --from=backend-build /app/target/BeaplabEngine-0.0.1-SNAPSHOT.war /usr/local/tomcat/webapps/api.war
 COPY --from=react-build /app/build /usr/local/tomcat/webapps/ROOT
 
-EXPOSE 80
+EXPOSE 8080
 CMD ["catalina.sh", "run"]

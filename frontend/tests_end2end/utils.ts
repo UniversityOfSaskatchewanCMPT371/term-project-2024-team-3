@@ -1,39 +1,15 @@
 /* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable import/prefer-default-export */
 import { Page } from "playwright";
-import { WatchType } from "shared/api";
 
-const setupMockLogin = async (page: Page): Promise<void> => {
+const setupLogin = async (page: Page): Promise<void> => {
+    await page.waitForTimeout(5000);
     await page.goto("./login");
 
-    await page.route("**/loginuser", async (route) => {
-        const responseData = {
-            userID: 123,
-            Authorities: ["admin"],
-        };
-        await route.fulfill({
-            status: 200,
-            headers: {
-                "Content-Type": "application/json",
-                token: "mockToken",
-            },
-            body: JSON.stringify(responseData),
-        });
-    });
-
-    await page.fill("#username", "testuser");
-    await page.fill("#password", "testpassword");
+    await page.fill("#username", "hello");
+    await page.fill("#password", "123");
     await page.click('button[type="submit"]');
+    await page.waitForTimeout(5000);
 };
 
-const setupMockUpload = async (page: Page, type: WatchType): Promise<void> => {
-    await page.route(`**/rest/beapengine/${type}/upload`, async (route) => {
-        await route.fulfill({
-            status: 200,
-            headers: {
-                "Content-Type": "multipart/form-data",
-            },
-        });
-    });
-};
-
-export { setupMockLogin, setupMockUpload };
+export { setupLogin };

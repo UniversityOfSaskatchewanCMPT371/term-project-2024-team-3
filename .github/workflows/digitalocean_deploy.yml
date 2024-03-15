@@ -19,6 +19,7 @@ jobs:
           echo "PG_CRYPTO_KEY=${{ secrets.PG_CRYPTO_KEY }}" >> .env
           cd frontend
           echo "REACT_APP_ROLLBAR_ACCESS_TOKEN=${{ secrets.ROLLBAR_ACCESS_TOKEN }}" > .env
+          echo "ROLLBAR_ACCESS_TOKEN=${{ secrets.ROLLBAR_ACCESS_TOKEN }}" >> .env
       - name: Build containers
         run: docker compose -f docker-compose-prod.yml build
       - name: Run app

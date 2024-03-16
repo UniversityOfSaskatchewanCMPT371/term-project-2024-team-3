@@ -4,6 +4,9 @@ on:
     branches:
       - master
   pull_request:
+    branches:
+      - master
+      - "release/*"
     paths:
       - "**/*.ts"
       - "**/*.tsx"

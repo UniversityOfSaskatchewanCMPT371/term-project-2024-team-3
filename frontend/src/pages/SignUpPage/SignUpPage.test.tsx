@@ -14,7 +14,7 @@ const signupMock = {
 
 describe("SignUpPage component", () => {
     // Test rendering and initial state
-    test("renders login form with initial state", () => {
+    test("T4.18 renders sign up form with initial state", () => {
         const { getAllByText, getByTestId, getByLabelText, getByText, getByPlaceholderText } =
             renderWithProvider(
                 <Router>
@@ -48,7 +48,7 @@ describe("SignUpPage component", () => {
     });
 
     // Test user interactions and state changes
-    test("allows user to type in first name, last name, username and password fields", () => {
+    test("T4.19 allows user to type in first name, last name, username and password fields", () => {
         const { getByPlaceholderText } = renderWithProvider(
             <Router>
                 <SignUpPage />
@@ -73,7 +73,7 @@ describe("SignUpPage component", () => {
     });
 
     // Test form submission with passing conditions
-    test("test that button submits form with first name, last name, username and password on click", () => {
+    test("T4.20 test that button submits form with first name, last name, username and password on click", () => {
         // Mock handleSignup function
         const signupSpy = jest.spyOn(useSignUp, "default");
         signupSpy.mockReturnValue(signupMock);
@@ -119,7 +119,7 @@ describe("SignUpPage component", () => {
     });
 
     // Test form submission with privacy policy unaccepted
-    test("test that form is not submitted if privacy policy is not agreed to", () => {
+    test("T4.21 test that form is not submitted if privacy policy is not agreed to", () => {
         // Mock handleSignup function
         const signupSpy = jest.spyOn(useSignUp, "default");
         signupSpy.mockReturnValue(signupMock);
@@ -151,7 +151,7 @@ describe("SignUpPage component", () => {
     });
 
     // Test form submission with unmatching password confirmation
-    test("test that form info is not submitted if passwords don't match", () => {
+    test("T4.22 test that form info is not submitted if passwords don't match", () => {
         // Mock handleSignup function
         const signupSpy = jest.spyOn(useSignUp, "default");
         signupSpy.mockReturnValue(signupMock);
@@ -185,7 +185,7 @@ describe("SignUpPage component", () => {
     });
 
     // Test form submission with unfilled fields
-    test("test that form does not work if an element is missing", () => {
+    test("T4.23 test that form does not work if an element is missing", () => {
         // Mock handleSignup function
         const signupSpy = jest.spyOn(useSignUp, "default");
         signupSpy.mockReturnValue(signupMock);
@@ -222,7 +222,7 @@ describe("SignUpPage component", () => {
     });
 
     // Test rotator belt for text display
-    it("test that the rotator buttons change the text on the screen", () => {
+    it("T4.24 test that the rotator buttons change the text on the screen", () => {
         const signupSpy = jest.spyOn(useSignUp, "default");
         signupSpy.mockReturnValue(signupMock);
 

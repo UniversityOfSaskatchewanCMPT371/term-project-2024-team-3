@@ -14,7 +14,7 @@ const loginMock = {
 
 describe("LoginPage component", () => {
     // Test rendering and initial state
-    test("renders login form with initial state", () => {
+    test("T4.11 renders login form with initial state", () => {
         const { getAllByText, getByLabelText, getByText, getByPlaceholderText } =
             renderWithProvider(
                 <Router>
@@ -42,7 +42,7 @@ describe("LoginPage component", () => {
     });
 
     // Test user interactions and state changes
-    test("allows user to type in username and password fields", () => {
+    test("T4.12 allows user to type in username and password fields", () => {
         const { getByPlaceholderText } = renderWithProvider(
             <Router>
                 <LoginPage />
@@ -61,7 +61,7 @@ describe("LoginPage component", () => {
     });
 
     // Test form submission
-    test("test that button submits form with username and password on click", () => {
+    test("T4.13 test that button submits form with username and password on click", () => {
         // Mock handleLogin function
         const loginSpy = jest.spyOn(useLogin, "default");
 
@@ -107,7 +107,7 @@ describe("LoginPage component", () => {
     // });
 
     // Test rotator belt for text display
-    it("test that the rotator buttons change the text on the screen", () => {
+    it("T4.13 test that the rotator buttons change the text on the screen", () => {
         const loginSpy = jest.spyOn(useLogin, "default");
 
         loginSpy.mockReturnValue(loginMock);

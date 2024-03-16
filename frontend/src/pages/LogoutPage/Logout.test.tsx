@@ -24,19 +24,19 @@ describe("Logout", () => {
         }));
     });
 
-    it("should call handleLogout on render", async () => {
+    it("T.14 should call handleLogout on render", async () => {
         render(<Logout />);
 
         await waitFor(() => expect(mockHandleLogout).toHaveBeenCalledTimes(1));
     });
 
-    it("should navigate to home page after logout", async () => {
+    it("T4.15 should navigate to home page after logout", async () => {
         render(<Logout />);
 
         await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith("/"));
     });
 
-    it("should display loading state", () => {
+    it("T4.16 should display loading state", () => {
         (useLogout as jest.Mock).mockImplementation(() => ({
             handleLogout: mockHandleLogout,
             isLoading: true,
@@ -48,7 +48,7 @@ describe("Logout", () => {
         expect(getByText("Logging out...")).toBeInTheDocument();
     });
 
-    it("should display error state", () => {
+    it("T4.17 should display error state", () => {
         const errorMessage = "Logout failed. Please try again.";
         (useLogout as jest.Mock).mockImplementation(() => ({
             handleLogout: mockHandleLogout,

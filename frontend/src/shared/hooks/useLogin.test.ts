@@ -27,7 +27,7 @@ describe("useLogin", () => {
     beforeEach(() => {
         jest.spyOn(moment, "now").mockImplementation(() => currentTime);
     });
-    it("should handle login successfully", async () => {
+    it("T3.10 should handle login successfully", async () => {
         const { result } = renderHook(useLogin);
 
         const mockData = {
@@ -52,7 +52,7 @@ describe("useLogin", () => {
         expect(result.current.error).toBe(null);
     });
 
-    it("should handle login when it errors", async () => {
+    it("T3.10 should handle login when it errors", async () => {
         const { result } = renderHook(useLogin);
 
         loginSpy.mockImplementation(async () => {

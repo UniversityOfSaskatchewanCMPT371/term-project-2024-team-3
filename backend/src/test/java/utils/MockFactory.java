@@ -161,7 +161,7 @@ public class MockFactory {
         cal.set(Calendar.DAY_OF_MONTH, 11);
 
         return new LoginUserDto(
-            new Long("123456789"),
+            1234L,
             userDto,
             new Date(cal.getTimeInMillis()),
             "password"

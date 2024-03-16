@@ -29,7 +29,7 @@ function FileDropZone(): ReactElement {
      * Adjust the file type to mach the given type
      */
     const changedType = (event: ChangeEvent, value: string) => {
-        console.assert(value === "fitbit" || value === "apple", "unexpected type: " + value);
+        console.assert(value === "fitbit" || value === "apple", "unexpected type: ".concat(value));
         setFilesPerYear({});
 
         if (value === "fitbit") {
@@ -51,12 +51,12 @@ function FileDropZone(): ReactElement {
      */
     const getYear = (fName: string): string | undefined => {
         // check if the year is the last number in the date
-        console.debug("Parsing year from: " + fName);
+        console.debug("Parsing year from: ".concat(fName));
 
         let fullDate = fName.match("[0-9]{2}([-/ .])[0-9]{2}[-/ .][0-9]{4}");
         if (fullDate) {
             const splitDate = fullDate[0].split(fullDate[1]);
-            rollbar.debug("Year is the last number: " + splitDate[2]);
+            rollbar.debug("Year is the last number: ".concat(splitDate[2]));
             return splitDate[2];
         }
 
@@ -64,7 +64,7 @@ function FileDropZone(): ReactElement {
         fullDate = fName.match("[0-9]{4}([-/ .])[0-9]{2}[-/ .][0-9]{2}");
         if (fullDate) {
             const splitDate = fullDate[0].split(fullDate[1]);
-            rollbar.debug("Year is the first number: " + splitDate[0]);
+            rollbar.debug("Year is the first number: ".concat(splitDate[0]));
             return splitDate[0];
         }
         rollbar.debug("Unable to find year match");
@@ -99,10 +99,12 @@ function FileDropZone(): ReactElement {
                 const parsedYear = getYear(file.name);
                 const year = parsedYear || "Yearless Fitbit Export";
                 if (fy[year]) {
-                    rollbar.debug("Added " + file.name + " to year: " + year);
+                    rollbar.debug("Added ".concat(file.name).concat(" to year: ").concat(year));
                     fy[year].push(file);
                 } else {
-                    rollbar.debug("New Year found: " + year + " for file: " + file.name);
+                    rollbar.debug(
+                        "New Year found: ".concat(year).concat(" for file: ").concat(file.name),
+                    );
                     fy[year] = [file];
                 }
                 yearSet.add(year);
@@ -117,7 +119,7 @@ function FileDropZone(): ReactElement {
      * Postconditon: Given years files are zipped and sent to the api and are removed from filesPerYear
      */
     const uploadFiles = async (year: string) => {
-        rollbar.debug("Upload called with year: " + year);
+        rollbar.debug("Upload called with year: ".concat(year));
         console.assert(Object.keys(filesPerYear).includes(year), "Year doesn't have any files");
         const filesToZip = [...filesPerYear[year]];
         const zip = new Zip();

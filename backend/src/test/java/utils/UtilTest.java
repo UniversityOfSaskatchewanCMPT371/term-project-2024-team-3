@@ -17,6 +17,7 @@ public class UtilTest {
     @InjectMocks
     private Util util;
     @Test
+    //T4.87
     // Preconditions: Start date is before end date
     // Post-conditions: Returns the correct difference in hours
     public void testDateDifference() {
@@ -31,6 +32,7 @@ public class UtilTest {
     }
 
     @Test
+    //T4.88
     // Preconditions: Start date is after end date
     // Post-conditions: Returns -4 as difference
     public void testDateDifferenceStartDateAfterEndDate() {
@@ -45,6 +47,7 @@ public class UtilTest {
     }
 
     @Test
+    //T4.89
     // Preconditions: Start date and end date are the same
     // Post-conditions: Returns 0 as difference
     public void testDateDifferenceSameStartDateAndEndDate() {

@@ -16,7 +16,7 @@ afterEach(() => {
     authSpy.mockClear();
 });
 
-test(" TID 1.4. renders all links", () => {
+test("TID 1.4. renders all links", () => {
     authSpy.mockReturnValue({ isAuthenticated: true } as AuthReturnValue);
     renderWithProvider(
         <Router>

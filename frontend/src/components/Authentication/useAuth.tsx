@@ -1,5 +1,5 @@
 import React, { createContext, useContext, ReactNode, useMemo } from "react";
-import useIsUserLoggedIn from "../../shared/hooks/useIsUserLoggedIn";
+import useIsUserLoggedIn from "shared/hooks/useIsUserLoggedIn";
 
 type AuthContextValue = {
     isAuthenticated: boolean;

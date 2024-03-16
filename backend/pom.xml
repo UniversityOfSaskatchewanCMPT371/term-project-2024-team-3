@@ -319,6 +319,17 @@
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
 				<version>0.8.5</version>
+				<configuration>
+					<excludes>
+						<exclude>**/authentication/*</exclude>
+						<exclude>**/config/*</exclude>
+						<exclude>**/constants/*</exclude>
+						<exclude>**/metadata/*</exclude>
+						<exclude>**/model/*</exclude>
+						<exclude>**/util/error/*</exclude>
+						<exclude>**/util/redis/*</exclude>
+					</excludes>
+				</configuration>
 				<executions>
 					<execution>
 						<goals>

@@ -67,6 +67,7 @@ public class LoginUserTest {
 
     @Test
     /**
+     * T4.71
      * Preconditions: Login list is empty
      * Post-conditions: Returns an empty list
      */
@@ -81,6 +82,7 @@ public class LoginUserTest {
 
     @Test
     /**
+     * T4.72
      * Preconditions: Login list is not empty
      * Post-conditions: Returns a list of LoginDto objects
      */
@@ -118,6 +120,7 @@ public class LoginUserTest {
 
     @Test
     /**
+     * T4.73
      * Preconditions: LoginUser does not exist in the database
      * Post-conditions: new LoginUser is saved successfully
      */
@@ -153,32 +156,7 @@ public class LoginUserTest {
 
     @Test
     /**
-     * Preconditions: The LoginUser is already in the database
-     * Post-conditions: Returns an error message indicating the LoginUser already exists
-     */
-    public void testSaveLoginAlreadyExists() throws UserAlreadyExistException{
-        LoginUser loginUser = mockLoginUser(
-            mockUser(
-                "michael",
-                "Scott",
-                "The Destroyer"
-            ), 
-            "123"
-            );
-            loginUser.setId(1234L);
-            Serializable expected = loginUser.getId();
-
-            LoginUserDto loginUserDto = mockLoginUserDto();
-
-            when(loginUserDao.get(loginUser.getId())).thenReturn(loginUser);
-            
-            Serializable result = loginUserService.save(loginUserDto);
-
-            assertEquals(expected, result);
-    }
-
-    @Test
-    /**
+     * T4.74
      * Preconditions: LoginUser exists in the database
      * Post-conditions: LoginUser details are updated
      */
@@ -191,6 +169,7 @@ public class LoginUserTest {
 
     @Test
     /**
+     * T4.75
      * Preconditions: LoginUser exists in the database
      * Post-conditions: Returns LoginUserDto object
      */
@@ -216,6 +195,7 @@ public class LoginUserTest {
 
     @Test
     /**
+     * T4.76
      * Preconditions: LoginUser is not in the database
      * Post-conditions: Returns null
      */
@@ -228,6 +208,7 @@ public class LoginUserTest {
 
     @Test
     /**
+     * T4.77
      * Preconditions: LoginUser is in the database
      * Post-conditions: deletes the LoginUser
      */

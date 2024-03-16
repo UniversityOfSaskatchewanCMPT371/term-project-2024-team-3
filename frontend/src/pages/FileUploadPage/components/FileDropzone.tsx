@@ -13,7 +13,7 @@ function FileDropZone(): ReactElement {
     const rollbar = useRollbar();
     rollbar.info("Reached dropzone component");
 
-    const { handleUpload } = useUpload();
+    const { handleUpload, error: useUploadError } = useUpload();
 
     const [filesPerYear, setFilesPerYear] = useState<{ [years: string]: FileWithPath[] }>({});
 
@@ -143,6 +143,10 @@ function FileDropZone(): ReactElement {
                 return handleUpload(formData, year, currentFileType);
             })
             .then(() => {
+                if (useUploadError) {
+                    rollbar.error(useUploadError);
+                    return;
+                }
                 const newFilesPerYear = { ...filesPerYear };
                 delete newFilesPerYear[year];
                 rollbar.info("removed uploaded files from accepted files");

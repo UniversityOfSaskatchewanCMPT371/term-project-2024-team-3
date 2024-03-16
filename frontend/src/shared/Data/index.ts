@@ -6,6 +6,7 @@ import {
     RawFilesData,
     DownloadData,
     PredictionType,
+    DownloadType,
 } from "shared/api";
 
 /**
@@ -29,7 +30,7 @@ export async function upload(form: FormData, year: string, watchType: WatchType)
  * @param watchType the type of watch to be processed
  */
 export async function process(id: any, watchType: WatchType): Promise<void> {
-    await api.get(`/rest/beapengine//${watchType}/process/${id}`);
+    await api.get(`/rest/beapengine/${watchType}/process/${id}`);
 }
 
 /**
@@ -43,7 +44,7 @@ export async function predict(
     model: PredictionType,
     watchType: WatchType,
 ): Promise<void> {
-    await api.get(`/rest/beapengine//${watchType}/predict/${id}/${model}`);
+    await api.get(`/rest/beapengine/${watchType}/predict/${id}/${model}`);
 }
 
 /**
@@ -55,11 +56,11 @@ export async function predict(
  */
 export async function download(
     id: string,
-    type: string,
+    type: DownloadType,
     watchType: WatchType,
 ): Promise<DownloadData> {
-    const response = await api.get(`/rest/beapengine//${watchType}/download_file/${id}/${type}`);
-    return { file: response.data.file };
+    const response = await api.get(`/rest/beapengine/${watchType}/download_file/${id}/${type}`);
+    return { file: response.data?.file };
 }
 
 /**

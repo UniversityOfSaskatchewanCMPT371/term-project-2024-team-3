@@ -11,12 +11,11 @@ import styles from "../FileUpload.module.css";
 
 function FileDropZone(): ReactElement {
     const rollbar = useRollbar();
+    rollbar.info("Reached dropzone component");
 
     const { handleUpload } = useUpload();
 
-    const [filesPerYear, setFilesPerYear] = useState<{
-        [years: string]: FileWithPath[];
-    }>({});
+    const [filesPerYear, setFilesPerYear] = useState<{ [years: string]: FileWithPath[] }>({});
 
     const [fileType, setFileType] = useState<Accept>({
         "application/json": [".json"],
@@ -26,25 +25,38 @@ function FileDropZone(): ReactElement {
 
     const pstyle = { fontWeight: "bold", fontSize: "22px" }; // add to style sheet
 
+    /**
+     * Adjust the file type to mach the given type
+     */
     const changedType = (event: ChangeEvent, value: string) => {
-        // assert(value === "fitbit" || value === "apple");
+        console.assert(value === "fitbit" || value === "apple", "unexpected type: " + value);
         setFilesPerYear({});
 
         if (value === "fitbit") {
             setCurrentFileType(WatchType.FITBIT);
             setFileType({ "application/json": [".json"] });
+            rollbar.info("Changed to accept .json files (Fitbit)");
         } else {
             setCurrentFileType(WatchType.APPLE_WATCH);
             setFileType({ "application/xml": [".xml"] });
+            rollbar.info("Changed to accept .xml files (Apple)");
         }
     };
 
-    // for fitbit files parse the year out of the files name
+    /**
+     * For fitbit files parse the year out of the files name
+     * Can be used for any file but currently only fitbit files are expected to have a year in their name
+     * Precondition: year is full year (2019) not last 2 digits (19)
+     * Returns: The year or undefined if no year is found
+     */
     const getYear = (fName: string): string | undefined => {
         // check if the year is the last number in the date
+        console.debug("Parsing year from: " + fName);
+
         let fullDate = fName.match("[0-9]{2}([-/ .])[0-9]{2}[-/ .][0-9]{4}");
         if (fullDate) {
             const splitDate = fullDate[0].split(fullDate[1]);
+            rollbar.debug("Year is the last number: " + splitDate[2]);
             return splitDate[2];
         }
 
@@ -52,21 +64,32 @@ function FileDropZone(): ReactElement {
         fullDate = fName.match("[0-9]{4}([-/ .])[0-9]{2}[-/ .][0-9]{2}");
         if (fullDate) {
             const splitDate = fullDate[0].split(fullDate[1]);
+            rollbar.debug("Year is the first number: " + splitDate[0]);
             return splitDate[0];
         }
+        rollbar.debug("Unable to find year match");
         return undefined;
     };
 
-    // accept the files that are dropped into the dropzone
+    /**
+     * Accept the files that are dropped into the dropzone
+     * Precondition: A file is dropped into the dropzone(or selected from file explorer prompt)
+     *      current file type has to have a value
+     *      Apple watches do not have a year
+     * Postconditon: dropped files are added to filesPerYear,
+     *      key dependant on years that can be parsed from the files names
+     */
     const onDrop = (acceptedFiles: FileWithPath[]) => {
-        rollbar.debug(acceptedFiles);
+        rollbar.info("onDrop called");
         if (acceptedFiles?.length) {
+            rollbar.debug(acceptedFiles);
             const fy = { ...filesPerYear };
             const yearSet = new Set();
             Object.keys(fy).forEach((year) => yearSet.add(year));
             acceptedFiles.forEach((file) => {
                 // apple files do not contain a year
                 if (currentFileType === WatchType.APPLE_WATCH) {
+                    rollbar.info("Dropped ");
                     if (fy["Apple Export"]) fy["Apple Export"].push(file);
                     else fy["Apple Export"] = [file];
                     yearSet.add("Apple Export");
@@ -75,17 +98,27 @@ function FileDropZone(): ReactElement {
 
                 const parsedYear = getYear(file.name);
                 const year = parsedYear || "Yearless Fitbit Export";
-                if (fy[year]) fy[year].push(file);
-                else fy[year] = [file];
+                if (fy[year]) {
+                    rollbar.debug("Added " + file.name + " to year: " + year);
+                    fy[year].push(file);
+                } else {
+                    rollbar.debug("New Year found: " + year + " for file: " + file.name);
+                    fy[year] = [file];
+                }
                 yearSet.add(year);
             });
-
             setFilesPerYear(fy);
         }
     };
 
-    // zip a years group of files then send them to the api
+    /**
+     * Zip a years group of files then send them to the api
+     * Precondition: There is a key that matches they year passed in filesPerYear
+     * Postconditon: Given years files are zipped and sent to the api and are removed from filesPerYear
+     */
     const uploadFiles = async (year: string) => {
+        rollbar.debug("Upload called with year: " + year);
+        console.assert(Object.keys(filesPerYear).includes(year), "Year doesn't have any files");
         const filesToZip = [...filesPerYear[year]];
         const zip = new Zip();
         if (filesToZip.length < 1) {
@@ -104,21 +137,30 @@ function FileDropZone(): ReactElement {
                 const formData = new FormData();
                 formData.set("fname", `${fileType}.zip`);
                 formData.set("data", content);
+                rollbar.info("sending upload");
                 return handleUpload(formData, year, currentFileType);
             })
             .then(() => {
                 const newFilesPerYear = { ...filesPerYear };
                 delete newFilesPerYear[year];
+                rollbar.info("removed uploaded files from accepted files");
                 setFilesPerYear(newFilesPerYear);
             });
     };
 
+    /**
+     * constructs react dropzone
+     */
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop,
         accept: fileType,
     });
 
-    // displays uploaded files grouped by year
+    /**
+     * Displays uploaded files grouped by year
+     * Precondition: filesPerYear not null
+     */
+
     const acceptedFileItems = Object.keys(filesPerYear).map((year: string) => (
         <div
             key={year}

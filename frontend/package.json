@@ -21,6 +21,7 @@
     "@types/react-dom": "^18.0.0",
     "adm-zip": "^0.5.10",
     "axios": "^1.6.5",
+    "env-cmd": "^10.1.0",
     "bootstrap": "^5.3.3",
     "file-saver": "^2.0.5",
     "jquery": "^3.7.1",
@@ -46,7 +47,8 @@
     "prepare": "cd .. && husky install",
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --silent",
+    "build:staging": "env-cmd -f .env.staging yarn build",
+    "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint \"src/**/*.{ts,tsx}\"",
     "lint:fix": "eslint --fix \"src/**/*.{ts,tsx}\"",
@@ -78,7 +80,15 @@
   "jest": {
     "moduleNameMapper": {
       "^axios$": "axios/dist/node/axios.cjs"
-    }
+    },
+    "collectCoverageFrom": [
+      "!src/*",
+      "!src/assets/*",
+      "!src/shared/util/tests/*",
+      "!src/shared/config/*",
+      "!src/shared/api/index.ts",
+      "!src/shared/api/types.ts"
+    ]
   },
   "devDependencies": {
     "@playwright/test": "^1.41.1",

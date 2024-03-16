@@ -74,5 +74,5 @@ export type RawFilesData = {
 };
 
 export type DownloadData = {
-    file: Uint8Array | null;
+    file: Uint8Array | null | undefined;
 };

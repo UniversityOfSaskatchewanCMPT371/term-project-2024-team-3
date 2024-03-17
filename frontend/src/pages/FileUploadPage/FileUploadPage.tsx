@@ -3,6 +3,7 @@ import { Container } from "@mui/material";
 import { useRollbar } from "@rollbar/react";
 import FileDropZone from "./components/FileDropzone";
 import styles from "./FileUpload.module.css";
+import UploadedFiles from "./components/UploadedFiles";
 
 function FileUploadPage(): ReactElement {
     const rollbar = useRollbar();
@@ -13,6 +14,7 @@ function FileUploadPage(): ReactElement {
             <Container className={styles.container}>
                 <FileDropZone />
             </Container>
+            <UploadedFiles />
         </div>
     );
 }

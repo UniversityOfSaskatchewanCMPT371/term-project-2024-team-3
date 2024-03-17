@@ -1,6 +1,19 @@
 version: "3.8"
 
 services:
+  webapp:
+      container_name: webapp-dev
+      image: webapp-dev
+      build:
+        context: ./frontend
+        target: development
+      volumes:
+        - ./frontend/src:/app/src
+      ports:
+        - 3000:3000
+      environment:
+        - WATCHPACK_POLLING=true
+
   cache:
     image: redis:6.2-alpine
     restart: always

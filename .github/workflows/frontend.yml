@@ -1,9 +1,15 @@
 name: frontend
 on:
-    push:
-      branches:
-        - master
-    pull_request:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+      - "release/*"
+    paths:
+      - "**/*.ts"
+      - "**/*.tsx"
 
 jobs:
   build-and-test:
@@ -11,19 +17,26 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Install frontend dependencies     
+      - name: Install frontend dependencies
         run: |
-            cd frontend
-            yarn install
+          cd frontend
+          yarn install
       - name: Run lint
         run: |
-            cd frontend
-            yarn lint
+          cd frontend
+          yarn lint
       - name: Build Frontend
         run: |
-            cd frontend
-            yarn run build
+          cd frontend
+          yarn run build
       - name: Run Unit and Integration Tests
         run: |
-            cd frontend
-            yarn run test
+          cd frontend
+          yarn test --ci --json --coverage --testLocationInResults --outputFile=report.json
+      - name: Frontend code coverage
+        uses: ArtiomTr/jest-coverage-report-action@v2
+        with:
+          package-manager: yarn
+          skip-step: all
+          working-directory: ./frontend
+          custom-title: Frontend Code Coverage Report

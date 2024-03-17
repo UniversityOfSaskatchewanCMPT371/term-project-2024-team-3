@@ -11,10 +11,10 @@
     display: flex;
     align-items: center;
     flex-grow: 1;
+    justify-content: center;
 }
 
 .navbar a {
-    display: block;
     color: black;
     text-align: center;
     padding: 14px 16px;
@@ -26,7 +26,16 @@
     color: aliceblue;
 }
 
-.navbar .navbar-nav .logout-link a {
+
+.navbar-profile {
     margin-left: auto;
-    color: red; /* Just to test if the style is being applied */
+}
+
+.navbar-brand{
+    margin-right: auto;
+}
+
+.navbar-logo {
+    width:  65px;
+    height: 65px ;
 }

@@ -1,14 +1,10 @@
 package com.beaplab.BeaplabEngine.service;
 
 import com.beaplab.BeaplabEngine.metadata.IncorrectLoginsDto;
-import com.beaplab.BeaplabEngine.metadata.LoginUserDto;
 import com.beaplab.BeaplabEngine.model.IncorrectLogins;
-import com.beaplab.BeaplabEngine.model.LoginUser;
 import com.beaplab.BeaplabEngine.repository.IncorrectLoingsDao;
-import com.beaplab.BeaplabEngine.repository.base.BaseRepository;
 import com.beaplab.BeaplabEngine.service.base.BaseService;
 import com.beaplab.BeaplabEngine.util.objectMapper.IncorrectLoginsMapper;
-import com.beaplab.BeaplabEngine.util.objectMapper.LoginUserMapper;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,9 +41,7 @@ public class IncorrectLoginsService implements BaseService<IncorrectLoginsDto> {
     public List<IncorrectLoginsDto> list() {
         logger.info("in IncorrectLoginsService: list");
 
-        List<IncorrectLoginsDto> incorrectLoginsDtos = incorrectLoginsMapper.model2Dto(incorrectLoginsDao.list(),
-                new ArrayList<IncorrectLoginsDto>());
-        return incorrectLoginsDtos;
+        return incorrectLoginsMapper.model2Dto(incorrectLoginsDao.list(), new ArrayList<IncorrectLoginsDto>());
     }
 
 

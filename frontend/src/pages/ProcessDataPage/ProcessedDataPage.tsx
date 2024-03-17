@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { RadioGroup, FormControl, FormControlLabel, Radio, Button, Container } from "@mui/material";
-import { DataType, PredictionType, ProcessedFileData, WatchType } from "shared/api";
+import { DataType, PredictionType, ProcessedFileData, WatchType, DownloadType } from "shared/api";
 import useGetProcessedDataList from "shared/hooks/useGetProcessedDataList";
 import moment from "moment";
 import usePredictedFile from "shared/hooks/usePredictFile";
+import useDownload from "shared/hooks/useDownload";
 import { useRollbar } from "@rollbar/react";
 import styles from "./ProcessedDataPage.module.css";
 
@@ -14,10 +15,30 @@ const ProcessedDataPage = function () {
     const [currentFile, setCurrentFile] = useState<any>();
     const [selectedModel, setSelectedModel] = useState<PredictionType>(PredictionType.SVM);
 
+    // ensuring correct initialization of state.
+    console.assert(currentFile === undefined, "currentFile should be undefined initially");
+    console.assert(
+        selectedModel === PredictionType.SVM,
+        "selectedModel should be initialized to PredictionType.SVM",
+    );
+
     const { handlePredict } = usePredictedFile();
+    const { handleDownload } = useDownload();
 
     const { uploadedFiles: fitbitFiles } = useGetProcessedDataList(WatchType.FITBIT);
+
     const { uploadedFiles: appleWatchFiles } = useGetProcessedDataList(WatchType.APPLE_WATCH);
+
+    const handleModelChange = (model: PredictionType) => {
+        // ensure that the selected model belongs to one of the acceptable types
+        console.assert(
+            model === PredictionType.SVM ||
+                model === PredictionType.RANDOM_FOREST ||
+                model === PredictionType.DECISSION_TREE,
+            "Invalid prediction model selected",
+        );
+        setSelectedModel(model);
+    };
 
     const appleWatchProcessedFiles =
         appleWatchFiles?.length !== 0
@@ -47,6 +68,8 @@ const ProcessedDataPage = function () {
      */
     const predictFile = async (event: React.MouseEvent) => {
         event.preventDefault();
+        // make sure a file is selected before you attempt to predict it
+        console.assert(currentFile !== undefined, "A file should be selected before predicting");
         if (currentFile) {
             const { id, watch } = currentFile;
             const lowerCaseWatch = watch.toLowerCase();
@@ -59,25 +82,20 @@ const ProcessedDataPage = function () {
      */
     const downloadFile = (event: React.MouseEvent) => {
         event.preventDefault();
-    };
-
-    /**
-     * deletes a file
-     * NOTE: The delete route in the back-end does not exist, but the hook works
-     */
-    const deleteFile = (event: React.MouseEvent) => {
-        event.preventDefault();
-        // if (currentFile) {
-        //   const { id, watch } = currentFile;
-        //   const lowerCaseWatch = watch.toLowerCase();
-        //   handleDelete(id, lowerCaseWatch);
-        // }
+        // make sure a file is selected before you attempt to download it
+        console.assert(currentFile !== undefined, "A file should be selected before downloading");
+        if (currentFile) {
+            const { id, watch } = currentFile;
+            const stringID = id.toString();
+            handleDownload(stringID, DownloadType.PROCESS, watch);
+        }
     };
 
     /**
      *  Maps the list of files to a list of radial selectors for the files list
      */
     const getRendersOfFiles = () => {
+        console.assert(files.length > 0, "Files array should contain data for rendering");
         renders = files.map((file: ProcessedFileData) => {
             const date = moment(file.dateTime ?? "");
             let dateString;
@@ -124,7 +142,7 @@ const ProcessedDataPage = function () {
                         <RadioGroup row defaultValue="svm">
                             <FormControlLabel
                                 value="svm"
-                                onClick={() => setSelectedModel(PredictionType.SVM)}
+                                onClick={() => handleModelChange(PredictionType.SVM)}
                                 label="SVM"
                                 labelPlacement="end"
                                 control={
@@ -141,7 +159,7 @@ const ProcessedDataPage = function () {
                             />
                             <FormControlLabel
                                 value="randomForest"
-                                onClick={() => setSelectedModel(PredictionType.RANDOM_FOREST)}
+                                onClick={() => handleModelChange(PredictionType.RANDOM_FOREST)}
                                 label="Random Forest"
                                 labelPlacement="end"
                                 control={
@@ -158,7 +176,7 @@ const ProcessedDataPage = function () {
                             />
                             <FormControlLabel
                                 value="decissionTree"
-                                onClick={() => setSelectedModel(PredictionType.DECISSION_TREE)}
+                                onClick={() => handleModelChange(PredictionType.DECISSION_TREE)}
                                 label="Decission Tree"
                                 labelPlacement="end"
                                 control={
@@ -198,15 +216,6 @@ const ProcessedDataPage = function () {
                             data-testid="Download_Button"
                         >
                             Download File
-                        </Button>
-                        <Button
-                            className={styles.goToPredicted}
-                            variant="contained"
-                            href="/PredictedDataPage"
-                            onClick={deleteFile}
-                            data-testid="Delete_Button"
-                        >
-                            DELETE FILE{" "}
                         </Button>
                     </div>
                 </div>

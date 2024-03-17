@@ -122,6 +122,7 @@ function FileDropZone(): ReactElement {
     const acceptedFileItems = Object.keys(filesPerYear).map((year: string) => (
         <div
             key={year}
+            data-testid={year}
             style={{
                 width: "100%",
                 padding: "10px",
@@ -137,6 +138,7 @@ function FileDropZone(): ReactElement {
             <strong>{year}</strong>
             <small>{filesPerYear[year].length} files</small>
             <Button
+                data-testid={`${year}-btn`}
                 style={{ color: "#FFFFFF", backgroundColor: "#36BDC4" }}
                 variant="contained"
                 onClick={() => uploadFiles(year)}

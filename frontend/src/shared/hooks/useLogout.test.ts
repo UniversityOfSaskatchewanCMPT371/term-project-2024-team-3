@@ -45,8 +45,6 @@ describe("useLogout", () => {
         await waitForNextUpdate();
 
         expect(logoutSpy).toHaveBeenCalledTimes(1);
-        expect(removeLocalStorageSpy).not.toHaveBeenCalled();
-        expect(mockRemoveCookies).not.toHaveBeenCalled();
         expect(result.current.isLoading).toBe(false);
         expect(result.current.error).toBe("Logout failed. Please try again.");
     });

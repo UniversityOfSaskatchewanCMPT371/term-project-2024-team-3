@@ -19,6 +19,7 @@
 		<org.springframework-version>4.3.8.RELEASE</org.springframework-version>
 		<spring.security.version>4.2.2.RELEASE</spring.security.version>
 		<slf4j.version>1.8.0-alpha0</slf4j.version>
+		<myTestSourceDirectory>src/test/java</myTestSourceDirectory>
 	</properties>
 
 	<dependencies>
@@ -60,6 +61,12 @@
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-config</artifactId>
 			<version>${spring.security.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.rollbar</groupId>
+			<version>[1.0,)</version>
+			<artifactId>rollbar-java</artifactId>
 		</dependency>
 
 		<dependency>
@@ -261,11 +268,10 @@
             <artifactId>commons-fileupload</artifactId>
             <version>1.3.1</version>
         </dependency>
-
-
 	</dependencies>
 
 	<build>
+		<testSourceDirectory>${myTestSourceDirectory}</testSourceDirectory>
 		<plugins>
 			<plugin>
 				<artifactId>maven-eclipse-plugin</artifactId>
@@ -309,7 +315,60 @@
 					<failOnMissingWebXml>false</failOnMissingWebXml>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.8.5</version>
+				<configuration>
+					<excludes>
+						<exclude>**/authentication/*</exclude>
+						<exclude>**/config/*</exclude>
+						<exclude>**/constants/*</exclude>
+						<exclude>**/metadata/*</exclude>
+						<exclude>**/model/*</exclude>
+						<exclude>**/util/error/*</exclude>
+						<exclude>**/util/redis/*</exclude>
+					</excludes>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<!-- attached to Maven test phase -->
+					<execution>
+						<id>report</id>
+						<phase>test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
 		</plugins>
 	</build>
+
+	<reporting>
+        <plugins>
+
+           <!-- see pom.xml for rest of reporting section -->
+
+           <!-- generate the coverage report using Jacoco -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <!-- select non-aggregate reports -->
+                            <report>report</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+        </plugins>
+    </reporting>
 
 </project>

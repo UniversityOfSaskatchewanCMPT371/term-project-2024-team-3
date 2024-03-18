@@ -1,0 +1,33 @@
+FROM node:18-alpine AS react-build
+
+WORKDIR /app
+
+COPY ./frontend/package.json .
+
+COPY ./frontend/yarn.lock .
+
+RUN yarn install
+
+COPY ./frontend/. .
+
+RUN yarn build:staging
+
+FROM maven:3.8.4-openjdk-11 AS backend-build
+WORKDIR /app
+COPY ./backend/pom.xml .
+COPY ./backend/src src
+RUN mvn clean install
+
+FROM ralphgregorio/r-tomcat9:1.0
+
+WORKDIR /usr/local/tomcat/webapps
+
+RUN rm -rf ROOT
+RUN rm -rf /usr/local/tomcat/webapps/ROOT
+
+COPY ./tomcat-config/staging/web.xml /usr/local/tomcat/webapps/ROOT/WEB-INF/
+COPY --from=backend-build /app/target/BeaplabEngine-0.0.1-SNAPSHOT.war /usr/local/tomcat/webapps/api.war
+COPY --from=react-build /app/build /usr/local/tomcat/webapps/ROOT
+
+EXPOSE 8080
+CMD ["catalina.sh", "run"]

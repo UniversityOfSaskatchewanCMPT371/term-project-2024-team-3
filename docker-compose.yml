@@ -6,8 +6,8 @@ services:
     restart: always
     ports:
       - 6379:6379
-    command: [ "redis-server", "--protected-mode", "no" ]
-    volumes: 
+    command: ["redis-server", "--protected-mode", "no"]
+    volumes:
       - cache:/data
     networks:
       - spring
@@ -35,12 +35,13 @@ services:
       - spring
     depends_on:
       - postgres-db
-  
+
   backend:
     container_name: backend-dev
     environment:
-        - POSTGRESQL_URL=jdbc:postgresql://postgres-db:5432/beapengine?user=root&password=root
-        - PG_CRYPTO_KEY=123
+      - POSTGRESQL_URL=jdbc:postgresql://postgres-db:5432/beapengine?user=root&password=root
+      - PG_CRYPTO_KEY=123
+      - ROLLBAR_ACCESS_TOKEN=${ROLLBAR_ACCESS_TOKEN}
     build:
       context: ./backend
     volumes:
@@ -56,7 +57,7 @@ services:
       nofile:
         soft: 1000
         hard: 2000
-  
+
 volumes:
   cache:
 

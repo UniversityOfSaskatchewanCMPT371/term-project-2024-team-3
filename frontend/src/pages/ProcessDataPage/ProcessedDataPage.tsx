@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { RadioGroup, FormControl, FormControlLabel, Radio, Button, Container } from "@mui/material";
 import { DataType, PredictionType, ProcessedFileData, WatchType, DownloadType } from "shared/api";
+// import ProgressBar from "components/ProgressBar/ProgressBar";
 import useGetProcessedDataList from "shared/hooks/useGetProcessedDataList";
 import moment from "moment";
 import usePredictFile from "shared/hooks/usePredictFile";
@@ -145,6 +146,7 @@ const ProcessedDataPage = function () {
 
     return (
         <div>
+            {/* <ProgressBar percentage={20} /> */}
             <Container className={styles.containerDiv}>
                 <div className={styles.action_bar}>
                     <FormControl component="fieldset">

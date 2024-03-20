@@ -6,6 +6,7 @@ import ProtectedRoute from "components/Authentication/ProtectedRoute";
 import SignUpPage from "pages/SignUpPage/SignUpPage";
 import rollbarConfig from "shared/config/rollbar";
 import LoadingSpinner from "components/LoadingSpinner/LoadingSpinner";
+import ProgressBar from "components/ProgressBar/ProgressBar";
 import Navbar from "./components/Navbar/Navbar";
 import Logout from "./pages/LogoutPage/Logout";
 import ProcessedDataPage from "./pages/ProcessDataPage/ProcessedDataPage";
@@ -25,6 +26,7 @@ function App(): React.ReactElement<typeof Router> {
                     <Router>
                         <Navbar />
                         <HelpPopup />
+                        <ProgressBar percentage={20} />
                         <Routes>
                             <Route path="/" element={<HomePage />} />
                             <Route path="/login" element={<LoginPage />} />

@@ -6,7 +6,7 @@ describe("API Tests", () => {
         jest.clearAllMocks();
     });
 
-    it("Login: should return mapped data upon successful login", async () => {
+    it("T3.2 Login: should return mapped data upon successful login", async () => {
         jest.spyOn(api, "post").mockResolvedValueOnce({
             data: { userID: "123", Authorities: ["admin", "user"] },
             headers: {
@@ -29,7 +29,7 @@ describe("API Tests", () => {
         expect(api.post).toHaveBeenCalledWith("/loginuser", formData);
     });
 
-    it("Login: should throw an error upon failed login", async () => {
+    it("T3.3 Login: should throw an error upon failed login", async () => {
         jest.spyOn(api, "post").mockRejectedValueOnce(new Error("Login failed"));
 
         const formData = new FormData();
@@ -41,7 +41,7 @@ describe("API Tests", () => {
         expect(api.post).toHaveBeenCalledWith("/loginuser", formData);
     });
 
-    it("Logout: should logout successfully", async () => {
+    it("T3.4 Logout: should logout successfully", async () => {
         jest.spyOn(api, "get").mockResolvedValueOnce({
             ok: true,
         });
@@ -51,7 +51,7 @@ describe("API Tests", () => {
         expect(api.get).toHaveBeenCalledWith("/logoutuser");
     });
 
-    it("Logout: should throw an error if fails", async () => {
+    it("T3.5 Logout: should throw an error if fails", async () => {
         jest.spyOn(api, "get").mockRejectedValueOnce(new Error("Logout failed"));
 
         await expect(logout()).rejects.toThrow("Logout failed");
@@ -59,7 +59,7 @@ describe("API Tests", () => {
         expect(api.get).toHaveBeenCalledWith("/logoutuser");
     });
 
-    it("should sign up successfully", async () => {
+    it("T3.6 should sign up successfully", async () => {
         jest.spyOn(api, "post").mockResolvedValueOnce({
             ok: true,
         });
@@ -69,7 +69,7 @@ describe("API Tests", () => {
         const firstName = "Test";
         const lastName = "User";
 
-        await expect(signUp(username, password, firstName, lastName)).resolves.not.toThrow();
+        await expect(signUp(firstName, lastName, username, password)).resolves.not.toThrow();
         expect(api.post).toHaveBeenCalledWith(
             "/user",
             {
@@ -89,7 +89,7 @@ describe("API Tests", () => {
         );
     });
 
-    it("should throw an error if sign up fails", async () => {
+    it("T3.7 should throw an error if sign up fails", async () => {
         jest.spyOn(api, "post").mockRejectedValueOnce(new Error("Signup failed"));
 
         const username = "testuser";
@@ -97,7 +97,7 @@ describe("API Tests", () => {
         const firstName = "Test";
         const lastName = "User";
 
-        await expect(signUp(username, password, firstName, lastName)).rejects.toThrow(
+        await expect(signUp(firstName, lastName, username, password)).rejects.toThrow(
             "Signup failed",
         );
         expect(api.post).toHaveBeenCalledWith(

@@ -10,7 +10,6 @@ import {
 } from "@mui/material";
 import { useRollbar } from "@rollbar/react";
 import { FileData, WatchType } from "shared/api";
-// import useGetPredictedDataList from "shared/hooks/useGetPredictedDataList";
 import moment from "moment";
 import useGetPredictedDataList from "shared/hooks/useGetPredictedDataList";
 import styles from "./PredictedDataPage.module.css";
@@ -19,20 +18,25 @@ type PredictedFileWithType = FileData & { watch: WatchType; name: String; isSele
 
 const PredictedDataPage = function () {
     const rollbar = useRollbar();
-    rollbar.debug("Reached Predicted Data page");
+    rollbar.info("Reached Predicted Data page");
 
     // #TODO download selected files
     // #TODO refresh predicted file list
 
     const selectedFiles: { [index: number]: PredictedFileWithType } = {};
 
-    // #region Checkbox state and event handler
     const [checked, setChecked] = useState<Array<Number>>([]);
 
+    /**
+     * @param value the index of files in the list of avaliable files
+     * Pre-conditions: There is at least one file in the list of avaliable files
+     * Post-conditions: The selected file is added to the list of checked files
+     */
     const handleToggle = (value: number) => () => {
         const currentIndex = checked.indexOf(value);
         const newChecked = [...checked];
 
+        // adding to checked list
         if (currentIndex === -1) {
             newChecked.push(value);
             selectedFiles[value].isSelected = true;
@@ -44,11 +48,20 @@ const PredictedDataPage = function () {
         setChecked(newChecked);
     };
 
-    // #endregion
+    const { uploadedFiles: fitBitFiles, error: predictedFitbitError } = useGetPredictedDataList(
+        WatchType.FITBIT,
+    );
+    if (predictedFitbitError) {
+        rollbar.error(predictedFitbitError.toString());
+    }
 
-    // #region Predicted Files List
-    const { uploadedFiles: fitBitFiles } = useGetPredictedDataList(WatchType.FITBIT);
-    const { uploadedFiles: appleWatchFiles } = useGetPredictedDataList(WatchType.APPLE_WATCH);
+    const { uploadedFiles: appleWatchFiles, error: predictedAppleError } = useGetPredictedDataList(
+        WatchType.APPLE_WATCH,
+    );
+
+    if (predictedAppleError) {
+        rollbar.error(predictedAppleError.toString());
+    }
 
     // const fitBitFiles = [ //mock data
     //     {
@@ -100,12 +113,12 @@ const PredictedDataPage = function () {
               }))
             : [];
 
-    console.log(appleWatchPredictedFiles);
-    console.log(fitbitPredictedFiles);
-
     const availableFiles: Array<PredictedFileWithType> =
         fitbitPredictedFiles.concat(appleWatchPredictedFiles);
 
+    /**
+     * mapping avaliable files to html components
+     */
     const availableFilesDisplay =
         availableFiles.length > 0 ? (
             availableFiles.map((file, i) => {
@@ -143,8 +156,6 @@ const PredictedDataPage = function () {
                 No files
             </li>
         );
-    console.log(availableFilesDisplay);
-    // #endregion
 
     return (
         <div>

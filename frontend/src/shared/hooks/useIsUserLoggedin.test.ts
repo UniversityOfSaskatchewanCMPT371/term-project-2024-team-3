@@ -11,7 +11,7 @@ jest.mock("react-cookie", () => ({
 }));
 
 describe("useIsUserLoggedIn", () => {
-    it("returns false and clears storage and cookie when expiresAt is in the past", () => {
+    it("T3.8 returns false and clears storage and cookie when expiresAt is in the past", () => {
         const currentTime = moment("2024-01-02T00:00:00Z").valueOf();
 
         jest.spyOn(Storage.prototype, "getItem")
@@ -38,7 +38,7 @@ describe("useIsUserLoggedIn", () => {
         expect(hook.result.current).toBe(false);
     });
 
-    it("returns true when user is logged in and expiresAt is in the future", () => {
+    it("T3.9 returns true when user is logged in and expiresAt is in the future", () => {
         const currentTime = moment("2023-12-31T23:59:59Z").valueOf();
         jest.spyOn(Storage.prototype, "getItem")
             .mockReturnValueOnce('"2024-01-01T00:00:00Z"')

@@ -31,7 +31,7 @@ const getPredictedFilesSpy = jest
     .mockImplementation(async () => mockData);
 
 describe("useGetPredictedDataList", () => {
-    it("should get predicted files successfully", async () => {
+    it("T4.25 should get predicted files successfully", async () => {
         getPredictedFilesSpy.mockResolvedValue(mockData);
 
         const { result } = renderHook(() => useGetPredictedDataList(WatchType.APPLE_WATCH));
@@ -43,7 +43,7 @@ describe("useGetPredictedDataList", () => {
         expect(result.current.error).toBe(null);
     });
 
-    it("should handle getPredictedFiles when it errors", async () => {
+    it("T4.26 should handle getPredictedFiles when it errors", async () => {
         getPredictedFilesSpy.mockImplementation(async () => {
             throw new Error("Getting predicted file list failed.");
         });

@@ -47,6 +47,8 @@ Mac Users: [Docker](https://docs.docker.com/desktop/install/mac-install/) or [Or
 
 2. After installing maven make sure to run `mvn dependency:resolve` from the backend directory. You should always run this if there are new dependencies installed on the backend
 
+3. Make sure you have JDK11 installed and thats the version your IDE/Maven is using
+
 #### How To Run backend Tests:
 
 You have 2 options:

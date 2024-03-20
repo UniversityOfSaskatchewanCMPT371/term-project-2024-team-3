@@ -33,10 +33,10 @@ export const logout = async (): Promise<void> => {
 };
 
 export const signUp = async (
-    username: string,
-    password: string,
     firstName: string,
     lastName: string,
+    username: string,
+    password: string,
 ): Promise<void> => {
     const requestBody = {
         firstName,

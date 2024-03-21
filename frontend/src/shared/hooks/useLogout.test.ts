@@ -13,7 +13,7 @@ const logoutSpy = jest.spyOn(API, "logout").mockImplementation(async () => {});
 const removeLocalStorageSpy = jest.spyOn(Storage.prototype, "removeItem");
 
 describe("useLogout", () => {
-    it("should handle logout successfully", async () => {
+    it("T3.12 should handle logout successfully", async () => {
         const { result, waitForNextUpdate } = renderHook(useLogout);
 
         act(() => {
@@ -31,7 +31,7 @@ describe("useLogout", () => {
         expect(result.current.error).toBe(null);
     });
 
-    it("should handle logout when it errors", async () => {
+    it("T3.13 should handle logout when it errors", async () => {
         const { result, waitForNextUpdate } = renderHook(useLogout);
 
         logoutSpy.mockImplementation(async () => {
@@ -45,8 +45,8 @@ describe("useLogout", () => {
         await waitForNextUpdate();
 
         expect(logoutSpy).toHaveBeenCalledTimes(1);
-        expect(removeLocalStorageSpy).not.toHaveBeenCalled();
-        expect(mockRemoveCookies).not.toHaveBeenCalled();
+        expect(removeLocalStorageSpy).toHaveBeenCalled();
+        expect(mockRemoveCookies).toHaveBeenCalled();
         expect(result.current.isLoading).toBe(false);
         expect(result.current.error).toBe("Logout failed. Please try again.");
     });

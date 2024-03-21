@@ -17,14 +17,14 @@ const useLogout = (): UseLogout => {
         setIsLoading(true);
         try {
             await logout();
-            localStorage.removeItem("expires_at");
-            localStorage.removeItem("user_id");
-            removeCookie("SESSION");
-            window.location.reload();
         } catch (error) {
             setErrorState("Logout failed. Please try again.");
         } finally {
             setIsLoading(false);
+            localStorage.removeItem("expires_at");
+            localStorage.removeItem("user_id");
+            removeCookie("SESSION");
+            window.location.reload();
         }
     };
 

@@ -23,7 +23,7 @@ const getUploadedFileSpy = jest
     .mockImplementation(async () => mockData);
 
 describe("useGetUploadedFiles", () => {
-    it("should get uploaded files successfully", async () => {
+    it("T3.19 should get uploaded files successfully", async () => {
         getUploadedFileSpy.mockResolvedValue(mockData);
 
         const { result } = renderHook(() => useGetUploadedFiles(WatchType.FITBIT));
@@ -37,7 +37,7 @@ describe("useGetUploadedFiles", () => {
         });
     });
 
-    it("should handle getUploadedFiles when it errors", async () => {
+    it("T3.20 should handle getUploadedFiles when it errors", async () => {
         const { result } = renderHook(() => useGetUploadedFiles(WatchType.APPLE_WATCH));
 
         getUploadedFileSpy.mockImplementation(async () => {

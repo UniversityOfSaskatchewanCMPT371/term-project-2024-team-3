@@ -7,7 +7,7 @@ import UploadedFiles from "./components/UploadedFiles";
 
 function FileUploadPage(): ReactElement {
     const rollbar = useRollbar();
-    rollbar.debug("Reached File-upload page");
+    rollbar.info("Reached File-upload page");
 
     return (
         <div className={styles.page}>

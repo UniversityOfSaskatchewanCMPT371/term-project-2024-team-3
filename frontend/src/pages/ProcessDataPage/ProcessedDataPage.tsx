@@ -1,15 +1,16 @@
 import React, { useState } from "react";
 import { RadioGroup, FormControl, FormControlLabel, Radio, Button, Container } from "@mui/material";
-import { DataType, PredictionType, ProcessedFileData, WatchType } from "shared/api";
+import { DataType, PredictionType, ProcessedFileData, WatchType, DownloadType } from "shared/api";
 import useGetProcessedDataList from "shared/hooks/useGetProcessedDataList";
 import moment from "moment";
-import usePredictedFile from "shared/hooks/usePredictFile";
+import usePredictFile from "shared/hooks/usePredictFile";
+import useDownload from "shared/hooks/useDownload";
 import { useRollbar } from "@rollbar/react";
 import styles from "./ProcessedDataPage.module.css";
 
 const ProcessedDataPage = function () {
     const rollbar = useRollbar();
-    rollbar.debug("Reached Processed Data page");
+    rollbar.info("Reached Processed Data page");
 
     const [currentFile, setCurrentFile] = useState<any>();
     const [selectedModel, setSelectedModel] = useState<PredictionType>(PredictionType.SVM);
@@ -21,9 +22,11 @@ const ProcessedDataPage = function () {
         "selectedModel should be initialized to PredictionType.SVM",
     );
 
-    const { handlePredict } = usePredictedFile();
+    const { handlePredict, error: usePredictError } = usePredictFile();
+    const { handleDownload, error: useDownloadError } = useDownload();
 
     const { uploadedFiles: fitbitFiles } = useGetProcessedDataList(WatchType.FITBIT);
+
     const { uploadedFiles: appleWatchFiles } = useGetProcessedDataList(WatchType.APPLE_WATCH);
 
     const handleModelChange = (model: PredictionType) => {
@@ -71,35 +74,34 @@ const ProcessedDataPage = function () {
             const { id, watch } = currentFile;
             const lowerCaseWatch = watch.toLowerCase();
             handlePredict(id, selectedModel, lowerCaseWatch);
+            if (usePredictError) {
+                rollbar.error(usePredictError);
+            }
         }
     };
 
     /**
-     * Downloads the currently selected file to the users computer
+     * Pre-conditions: A file is selected
+     * Post-conditions: Downloads the currently selected file to the users computer
      */
     const downloadFile = (event: React.MouseEvent) => {
         event.preventDefault();
         // make sure a file is selected before you attempt to download it
         console.assert(currentFile !== undefined, "A file should be selected before downloading");
-    };
-
-    /**
-     * deletes a file
-     * NOTE: The delete route in the back-end does not exist, but the hook works
-     */
-    const deleteFile = (event: React.MouseEvent) => {
-        event.preventDefault();
-        // make sure a file is selected before you attempt to delete it
-        console.assert(currentFile !== undefined, "A file should be selected before deleting");
-        // if (currentFile) {
-        //   const { id, watch } = currentFile;
-        //   const lowerCaseWatch = watch.toLowerCase();
-        //   handleDelete(id, lowerCaseWatch);
-        // }
+        if (currentFile) {
+            const { id, watch } = currentFile;
+            const stringID = id.toString();
+            handleDownload(stringID, DownloadType.PROCESS, watch);
+            if (useDownloadError) {
+                rollbar.error(useDownloadError);
+            }
+        }
     };
 
     /**
      *  Maps the list of files to a list of radial selectors for the files list
+     *  Pre-conditions: files has at least one file in it
+     *  Post-conditions: returns a list of formatted html components
      */
     const getRendersOfFiles = () => {
         console.assert(files.length > 0, "Files array should contain data for rendering");
@@ -223,15 +225,6 @@ const ProcessedDataPage = function () {
                             data-testid="Download_Button"
                         >
                             Download File
-                        </Button>
-                        <Button
-                            className={styles.goToPredicted}
-                            variant="contained"
-                            href="/PredictedDataPage"
-                            onClick={deleteFile}
-                            data-testid="Delete_Button"
-                        >
-                            DELETE FILE{" "}
                         </Button>
                     </div>
                 </div>

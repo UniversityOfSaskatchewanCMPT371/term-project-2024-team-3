@@ -6,6 +6,7 @@ import {
     RawFilesData,
     DownloadData,
     PredictionType,
+    DownloadType,
 } from "shared/api";
 
 /**
@@ -29,7 +30,7 @@ export async function upload(form: FormData, year: string, watchType: WatchType)
  * @param watchType the type of watch to be processed
  */
 export async function process(id: any, watchType: WatchType): Promise<void> {
-    await api.get(`/rest/beapengine//${watchType}/process/${id}`);
+    await api.get(`/rest/beapengine/${watchType}/process/${id}`);
 }
 
 /**
@@ -43,7 +44,7 @@ export async function predict(
     model: PredictionType,
     watchType: WatchType,
 ): Promise<void> {
-    await api.get(`/rest/beapengine//${watchType}/predict/${id}/${model}`);
+    await api.get(`/rest/beapengine/${watchType}/predict/${id}/${model}`);
 }
 
 /**
@@ -55,11 +56,11 @@ export async function predict(
  */
 export async function download(
     id: string,
-    type: string,
+    type: DownloadType,
     watchType: WatchType,
 ): Promise<DownloadData> {
-    const response = await api.get(`/rest/beapengine//${watchType}/download_file/${id}/${type}`);
-    return { file: response.data.file };
+    const response = await api.get(`/rest/beapengine/${watchType}/download_file/${id}/${type}`);
+    return { file: response.data?.file };
 }
 
 /**
@@ -78,7 +79,7 @@ export const deleteFile = async (id: string, watchType: WatchType): Promise<void
  */
 export async function getUploadedFiles(watchType: WatchType): Promise<RawFilesData> {
     const response = await api.get(`/rest/beapengine/${watchType}/list/raw`);
-    return { list: response.data.list };
+    return { list: response.data.list ?? [] };
 }
 
 /**
@@ -88,7 +89,7 @@ export async function getUploadedFiles(watchType: WatchType): Promise<RawFilesDa
  */
 export async function getPredictedDataList(watchType: WatchType): Promise<PredictedFilesData> {
     const response = await api.get(`/rest/beapengine/${watchType}/list/predicted`);
-    return { list: response.data.list };
+    return { list: response.data.list ?? [] };
 }
 
 /**
@@ -98,5 +99,5 @@ export async function getPredictedDataList(watchType: WatchType): Promise<Predic
  */
 export async function getProcessedDataList(watchType: WatchType): Promise<ProcessedFilesData> {
     const response = await api.get(`/rest/beapengine/${watchType}/list/processed`);
-    return { list: response.data.list };
+    return { list: response.data.list ?? [] };
 }

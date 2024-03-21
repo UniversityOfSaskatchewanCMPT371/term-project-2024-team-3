@@ -23,7 +23,7 @@ const ProcessedDataPage = function () {
         "selectedModel should be initialized to PredictionType.SVM",
     );
 
-    const [percentage, setPercentage] = useState<number>(0);
+    const [percentage, setPercentage] = useState<number>(-1);
 
     const { handlePredict, error: usePredictError } = usePredictFile();
     const { handleDownload, error: useDownloadError } = useDownload();
@@ -148,16 +148,22 @@ const ProcessedDataPage = function () {
         });
     };
 
-    const incrementPercent = () => {
-        setPercentage(percentage + 10);
-    };
+    /** for testing purposes */
+    // const incrementPercent = () => {
+    //     setPercentage(percentage + 10);
+    // };
+
+    // const resetPercent = () =>{
+    //     setPercentage(0);
+    // }
 
     getRendersOfFiles();
 
     return (
         <div>
             <ProgressBar percentage={percentage} />
-            <Button
+            {/* for testing purposes */}
+            {/* <Button
                 variant="contained"
                 onClick={incrementPercent}
                 sx={{
@@ -166,6 +172,15 @@ const ProcessedDataPage = function () {
             >
                 Increment
             </Button>
+            <Button
+                variant="contained"
+                onClick={resetPercent}
+                sx={{
+                    zIndex: 201,
+                }}
+            >
+                reset
+            </Button> */}
 
             <Container className={styles.containerDiv}>
                 <div className={styles.action_bar}>

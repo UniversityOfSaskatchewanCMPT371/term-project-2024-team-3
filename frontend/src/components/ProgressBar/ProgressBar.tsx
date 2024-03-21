@@ -47,6 +47,8 @@ function ProgressBar(props: Props): React.ReactElement | null {
 
     return (
         <div>
+            <div className={styles.overlay} />
+
             <div className={styles.popup}>
                 <div className={styles.header}>
                     <Button
@@ -54,7 +56,7 @@ function ProgressBar(props: Props): React.ReactElement | null {
                         variant="contained"
                         // onClick={closePopup}
                     >
-                        _
+                        Minimize
                     </Button>
                 </div>
 
@@ -64,7 +66,30 @@ function ProgressBar(props: Props): React.ReactElement | null {
                     </div>
                     
                     <div>{percentage}</div> */}
-                    <LinearProgress variant="determinate" value={percentage} />
+                    <LinearProgress
+                        className={styles.progressBar}
+                        variant="determinate"
+                        value={percentage}
+                        sx={{
+                            position: "relative",
+                            marginLeft: 5,
+                            height: 60,
+                            bgcolor: `rgb(217, 217, 217)`,
+                            boxShadow: 1,
+                            borderRadius: 30,
+                            "& .MuiLinearProgress-bar": {
+                                position: "absolute",
+                                marginLeft: 0,
+                                width: 1,
+                                height: 0.75,
+                                top: "12.5%",
+                                // transform: `translate(-50%, -50%)`,
+                                boxShadow: 1,
+                                borderRadius: 10,
+                                backgroundColor: `rgb(54, 189, 196)`,
+                            },
+                        }}
+                    />
                 </div>
             </div>
             <button className="maximizeButton" type="button" onClick={openPopup}>

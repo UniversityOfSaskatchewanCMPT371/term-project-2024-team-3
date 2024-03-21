@@ -26,7 +26,7 @@ function App(): React.ReactElement<typeof Router> {
                     <Router>
                         <Navbar />
                         <HelpPopup />
-                        <ProgressBar percentage={20} />
+                        <ProgressBar percentage={70} />
                         <Routes>
                             <Route path="/" element={<HomePage />} />
                             <Route path="/login" element={<LoginPage />} />

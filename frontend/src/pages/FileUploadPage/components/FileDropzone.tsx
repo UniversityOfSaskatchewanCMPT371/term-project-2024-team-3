@@ -11,7 +11,7 @@ import styles from "../FileUpload.module.css";
 
 function FileDropZone(): ReactElement {
     const rollbar = useRollbar();
-    rollbar.info("Reached dropzone component");
+    rollbar.debug("Reached dropzone component");
 
     const { handleUpload, error: useUploadError } = useUpload();
 
@@ -80,7 +80,7 @@ function FileDropZone(): ReactElement {
      *      key dependant on years that can be parsed from the files names
      */
     const onDrop = (acceptedFiles: FileWithPath[]) => {
-        rollbar.info("onDrop called");
+        rollbar.info("User has dropped files into dropzone");
         if (acceptedFiles?.length) {
             rollbar.debug(acceptedFiles);
             const fy = { ...filesPerYear };
@@ -89,7 +89,6 @@ function FileDropZone(): ReactElement {
             acceptedFiles.forEach((file) => {
                 // apple files do not contain a year
                 if (currentFileType === WatchType.APPLE_WATCH) {
-                    rollbar.info("Dropped ");
                     if (fy["Apple Export"]) fy["Apple Export"].push(file);
                     else fy["Apple Export"] = [file];
                     yearSet.add("Apple Export");
@@ -119,8 +118,8 @@ function FileDropZone(): ReactElement {
      * Postconditon: Given years files are zipped and sent to the api and are removed from filesPerYear
      */
     const uploadFiles = async (year: string) => {
-        rollbar.debug("Upload called with year: ".concat(year));
-        console.assert(Object.keys(filesPerYear).includes(year), "Year doesn't have any files");
+        console.assert(Object.keys(filesPerYear).includes(year), "Year doesn't have any files"); // call assert() instead of console.assert() and can handle AssertionError with rollbar call and graceful exit instead
+        // this work should be done in a different ticket
         const filesToZip = [...filesPerYear[year]];
         const zip = new Zip();
         if (filesToZip.length < 1) {
@@ -149,7 +148,7 @@ function FileDropZone(): ReactElement {
                 }
                 const newFilesPerYear = { ...filesPerYear };
                 delete newFilesPerYear[year];
-                rollbar.info("removed uploaded files from accepted files");
+                rollbar.debug("removed uploaded files from accepted files");
                 setFilesPerYear(newFilesPerYear);
             });
     };

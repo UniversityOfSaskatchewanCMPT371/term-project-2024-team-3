@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { useRollbar } from "@rollbar/react";
 import { signUp } from "../api";
 
 type UseSignup = {
@@ -15,6 +16,7 @@ type UseSignup = {
 const useSignup = (): UseSignup => {
     const [isLoading, setIsLoading] = useState(false);
     const [errorState, setErrorState] = useState<string | null>(null);
+    const rollbar = useRollbar();
 
     const handleSignup = async (
         username: string,
@@ -23,11 +25,15 @@ const useSignup = (): UseSignup => {
         lastname: string,
     ): Promise<void> => {
         setIsLoading(true);
+        const infoMsg = `Request for signup of user ${username}`;
         try {
+            rollbar.info(`${infoMsg} sent.`);
             await signUp(username, password, firstname, lastname);
             setErrorState(null);
+            rollbar.info(`${infoMsg} completed without errors.`);
         } catch (error) {
             setErrorState("Signup failed. Please try again.");
+            rollbar.error(`${infoMsg} failed.`);
         } finally {
             setIsLoading(false);
         }

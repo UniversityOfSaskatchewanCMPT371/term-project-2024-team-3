@@ -1,6 +1,9 @@
 import React from "react";
 import { useRollbar } from "@rollbar/react";
-import { Button, LinearProgress } from "@mui/material";
+import {
+    Button,
+    // LinearProgress
+} from "@mui/material";
 import { useAuth } from "../Authentication/useAuth";
 import styles from "./ProgressBar.module.css";
 
@@ -24,77 +27,64 @@ function ProgressBar(props: Props): React.ReactElement | null {
     // const [percentage, setPercentage] = useState<number>();
     const { percentage } = props;
 
-    function openPopup() {
-        const popup = document.getElementById("popup");
+    const openPopup = () => {
+        const popup = document.getElementById("progressBarPopup");
+        const overLay = document.getElementById("progressOverlay");
+        console.log(popup);
 
-        // console.assert(popup != null);
-        if (popup == null) {
+        if (popup == null || overLay == null) {
             rollbar.error("Help popup element does not exist in document");
         } else {
-            popup.style.display = "block";
+            popup.hidden = false;
+            overLay.hidden = false;
         }
-    }
+    };
 
-    // function closePopup() {
-    //     const popup = document.getElementById("popup");
+    const closePopup = () => {
+        const popup = document.getElementById("progressBarPopup");
+        const overLay = document.getElementById("progressOverlay");
+        console.log(popup);
 
-    //     if (popup == null) {
-    //         rollbar.error("Help popup element does not exist in document");
-    //     } else {
-    //         popup.style.display = "none";
-    //     }
-    // }
+        if (popup == null || overLay == null) {
+            rollbar.error("Help popup element does not exist in document");
+        } else {
+            popup.hidden = true;
+            overLay.hidden = true;
+        }
+    };
 
     return (
-        <div>
-            <div className={styles.overlay} />
+        <div className={styles.main}>
+            <div className={styles.overlay} id="progressOverlay" />
 
-            <div className={styles.popup}>
+            <div className={styles.popup} id="progressBarPopup">
                 <div className={styles.header}>
                     <Button
                         className={styles.minimizeButton}
                         variant="contained"
-                        // onClick={closePopup}
+                        onClick={closePopup}
                     >
                         Minimize
                     </Button>
                 </div>
 
-                <div className="body">
-                    {/* <div className={styles.outterProgress}>
-                        <div className={styles.innerProgress} />
+                <div className={styles.body}>
+                    Your task is being processed. Please wait...
+                    <div className={styles.outterProgress}>
+                        <div
+                            className={styles.innerProgress}
+                            style={{
+                                width: `${percentage}%`,
+                            }}
+                        >
+                            <div className={styles.percentageText}>{`${percentage}%`}</div>
+                        </div>
                     </div>
-                    
-                    <div>{percentage}</div> */}
-                    <LinearProgress
-                        className={styles.progressBar}
-                        variant="determinate"
-                        value={percentage}
-                        sx={{
-                            position: "relative",
-                            marginLeft: 5,
-                            height: 60,
-                            bgcolor: `rgb(217, 217, 217)`,
-                            boxShadow: 1,
-                            borderRadius: 30,
-                            "& .MuiLinearProgress-bar": {
-                                position: "absolute",
-                                marginLeft: 0,
-                                width: 1,
-                                height: 0.75,
-                                top: "12.5%",
-                                // transform: `translate(-50%, -50%)`,
-                                boxShadow: 1,
-                                borderRadius: 10,
-                                backgroundColor: `rgb(54, 189, 196)`,
-                            },
-                        }}
-                    />
                 </div>
             </div>
-            <button className="maximizeButton" type="button" onClick={openPopup}>
+            <Button className={styles.maximizeButton} variant="contained" onClick={openPopup}>
                 +
-            </button>
+            </Button>
         </div>
     );
 }

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { RadioGroup, FormControl, FormControlLabel, Radio, Button, Container } from "@mui/material";
 import { DataType, PredictionType, ProcessedFileData, WatchType, DownloadType } from "shared/api";
-// import ProgressBar from "components/ProgressBar/ProgressBar";
+import ProgressBar from "components/ProgressBar/ProgressBar";
 import useGetProcessedDataList from "shared/hooks/useGetProcessedDataList";
 import moment from "moment";
 import usePredictFile from "shared/hooks/usePredictFile";
@@ -22,6 +22,8 @@ const ProcessedDataPage = function () {
         selectedModel === PredictionType.SVM,
         "selectedModel should be initialized to PredictionType.SVM",
     );
+
+    const [percentage, setPercentage] = useState<number>(0);
 
     const { handlePredict, error: usePredictError } = usePredictFile();
     const { handleDownload, error: useDownloadError } = useDownload();
@@ -74,7 +76,11 @@ const ProcessedDataPage = function () {
         if (currentFile) {
             const { id, watch } = currentFile;
             const lowerCaseWatch = watch.toLowerCase();
+
+            // TODO: Do a better job of guestimating percentages...
+            setPercentage(20);
             handlePredict(id, selectedModel, lowerCaseWatch);
+            setPercentage(100);
             if (usePredictError) {
                 rollbar.error(usePredictError);
             }
@@ -142,11 +148,25 @@ const ProcessedDataPage = function () {
         });
     };
 
+    const incrementPercent = () => {
+        setPercentage(percentage + 10);
+    };
+
     getRendersOfFiles();
 
     return (
         <div>
-            {/* <ProgressBar percentage={20} /> */}
+            <ProgressBar percentage={percentage} />
+            <Button
+                variant="contained"
+                onClick={incrementPercent}
+                sx={{
+                    zIndex: 201,
+                }}
+            >
+                Increment
+            </Button>
+
             <Container className={styles.containerDiv}>
                 <div className={styles.action_bar}>
                     <FormControl component="fieldset">

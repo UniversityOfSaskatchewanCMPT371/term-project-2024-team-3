@@ -1,5 +1,5 @@
 .helpButton {
-    background-color: #5fced3;
+    background-color: #36bdc4;
     color: white;
     border-bottom-left-radius: 10px;
     float: right;
@@ -19,6 +19,7 @@
         2px 2px 4px rgba(0, 0, 0, 0.2),
         -2px -2px 4px rgba(0, 0, 0, 0.2);
     transition-duration: 500ms;
+    background-color: #2e9ca1;
 }
 
 .helpButton:active {

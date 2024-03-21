@@ -87,7 +87,7 @@ const ProcessedDataPage = function () {
     const downloadFile = (event: React.MouseEvent) => {
         event.preventDefault();
         // make sure a file is selected before you attempt to download it
-        console.assert(currentFile !== undefined, "A file should be selected before downloading");
+        console.assert(currentFile !== undefined, "A file should be selected before downloading"); // ahhhhhh
         if (currentFile) {
             const { id, watch } = currentFile;
             const stringID = id.toString();

@@ -15,18 +15,67 @@ afterEach(() => {
     authSpy.mockClear();
 });
 
-test("TID 3.1. Renders HelpPopup component", () => {
+test("TID 5.01. Renders ProgressBar component", () => {
     authSpy.mockReturnValue({ isAuthenticated: true } as AuthReturnValue);
-    const { getByText, getByTestId } = renderWithProvider(<ProgressBar percentage={70} />);
+    const { getByText, getByTestId } = renderWithProvider(
+        <ProgressBar percentage={70} message="This is a test message" isVisible />,
+    );
 
-    getByTestId("popup");
-    getByText("70%");
-    getByText("Your request is being processed. Please wait...");
-    const button = getByTestId("minimizeButton");
-    if (button === null) {
-        throw new Error("Button didnt render");
+    const popup = getByTestId("progressBarPopup"); // popup displays
+    getByText("70%"); // correct percent in the bar
+    getByText("This is a test message");
+
+    // const progressBar =
+    getByTestId("progressBarInner");
+
+    // expect(progressBar).toHaveAttribute("width", "70%")     // making sure the width is correct
+    // expect(progressBar.getAttribute("width")).toEqual("70%");    // cant seem to get this to work :(
+
+    const minButton = getByTestId("minimizeButton");
+    if (minButton === null) {
+        throw new Error("minButton did not render");
     } else {
-        // press the button
-        userEvent.click(button);
+        // press the minimize button
+        userEvent.click(minButton);
+        expect(popup).not.toBeVisible(); // should be hidden
+        const maxButton = getByTestId("maximizeButton");
+        if (maxButton === null) {
+            throw new Error("maxButton did not render");
+        } else {
+            // click the max button
+            expect(maxButton).toBeInTheDocument();
+            userEvent.click(maxButton);
+
+            expect(popup).toBeVisible(); // should be visible
+            getByText("70%"); // correct percent in the bar
+            getByText("This is a test message");
+        }
     }
+});
+
+test("TID 5.02. Does not render ProgressBar component with isVisible=false", () => {
+    authSpy.mockReturnValue({ isAuthenticated: true } as AuthReturnValue);
+    const { container } = renderWithProvider(
+        <ProgressBar percentage={70} message="This is a test message" isVisible={false} />,
+    );
+
+    expect(container).toBeEmptyDOMElement();
+});
+
+test("TID 5.03. Does not render ProgressBar component with percentage < 0", () => {
+    authSpy.mockReturnValue({ isAuthenticated: true } as AuthReturnValue);
+    const { container } = renderWithProvider(
+        <ProgressBar percentage={-1} message="This is a test message" isVisible />,
+    );
+
+    expect(container).toBeEmptyDOMElement();
+});
+
+test("TID 5.04. Does not render ProgressBar component with percentage > 100", () => {
+    authSpy.mockReturnValue({ isAuthenticated: true } as AuthReturnValue);
+    const { container } = renderWithProvider(
+        <ProgressBar percentage={101} message="This is a test message" isVisible />,
+    );
+
+    expect(container).toBeEmptyDOMElement();
 });

@@ -86,12 +86,13 @@ function ProgressBar(props: Props): React.ReactElement | null {
             <div className={styles.main}>
                 <div className={styles.overlay} id="progressOverlay" />
 
-                <div className={styles.popup} id="progressBarPopup">
+                <div className={styles.popup} id="progressBarPopup" data-testid="progressBarPopup">
                     <div className={styles.header}>
                         <Button
                             className={styles.minimizeButton}
                             variant="contained"
                             onClick={closePopup}
+                            data-testid="minimizeButton"
                         >
                             Minimize
                         </Button>
@@ -105,6 +106,7 @@ function ProgressBar(props: Props): React.ReactElement | null {
                                 style={{
                                     width: `${getMinWidth()}%`,
                                 }}
+                                data-testid="progressBarInner"
                             >
                                 <div className={styles.percentageText}>{`${percentage}%`}</div>
                             </div>
@@ -116,6 +118,7 @@ function ProgressBar(props: Props): React.ReactElement | null {
                     id="maximizeButton"
                     variant="contained"
                     onClick={openPopup}
+                    data-testid="maximizeButton"
                 >
                     Maximize
                 </Button>

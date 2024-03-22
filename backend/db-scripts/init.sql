@@ -432,6 +432,13 @@ CREATE TABLE public.tbl_user_tbl_role (
     roleids_id bigint NOT NULL
 );
 
+CREATE TABLE public.test_table (
+    id INT PRIMARY KEY,
+    name VARCHAR(50),
+    email VARCHAR(100),
+
+    CONSTRAINT uk_gafrg3m3c615etla3ll182w0p UNIQUE (name, email)
+);
 
 ALTER TABLE public.tbl_user_tbl_role OWNER TO root;
 
@@ -521,3 +528,12 @@ INSERT INTO public.tbl_role (id, description, role_name)
 VALUES
    (4, 'Administrator role', 'ROLE_ADMIN'),
    (5, 'User role', 'ROLE_USER');
+
+INSERT INTO public.tbl_user (id, first_name, last_name, password, username)
+VALUES (1, 'Test', 'Tester', public.crypt('123', public.gen_salt('md5')), 'hello');
+
+INSERT INTO public.tbl_user_tbl_access_group (tbl_user_id, accessgroupids_id)
+VALUES (1, 4);
+
+INSERT INTO public.tbl_user_tbl_role (tbl_user_id, roleids_id)
+VALUES (1, 5);

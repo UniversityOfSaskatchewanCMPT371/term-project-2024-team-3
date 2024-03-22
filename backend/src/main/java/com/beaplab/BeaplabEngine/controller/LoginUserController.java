@@ -14,6 +14,9 @@ import com.beaplab.BeaplabEngine.service.IncorrectLoginsService;
 import com.beaplab.BeaplabEngine.service.LoginUserService;
 import com.beaplab.BeaplabEngine.service.UserService;
 import com.beaplab.BeaplabEngine.util.objectMapper.UserMapper;
+
+import com.rollbar.notifier.Rollbar;
+
 import io.swagger.annotations.ApiOperation;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -43,7 +46,7 @@ public class LoginUserController {
 
     
     final static Logger logger = LogManager.getLogger(LoginUserController.class.getName());
-
+    Rollbar rollbar;
     /**
      * injecting LoginUserService into this class
      */
@@ -116,19 +119,26 @@ public class LoginUserController {
         Iterator<? extends ExpiringSession> iterator = usersSessions.iterator();
         while (iterator.hasNext()) {
             Set<String> set = iterator.next().getAttributeNames();
-            for (String str: set)
+            for (String str: set){
                 logger.info("str: " + str);
+                rollbar.info("str: " + str);
+            }
+
         }
 
         if (!usersSessions.isEmpty()){
             logger.info("A valid session exists for username: " + username);
+            rollbar.info("A valid session exists for username: " + username);
             Authentication authToken = (Authentication) request.getSession(false).getAttribute("token");
             logger.info("auth: " + authToken);
+            rollbar.info("auth: " + authToken);
+
         }
         else {
             logger.info("A valid session doesn't exists for username: " + username);
-        }
+            rollbar.info("A valid session doesn't exists for username: " + username);
 
+        }
         return new ResponseEntity<String>("checkAuth", HttpStatus.OK);
     }
 

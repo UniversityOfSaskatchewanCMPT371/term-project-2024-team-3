@@ -4,8 +4,12 @@ on:
     branches:
       - master
   pull_request:
+    branches:
+      - master
+      - "release/*"
     paths:
-      - "frontend/*"
+      - "**/*.ts"
+      - "**/*.tsx"
 
 jobs:
   build-and-test:

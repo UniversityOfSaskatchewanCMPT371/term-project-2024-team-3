@@ -4,8 +4,13 @@ on:
     branches:
       - master
   pull_request:
+    branches:
+      - master
+      - "release/*"
     paths:
-      - "backend/*"
+      - "**/*.java"
+      - "**/*.properties"
+      - "**/pom.xml"
 
 jobs:
   build-and-test:

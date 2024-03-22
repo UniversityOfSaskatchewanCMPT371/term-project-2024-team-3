@@ -53,6 +53,7 @@ public class UserServiceTest {
 
     @Test
     /*
+     * T4.50
      * Preconditions: User list is not empty
      * Post-conditions: Returns a list of UserDto objects
      */
@@ -63,17 +64,13 @@ public class UserServiceTest {
                 mockUser(
                         "Michael",
                         "Scott",
-                        "PrisonMike"
-                )
-        );
+                        "PrisonMike"));
 
         users.add(
                 mockUser(
                         "Dwight",
                         "Schrute",
-                        "MonkeyTrainer"
-                )
-        );
+                        "MonkeyTrainer"));
 
         when(userDao.list()).thenReturn(users);
 
@@ -85,6 +82,7 @@ public class UserServiceTest {
 
     @Test
     /*
+     * T4.51
      * Preconditions: User list is empty
      * Post-conditions: Returns an empty list
      */
@@ -99,6 +97,7 @@ public class UserServiceTest {
 
     @Test
     /*
+     * T4.52
      * Preconditions: User does not exist in the database
      * Post-conditions: New user is saved successfully
      */
@@ -123,6 +122,7 @@ public class UserServiceTest {
 
     @Test
     /*
+     * T4.53
      * Preconditions: User already exists in the database
      * Post-conditions: Returns error message indicating user already exists
      */
@@ -145,6 +145,7 @@ public class UserServiceTest {
 
     @Test
     /*
+     * T4.54
      * Preconditions: User exists in the database
      * Post-conditions: User details are updated
      */
@@ -157,6 +158,7 @@ public class UserServiceTest {
 
     @Test
     /*
+     * T4.55
      * Preconditions: User exists in the database
      * Post-conditions: Returns UserDto object
      */
@@ -175,6 +177,7 @@ public class UserServiceTest {
 
     @Test
     /*
+     * T4.56
      * Preconditions: User does not exist in the database
      * Post-conditions: Returns null
      */
@@ -187,6 +190,7 @@ public class UserServiceTest {
 
     @Test
     /*
+     * T4.57
      * Preconditions: User exists in database
      * Post-conditions: User is deleted in database
      */
@@ -199,6 +203,7 @@ public class UserServiceTest {
 
     @Test
     /*
+     * T4.58
      * Preconditions: User exists in the database and credentials are valid
      * Post-conditions: Returns JSONObject indicating successful login
      */
@@ -225,6 +230,7 @@ public class UserServiceTest {
 
     @Test
     /*
+     * T4.59
      * Preconditions: User account is locked
      * Post-conditions: Returns JSONObject indicating account is locked
      */
@@ -246,9 +252,7 @@ public class UserServiceTest {
                         userDto,
                         true,
                         0,
-                        lockedDate
-                )
-        );
+                        lockedDate));
 
         JSONObject results = userService.login(user.getUsername(), user.getPassword());
 
@@ -257,8 +261,10 @@ public class UserServiceTest {
 
     @Test
     /*
+     * T4.60
      * Preconditions: User account is locked and unlock time has passed
-     * Post-conditions: Returns JSONObject indicating successful login and account is unlocked
+     * Post-conditions: Returns JSONObject indicating successful login and account
+     * is unlocked
      */
     public void testValidLoginWithUnlock() {
         User user = mockUser();
@@ -281,9 +287,7 @@ public class UserServiceTest {
                         userDto,
                         true,
                         2,
-                        lockedDate
-                )
-        );
+                        lockedDate));
         when(util.dateDifference(eq(lockedDate), any(Date.class))).thenReturn(25L);
 
         JSONObject results = userService.login(user.getUsername(), user.getPassword());
@@ -298,6 +302,7 @@ public class UserServiceTest {
 
     @Test
     /*
+     * T4.61
      * Preconditions: Correct username and invalid password
      * Post-conditions: Returns JSONObject indicating invalid login attempt
      */
@@ -318,9 +323,7 @@ public class UserServiceTest {
                         userDto,
                         false,
                         0,
-                        getTimestamp(2023, 0, 1, 0, 0)
-                )
-        );
+                        getTimestamp(2023, 0, 1, 0, 0)));
 
         JSONObject result = userService.login(user.getUsername(), user.getPassword());
 
@@ -332,8 +335,11 @@ public class UserServiceTest {
 
     @Test
     /*
-     * Preconditions: Correct username and invalid password and is the first invalid attempt
-     * Post-conditions: Returns JSONObject indicating invalid login attempt and increments incorrect attempt count
+     * T4.62
+     * Preconditions: Correct username and invalid password and is the first invalid
+     * attempt
+     * Post-conditions: Returns JSONObject indicating invalid login attempt and
+     * increments incorrect attempt count
      */
     public void testInvalidLoginFirstTime() {
         User user = mockUser();
@@ -363,7 +369,9 @@ public class UserServiceTest {
 
     @Test
     /*
-     * Preconditions: Invalid login and user account is already locked and unlock time has not past
+     * T4.63
+     * Preconditions: Invalid login and user account is already locked and unlock
+     * time has not past
      * Post-conditions: Returns JSONObject indicating account is locked
      */
     public void testInvalidLoginLocked() {
@@ -385,9 +393,7 @@ public class UserServiceTest {
                         userDto,
                         true,
                         1,
-                        lockedDate
-                )
-        );
+                        lockedDate));
 
         JSONObject result = userService.login(user.getUsername(), user.getPassword());
 
@@ -396,8 +402,10 @@ public class UserServiceTest {
 
     @Test
     /*
+     * T4.64
      * Preconditions: User account is locked and unlock time has passed
-     * Post-conditions: Returns JSONObject indicating invalid login and account is unlocked
+     * Post-conditions: Returns JSONObject indicating invalid login and account is
+     * unlocked
      */
     public void testInvalidLoginUnlock() {
         User user = mockUser();
@@ -423,9 +431,7 @@ public class UserServiceTest {
                         userDto,
                         true,
                         1,
-                        lockedDate
-                )
-        );
+                        lockedDate));
 
         JSONObject result = userService.login(user.getUsername(), user.getPassword());
 
@@ -439,6 +445,7 @@ public class UserServiceTest {
 
     @Test
     /*
+     * T4.65
      * Preconditions: User credentials are invalid and user does not exist
      * Post-conditions: Returns JSONObject indicating invalid login attempt
      */
@@ -459,6 +466,7 @@ public class UserServiceTest {
 
     @Test
     /*
+     * T4.66
      * Preconditions: User exists in the database
      * Post-conditions: Returns UserDto object
      */
@@ -474,6 +482,7 @@ public class UserServiceTest {
 
     @Test
     /*
+     * T4.67
      * Preconditions: User does not exist in the database
      * Post-conditions: Returns null
      */
@@ -488,6 +497,7 @@ public class UserServiceTest {
 
     @Test
     /*
+     * T4.68
      * Preconditions: User exists in the database
      * Post-conditions: Returns UserDetails object
      */
@@ -503,6 +513,7 @@ public class UserServiceTest {
 
     @Test
     /*
+     * T4.69
      * Preconditions: User does not exist in the database
      * Post-conditions: Returns null
      */
@@ -517,6 +528,7 @@ public class UserServiceTest {
 
     @Test
     /*
+     * T4.70
      * Preconditions: UserDto and User objects are properly mapped
      * Post-conditions: Returns UserDetails object
      */

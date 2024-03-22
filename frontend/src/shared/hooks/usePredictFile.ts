@@ -2,13 +2,13 @@ import { useState, useMemo } from "react";
 import { predict } from "../Data/index";
 import { PredictionType, WatchType } from "../api";
 
-type UsePredictedFile = {
+type UsePredict = {
     handlePredict: (id: string, model: PredictionType, watchType: WatchType) => Promise<void>;
     isLoading: boolean;
     error: string | null;
 };
 
-const usePredictedFile = (): UsePredictedFile => {
+const usePredictFile = (): UsePredict => {
     const [isLoading, setIsLoading] = useState(false);
     const [errorState, setErrorState] = useState<string | null>(null);
 
@@ -38,4 +38,4 @@ const usePredictedFile = (): UsePredictedFile => {
     );
 };
 
-export default usePredictedFile;
+export default usePredictFile;

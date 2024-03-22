@@ -55,7 +55,7 @@ const predictMock = {
 };
 
 describe("Processed Data Page", () => {
-    it("Should properly display the processed data page", () => {
+    it("T3.16 Should properly display the processed data page", () => {
         jest.spyOn(useGetProcessedDataList, "default")
             .mockImplementationOnce(() => mockFitbitData)
             .mockImplementation(() => mockAppleData);

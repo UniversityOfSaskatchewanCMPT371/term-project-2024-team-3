@@ -108,41 +108,50 @@ function UploadedFiles({ refetch }: Props) {
                     <Stack>
                         <h3>Uploaded Files</h3>
                         <List>
-                            {files.map((file) => (
-                                <ListItem
-                                    style={{
-                                        paddingTop: "0px",
-                                        paddingBottom: "0px",
-                                        cursor: "pointer",
-                                        justifyContent: "space-between",
-                                    }}
-                                >
-                                    <ListItemIcon>
-                                        <FormControlLabel
-                                            control={
-                                                <Checkbox
-                                                    checked={!!checkedItems[file.id.toString()]}
-                                                    onChange={() =>
-                                                        handleToggle(file.id.toString(), file.watch)
-                                                    }
-                                                    color="primary"
-                                                />
+                            {files.map((file) => {
+                                if (file.processedDataID !== -1) {
+                                    return null;
+                                }
+
+                                return (
+                                    <ListItem
+                                        style={{
+                                            paddingTop: "0px",
+                                            paddingBottom: "0px",
+                                            cursor: "pointer",
+                                            justifyContent: "space-between",
+                                        }}
+                                    >
+                                        <ListItemIcon>
+                                            <FormControlLabel
+                                                control={
+                                                    <Checkbox
+                                                        checked={!!checkedItems[file.id.toString()]}
+                                                        onChange={() =>
+                                                            handleToggle(
+                                                                file.id.toString(),
+                                                                file.watch,
+                                                            )
+                                                        }
+                                                        color="primary"
+                                                    />
+                                                }
+                                                label={`${file.watch === WatchType.APPLE_WATCH ? "AppleWatch" : "Fitbit"} - ${file.id}`}
+                                                labelPlacement="end"
+                                            />
+                                        </ListItemIcon>
+                                        <ListItemText
+                                            primary={
+                                                file.dateTime
+                                                    ? moment(file.dateTime).format(
+                                                          "ddd, D MMM YYYY, hh:mm:ss A",
+                                                      )
+                                                    : ""
                                             }
-                                            label={`${file.watch === WatchType.APPLE_WATCH ? "AppleWatch" : "Fitbit"} - ${file.id}`}
-                                            labelPlacement="end"
                                         />
-                                    </ListItemIcon>
-                                    <ListItemText
-                                        primary={
-                                            file.dateTime
-                                                ? moment(file.dateTime).format(
-                                                      "ddd, D MMM YYYY, hh:mm:ss A",
-                                                  )
-                                                : ""
-                                        }
-                                    />
-                                </ListItem>
-                            ))}
+                                    </ListItem>
+                                );
+                            })}
                         </List>
                     </Stack>
                 </Grid>

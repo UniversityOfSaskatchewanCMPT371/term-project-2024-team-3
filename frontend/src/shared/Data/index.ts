@@ -17,11 +17,15 @@ import {
  * @returns
  */
 export async function upload(form: FormData, year: string, watchType: WatchType): Promise<void> {
-    await api.post(`/rest/beapengine/${watchType}/upload`, form, {
+    const response = await api.post(`/rest/beapengine/${watchType}/upload`, form, {
         headers: {
             "Content-Type": "multipart/form-data",
         },
     });
+
+    if (response.data?.success === false) {
+        throw new Error(response.data?.message);
+    }
 }
 
 /**

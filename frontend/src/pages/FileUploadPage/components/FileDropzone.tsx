@@ -1,47 +1,42 @@
-/* eslint-disable react/jsx-props-no-spreading */
-import React, { ChangeEvent, ReactElement, useState } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import { useRollbar } from "@rollbar/react";
-import { useDropzone, FileWithPath, Accept } from "react-dropzone";
 import { WatchType } from "shared/api";
-import { Button } from "@mui/material";
 import Zip from "jszip";
+import Dropzone, { IDropzoneProps } from "react-dropzone-uploader";
 import useUpload from "shared/hooks/useUpload";
-import FileDropZoneControls from "./FileDropzoneControls";
-import styles from "../FileUpload.module.css";
+import "react-dropzone-uploader/dist/styles.css";
 
-function FileDropZone(): ReactElement {
+interface UploadedFile {
+    file: File;
+    remove: () => void;
+}
+interface UploadedFiles {
+    [key: string]: UploadedFile[];
+}
+
+type Props = {
+    fileType: WatchType;
+};
+
+function FileDropZone({ fileType }: Props): ReactElement<typeof Dropzone> {
     const rollbar = useRollbar();
-    rollbar.info("Reached dropzone component");
 
-    const { handleUpload, error: useUploadError } = useUpload();
+    const { handleUpload } = useUpload();
+    const [filesPerYear, setFilesPerYear] = useState<UploadedFiles>({});
+    const [isUpdatePreview, setIsUpdatePreview] = useState(false);
 
-    const [filesPerYear, setFilesPerYear] = useState<{ [years: string]: FileWithPath[] }>({});
+    useEffect(() => {
+        const clearFiles = () => {
+            Object.values(filesPerYear).forEach((fileArray) => {
+                fileArray.forEach((file) => {
+                    file.remove();
+                });
+            });
+            setFilesPerYear({});
+        };
 
-    const [fileType, setFileType] = useState<Accept>({
-        "application/json": [".json"],
-    });
-
-    const [currentFileType, setCurrentFileType] = useState<WatchType>(WatchType.FITBIT);
-
-    const pstyle = { fontWeight: "bold", fontSize: "22px" }; // add to style sheet
-
-    /**
-     * Adjust the file type to mach the given type
-     */
-    const changedType = (event: ChangeEvent, value: string) => {
-        console.assert(value === "fitbit" || value === "apple", "unexpected type: ".concat(value));
-        setFilesPerYear({});
-
-        if (value === "fitbit") {
-            setCurrentFileType(WatchType.FITBIT);
-            setFileType({ "application/json": [".json"] });
-            rollbar.info("Changed to accept .json files (Fitbit)");
-        } else {
-            setCurrentFileType(WatchType.APPLE_WATCH);
-            setFileType({ "application/xml": [".xml"] });
-            rollbar.info("Changed to accept .xml files (Apple)");
-        }
-    };
+        clearFiles();
+    }, [fileType]);
 
     /**
      * For fitbit files parse the year out of the files name
@@ -49,7 +44,7 @@ function FileDropZone(): ReactElement {
      * Precondition: year is full year (2019) not last 2 digits (19)
      * Returns: The year or undefined if no year is found
      */
-    const getYear = (fName: string): string | undefined => {
+    const getYear = (fName: string): string => {
         // check if the year is the last number in the date
         console.debug("Parsing year from: ".concat(fName));
 
@@ -67,157 +62,111 @@ function FileDropZone(): ReactElement {
             rollbar.debug("Year is the first number: ".concat(splitDate[0]));
             return splitDate[0];
         }
-        rollbar.debug("Unable to find year match");
-        return undefined;
-    };
 
-    /**
-     * Accept the files that are dropped into the dropzone
-     * Precondition: A file is dropped into the dropzone(or selected from file explorer prompt)
-     *      current file type has to have a value
-     *      Apple watches do not have a year
-     * Postconditon: dropped files are added to filesPerYear,
-     *      key dependant on years that can be parsed from the files names
-     */
-    const onDrop = (acceptedFiles: FileWithPath[]) => {
-        rollbar.info("onDrop called");
-        if (acceptedFiles?.length) {
-            rollbar.debug(acceptedFiles);
-            const fy = { ...filesPerYear };
-            const yearSet = new Set();
-            Object.keys(fy).forEach((year) => yearSet.add(year));
-            acceptedFiles.forEach((file) => {
-                // apple files do not contain a year
-                if (currentFileType === WatchType.APPLE_WATCH) {
-                    rollbar.info("Dropped ");
-                    if (fy["Apple Export"]) fy["Apple Export"].push(file);
-                    else fy["Apple Export"] = [file];
-                    yearSet.add("Apple Export");
-                    return;
-                }
-
-                const parsedYear = getYear(file.name);
-                const year = parsedYear || "Yearless Fitbit Export";
-                if (fy[year]) {
-                    rollbar.debug("Added ".concat(file.name).concat(" to year: ").concat(year));
-                    fy[year].push(file);
-                } else {
-                    rollbar.debug(
-                        "New Year found: ".concat(year).concat(" for file: ").concat(file.name),
-                    );
-                    fy[year] = [file];
-                }
-                yearSet.add(year);
-            });
-            setFilesPerYear(fy);
+        if (fileType === WatchType.APPLE_WATCH) {
+            return "Apple Export";
         }
+        return "Fitbit Export";
     };
 
-    /**
-     * Zip a years group of files then send them to the api
-     * Precondition: There is a key that matches they year passed in filesPerYear
-     * Postconditon: Given years files are zipped and sent to the api and are removed from filesPerYear
-     */
     const uploadFiles = async (year: string) => {
         rollbar.debug("Upload called with year: ".concat(year));
-        console.assert(Object.keys(filesPerYear).includes(year), "Year doesn't have any files");
-        const filesToZip = [...filesPerYear[year]];
+        const files = { ...filesPerYear };
+        console.assert(Object.keys(files).includes(year), "Year doesn't have any files");
+        const filesToZip = [...files[year]];
         const zip = new Zip();
         if (filesToZip.length < 1) {
             return;
         }
 
         filesToZip.forEach((file) => {
-            zip.file(file.name, file);
+            zip.file(file.file.name, file.file);
         });
-        zip.generateAsync({
-            type: "blob",
-            compression: "DEFLATE",
-            compressionOptions: { level: 6 },
-        })
+        await zip
+            .generateAsync({
+                type: "blob",
+                compression: "DEFLATE",
+                compressionOptions: { level: 6 },
+            })
             .then(async (content) => {
                 const formData = new FormData();
-                formData.set("fname", `${fileType}.zip`);
+                formData.set("fname", `${year}-${filesToZip.length}.zip`);
                 formData.set("data", content);
                 rollbar.info("sending upload");
-                return handleUpload(formData, year, currentFileType);
-            })
-            .then(() => {
-                if (useUploadError) {
-                    rollbar.error(useUploadError);
-                    return;
-                }
-                const newFilesPerYear = { ...filesPerYear };
-                delete newFilesPerYear[year];
-                rollbar.info("removed uploaded files from accepted files");
-                setFilesPerYear(newFilesPerYear);
+                await handleUpload(formData, year, fileType).then(() => {
+                    filesToZip.forEach((f) => f.remove());
+                    delete files[year];
+                    setFilesPerYear((prevData) => {
+                        const newData = { ...prevData };
+                        delete newData[year];
+                        return newData;
+                    });
+                });
             });
     };
 
-    /**
-     * constructs react dropzone
-     */
-    const { getRootProps, getInputProps, isDragActive } = useDropzone({
-        onDrop,
-        accept: fileType,
-    });
+    const handleChangeStatus: IDropzoneProps["onChangeStatus"] = (
+        { meta, file },
+        status,
+        allFiles,
+    ) => {
+        if (status === "done") {
+            const files = { ...filesPerYear };
+            allFiles.forEach(({ meta: m, file: f, remove: r }) => {
+                const year = getYear(m.name);
+                if (files[year]) {
+                    const isDuplicate = files[year].filter((item) => item.file === f).length > 0;
+                    if (!isDuplicate) {
+                        files[year].push({
+                            file: f,
+                            remove: r,
+                        });
+                    }
+                } else {
+                    files[year] = [
+                        {
+                            file: f,
+                            remove: r,
+                        },
+                    ];
+                }
+            });
+            setFilesPerYear(files);
+        }
 
-    /**
-     * Displays uploaded files grouped by year
-     * Precondition: filesPerYear not null
-     */
+        if (status === "removed") {
+            const year = getYear(meta.name);
+            const files = { ...filesPerYear };
 
-    const acceptedFileItems = Object.keys(filesPerYear).map((year: string) => (
-        <div
-            key={year}
-            data-testid={year}
-            style={{
-                width: "100%",
-                padding: "10px",
-                border: "1px solid black",
-                borderRadius: "5px",
-                boxSizing: "border-box",
-                marginBottom: "5px",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-            }}
-        >
-            <strong>{year}</strong>
-            <small>{filesPerYear[year].length} files</small>
-            <Button
-                data-testid={`${year}-btn`}
-                style={{ color: "#FFFFFF", backgroundColor: "#36BDC4" }}
-                variant="contained"
-                onClick={() => uploadFiles(year)}
-            >
-                Upload
-            </Button>
-        </div>
-    ));
+            if (files[year]) {
+                files[year] = files[year].filter((item) => item.file !== file);
+
+                if (files[year].length === 0) {
+                    delete files[year];
+                }
+
+                setFilesPerYear(files);
+            }
+        }
+        setIsUpdatePreview(!isUpdatePreview);
+    };
+
+    const handleSubmit: IDropzoneProps["onSubmit"] = () => {
+        const years = Object.keys(filesPerYear);
+        years.forEach(async (year) => {
+            await uploadFiles(year);
+        });
+    };
+
+    console.log(filesPerYear);
 
     return (
-        <>
-            <FileDropZoneControls onRadioChange={changedType} />
-            <div {...getRootProps()} data-testid="dropZone">
-                <div className={styles.main}>
-                    <section className={styles.dzContainer}>
-                        <div className={styles.dropzone}>
-                            <input {...getInputProps()} />
-                            {isDragActive ? (
-                                <p style={pstyle}>Drop the files here...</p>
-                            ) : (
-                                <p style={pstyle}>Drop files here, or Click</p>
-                            )}
-                        </div>
-                    </section>
-                </div>
-            </div>
-            <div>
-                <h4>Accepted Files</h4>
-                <ul>{acceptedFileItems}</ul>
-            </div>
-        </>
+        <Dropzone
+            onChangeStatus={handleChangeStatus}
+            onSubmit={handleSubmit}
+            accept={fileType === WatchType.FITBIT ? "application/json" : "application/xml"}
+            styles={{ dropzone: { minHeight: 200, maxHeight: 250 } }}
+        />
     );
 }
 

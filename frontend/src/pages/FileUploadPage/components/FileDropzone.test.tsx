@@ -3,6 +3,7 @@ import { fireEvent, act, waitFor } from "@testing-library/react";
 import { renderWithProvider } from "shared/util/tests/render";
 import * as UseUpload from "shared/hooks/useUpload";
 import userEvent from "@testing-library/user-event";
+import { WatchType } from "shared/api";
 import FileDropzone from "./FileDropzone";
 
 async function flushPromises(rerender: any, ui: React.ReactElement) {
@@ -38,7 +39,7 @@ jest.mock(
 );
 
 test(" TID 1.6. Renders FileDropzone components", () => {
-    const { getByText } = renderWithProvider(<FileDropzone />);
+    const { getByText } = renderWithProvider(<FileDropzone fileType={WatchType.FITBIT} />);
     getByText("FileDropzoneControls");
 });
 
@@ -54,13 +55,15 @@ test("invoke onDragEnter when dragenter event occurs", async () => {
         isLoading: false,
         error: null,
     });
-    const { getByTestId, rerender, getByText } = renderWithProvider(<FileDropzone />);
+    const { getByTestId, rerender, getByText } = renderWithProvider(
+        <FileDropzone fileType={WatchType.FITBIT} />,
+    );
     getByText("Drop files here, or Click");
     const dropzone = getByTestId("dropZone");
     dispatchEvt(dropzone, "drop", data);
     waitFor(() => getByText("Drop the files here..."));
 
-    await flushPromises(rerender, <FileDropzone />);
+    await flushPromises(rerender, <FileDropzone fileType={WatchType.FITBIT} />);
 
     getByText("2018");
     getByText("1 files");

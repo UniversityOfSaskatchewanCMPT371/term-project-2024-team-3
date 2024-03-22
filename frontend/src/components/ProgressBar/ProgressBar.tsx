@@ -81,7 +81,7 @@ function ProgressBar(props: Props): React.ReactElement | null {
     /**
      * only display if the percent is between 0 and 100 inclusively
      */
-    if ((percentage >= 0 && percentage <= 100) || isVisible) {
+    if (percentage >= 0 && percentage <= 100 && isVisible) {
         return (
             <div className={styles.main}>
                 <div className={styles.overlay} id="progressOverlay" />

@@ -2,10 +2,31 @@ import React, { ReactElement, useEffect, useState } from "react";
 import { useRollbar } from "@rollbar/react";
 import { WatchType } from "shared/api";
 import Zip from "jszip";
-import Dropzone, { IDropzoneProps } from "react-dropzone-uploader";
+import Dropzone, { IDropzoneProps, IStyleCustomization } from "react-dropzone-uploader";
 import useUpload from "shared/hooks/useUpload";
 import "react-dropzone-uploader/dist/styles.css";
 
+const dropzoneStyle: IStyleCustomization<React.CSSProperties> = {
+    dropzone: {
+        height: "432px",
+        background: "#F8F8F8",
+        boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+        borderRadius: "15px",
+    },
+    input: {
+        color: "black",
+    },
+    inputLabel: {
+        color: "black",
+    },
+    inputLabelWithFiles: {
+        color: "black",
+    },
+    submitButton: {
+        backgroundColor: "#FFD172",
+        color: "black",
+    },
+};
 interface UploadedFile {
     file: File;
     remove: () => void;
@@ -165,7 +186,7 @@ function FileDropZone({ fileType }: Props): ReactElement<typeof Dropzone> {
             onChangeStatus={handleChangeStatus}
             onSubmit={handleSubmit}
             accept={fileType === WatchType.FITBIT ? "application/json" : "application/xml"}
-            styles={{ dropzone: { minHeight: 200, maxHeight: 250 } }}
+            styles={dropzoneStyle}
         />
     );
 }

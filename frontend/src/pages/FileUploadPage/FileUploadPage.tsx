@@ -1,5 +1,5 @@
 import React, { ChangeEvent, ReactElement, useEffect, useState } from "react";
-import { Container } from "@mui/material";
+import { Container, Stack } from "@mui/material";
 import { useRollbar } from "@rollbar/react";
 import { WatchType } from "shared/api/types";
 import FileDropZone from "./components/FileDropzone";
@@ -32,9 +32,16 @@ function FileUploadPage(): ReactElement {
         <div className={styles.page}>
             <Container className={styles.container}>
                 <FileDropZoneControls onRadioChange={onChange} />
-                <FileDropZone fileType={fileType} />
+                <Stack
+                    direction="row"
+                    justifyContent="space-between"
+                    alignItems="baseline"
+                    spacing={2}
+                >
+                    <FileDropZone fileType={fileType} />
+                    <UploadedFiles />
+                </Stack>
             </Container>
-            <UploadedFiles />
         </div>
     );
 }

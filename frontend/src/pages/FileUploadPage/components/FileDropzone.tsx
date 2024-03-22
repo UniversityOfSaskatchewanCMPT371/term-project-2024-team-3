@@ -3,7 +3,6 @@ import { useRollbar } from "@rollbar/react";
 import { WatchType } from "shared/api";
 import Zip from "jszip";
 import Dropzone, { IDropzoneProps, IStyleCustomization } from "react-dropzone-uploader";
-import useUpload from "shared/hooks/useUpload";
 import "react-dropzone-uploader/dist/styles.css";
 
 const dropzoneStyle: IStyleCustomization<React.CSSProperties> = {
@@ -37,12 +36,12 @@ interface UploadedFiles {
 
 type Props = {
     fileType: WatchType;
+    handleUpload: (form: FormData, year: string, watchType: WatchType) => Promise<void>;
 };
 
-function FileDropZone({ fileType }: Props): ReactElement<typeof Dropzone> {
+function FileDropZone({ fileType, handleUpload }: Props): ReactElement<typeof Dropzone> {
     const rollbar = useRollbar();
 
-    const { handleUpload } = useUpload();
     const [filesPerYear, setFilesPerYear] = useState<UploadedFiles>({});
     const [isUpdatePreview, setIsUpdatePreview] = useState(false);
 

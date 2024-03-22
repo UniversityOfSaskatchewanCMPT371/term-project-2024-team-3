@@ -9,7 +9,7 @@ import FileDropZoneControls from "./components/FileDropzoneControls";
 
 function FileUploadPage(): ReactElement {
     const [fileType, setFileType] = useState<WatchType>(WatchType.FITBIT);
-    const { handleUpload, error: uploadError } = useUpload();
+    const { handleUpload, isLoading: uploadLoading, error: uploadError } = useUpload();
 
     const rollbar = useRollbar();
 
@@ -38,11 +38,11 @@ function FileUploadPage(): ReactElement {
                 <Stack
                     direction="row"
                     justifyContent="space-between"
-                    alignItems="baseline"
+                    alignItems="center"
                     spacing={2}
                 >
                     <FileDropZone fileType={fileType} handleUpload={handleUpload} />
-                    <UploadedFiles />
+                    <UploadedFiles refetch={uploadLoading} />
                 </Stack>
             </Stack>
         </Container>

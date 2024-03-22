@@ -65,8 +65,8 @@ export type RawFileData = {
     id: Number;
     data: Uint8Array | null;
     type: DataType | null;
-    processedDataId: Number | null;
-    dateTime: Date | null;
+    processedDataID: Number | null;
+    dateTime: string | null;
 };
 
 export type RawFilesData = {

@@ -8,7 +8,7 @@ type UseGetUploadedFiles = {
     error: string | null;
 };
 
-const useGetUploadedFiles = (watchType: WatchType): UseGetUploadedFiles => {
+const useGetUploadedFiles = (watchType: WatchType, refetch = false): UseGetUploadedFiles => {
     const [isLoading, setIsLoading] = useState(true);
     const [errorState, setErrorState] = useState<string | null>(null);
     const [uploadedFiles, setUploadedFiles] = useState<Array<RawFileData>>([]);
@@ -16,6 +16,7 @@ const useGetUploadedFiles = (watchType: WatchType): UseGetUploadedFiles => {
     useEffect(() => {
         getUploadedFiles(watchType)
             .then((data) => {
+                console.log(data.list);
                 setUploadedFiles(data.list);
             })
             .catch((error: Error) => {
@@ -24,7 +25,7 @@ const useGetUploadedFiles = (watchType: WatchType): UseGetUploadedFiles => {
             .finally(() => {
                 setIsLoading(false);
             });
-    }, []);
+    }, [refetch]);
 
     return useMemo(
         () => ({
@@ -32,7 +33,7 @@ const useGetUploadedFiles = (watchType: WatchType): UseGetUploadedFiles => {
             isLoading,
             error: errorState,
         }),
-        [isLoading, errorState],
+        [uploadedFiles, isLoading, errorState],
     );
 };
 

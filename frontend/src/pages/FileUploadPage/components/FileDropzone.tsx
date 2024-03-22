@@ -135,7 +135,7 @@ function FileDropZone({ fileType, handleUpload }: Props): ReactElement<typeof Dr
 
     const handleChangeStatus: IDropzoneProps["onChangeStatus"] = (
         { meta, file, remove },
-        status
+        status,
     ) => {
         setTimeout(() => {
             if (status === "done") {
@@ -143,7 +143,8 @@ function FileDropZone({ fileType, handleUpload }: Props): ReactElement<typeof Dr
                     const files = { ...prevData };
                     const year = getYear(meta.name);
                     if (files[year]) {
-                        const isDuplicate = files[year].filter((item) => item.file === file).length > 0;
+                        const isDuplicate =
+                            files[year].filter((item) => item.file === file).length > 0;
                         if (!isDuplicate) {
                             files[year].push({
                                 file: file,
@@ -161,27 +162,27 @@ function FileDropZone({ fileType, handleUpload }: Props): ReactElement<typeof Dr
                     return files;
                 });
             }
-    
-            if (status === "removed") {
-                setFilesPerYear((prevData) => {
-                    const files = { ...prevData };
-                    const year = getYear(meta.name);
+        }, 500);
 
-                    if (!files[year]) {
-                        return files;
-                    }
+        if (status === "removed") {
+            setFilesPerYear((prevData) => {
+                const files = { ...prevData };
+                const year = getYear(meta.name);
 
-                    files[year] = files[year].filter((item) => item.file !== file);
-                    if (files[year].length === 0) {
-                        delete files[year];
-                    }
+                if (!files[year]) {
                     return files;
-                });
-            }
+                }
 
-            // Makes sures we rerender the dropzone
-            setIsUpdatePreview(!isUpdatePreview);
-        }, 500)
+                files[year] = files[year].filter((item) => item.file !== file);
+                if (files[year].length === 0) {
+                    delete files[year];
+                }
+                return files;
+            });
+        }
+
+        // Makes sures we rerender the dropzone
+        setIsUpdatePreview(!isUpdatePreview);
     };
 
     const handleSubmit: IDropzoneProps["onSubmit"] = () => {

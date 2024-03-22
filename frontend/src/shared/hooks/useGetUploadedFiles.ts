@@ -16,7 +16,6 @@ const useGetUploadedFiles = (watchType: WatchType, refetch = false): UseGetUploa
     useEffect(() => {
         getUploadedFiles(watchType)
             .then((data) => {
-                console.log(data.list);
                 setUploadedFiles(data.list);
             })
             .catch((error: Error) => {

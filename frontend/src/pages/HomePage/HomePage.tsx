@@ -65,7 +65,7 @@ function HomePage(): ReactElement {
                 </div>
                 <div className={style.page_body}>
                     <h1>BEAP ENGINE</h1>
-                    <h6>Unleashing The Power Of Your Fitness Data</h6>
+                    <h6 className={style.h6Glow}>Unleashing The Power Of Your Fitness Data</h6>
                 </div>
                 <div className={style.see_more}>
                     <a href="#desc">

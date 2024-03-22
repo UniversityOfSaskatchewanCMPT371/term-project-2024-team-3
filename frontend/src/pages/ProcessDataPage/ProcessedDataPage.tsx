@@ -164,6 +164,7 @@ const ProcessedDataPage = function () {
             <ProgressBar
                 percentage={percentage}
                 message="Your request is being processed. Please wait... This is an extra long message to see how it handles extra long messages."
+                isVisible
             />
             {/* for testing purposes */}
             <Button

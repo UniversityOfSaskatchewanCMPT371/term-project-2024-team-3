@@ -54,6 +54,10 @@
     font-size: 20px;
 }
 
+.messageDiv{
+    padding: 10px;
+}
+
 .outterProgress {
     background-color: rgb(217, 217, 217);
     width: 85%;

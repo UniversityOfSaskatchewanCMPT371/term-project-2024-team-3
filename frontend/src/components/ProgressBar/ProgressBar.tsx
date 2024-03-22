@@ -9,6 +9,7 @@ import styles from "./ProgressBar.module.css";
 
 type Props = {
     percentage: number;
+    message: string;
 };
 
 /**
@@ -26,8 +27,11 @@ function ProgressBar(props: Props): React.ReactElement | null {
     const rollbar = useRollbar();
     rollbar.info("ProgressBar");
     // const [percentage, setPercentage] = useState<number>();
-    const { percentage } = props;
+    const { percentage, message } = props;
 
+    /**
+     * Opens the popup, and hides the maximize button
+     */
     const openPopup = () => {
         const popup = document.getElementById("progressBarPopup");
         const overLay = document.getElementById("progressOverlay");
@@ -43,6 +47,9 @@ function ProgressBar(props: Props): React.ReactElement | null {
         }
     };
 
+    /**
+     * hides the popup, and displays the maximize button
+     */
     const closePopup = () => {
         const popup = document.getElementById("progressBarPopup");
         const overLay = document.getElementById("progressOverlay");
@@ -58,6 +65,10 @@ function ProgressBar(props: Props): React.ReactElement | null {
         }
     };
 
+    /**
+     * Ensures the progress bar displays the correct minimum width
+     * @returns 9 if the percentage is less than 9, percent otherwise
+     */
     const getMinWidth = () => {
         if (percentage < 9) {
             return 9;
@@ -65,6 +76,9 @@ function ProgressBar(props: Props): React.ReactElement | null {
         return percentage;
     };
 
+    /**
+     * only display if the percent is between 0 and 100 inclusively
+     */
     if (percentage >= 0 && percentage <= 100) {
         return (
             <div className={styles.main}>
@@ -82,7 +96,7 @@ function ProgressBar(props: Props): React.ReactElement | null {
                     </div>
 
                     <div className={styles.body}>
-                        Your task is being processed. Please wait...
+                        <div className={styles.messageDiv}>{message}</div>
                         <div className={styles.outterProgress}>
                             <div
                                 className={styles.innerProgress}

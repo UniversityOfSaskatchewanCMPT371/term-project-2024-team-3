@@ -149,21 +149,24 @@ const ProcessedDataPage = function () {
     };
 
     /** for testing purposes */
-    // const incrementPercent = () => {
-    //     setPercentage(percentage + 10);
-    // };
+    const incrementPercent = () => {
+        setPercentage(percentage + 10);
+    };
 
-    // const resetPercent = () =>{
-    //     setPercentage(0);
-    // }
+    const resetPercent = () => {
+        setPercentage(0);
+    };
 
     getRendersOfFiles();
 
     return (
         <div>
-            <ProgressBar percentage={percentage} />
+            <ProgressBar
+                percentage={percentage}
+                message="Your request is being processed. Please wait... This is an extra long message to see how it handles extra long messages."
+            />
             {/* for testing purposes */}
-            {/* <Button
+            <Button
                 variant="contained"
                 onClick={incrementPercent}
                 sx={{
@@ -180,7 +183,7 @@ const ProcessedDataPage = function () {
                 }}
             >
                 reset
-            </Button> */}
+            </Button>
 
             <Container className={styles.containerDiv}>
                 <div className={styles.action_bar}>

@@ -4,7 +4,6 @@ import { useRollbar } from "@rollbar/react";
 import { WatchType } from "shared/api/types";
 import useUpload from "shared/hooks/useUpload";
 import FileDropZone from "./components/FileDropzone";
-import styles from "./FileUpload.module.css";
 import UploadedFiles from "./components/UploadedFiles";
 import FileDropZoneControls from "./components/FileDropzoneControls";
 
@@ -31,14 +30,10 @@ function FileUploadPage(): ReactElement {
     };
 
     return (
-        <div className={styles.page}>
-            <Container className={styles.container}>
-                <Stack spacing={2}>
+        <Container sx={{ marginTop: 2 }}>
+            <Stack spacing={2}>
                 <FileDropZoneControls onRadioChange={onChange} />
-                {uploadError && <Alert severity="error">
-                    {uploadError}
-
-                </Alert>}
+                {uploadError && <Alert severity="error">{uploadError}</Alert>}
                 <Stack
                     direction="row"
                     justifyContent="space-between"
@@ -48,10 +43,8 @@ function FileUploadPage(): ReactElement {
                     <FileDropZone fileType={fileType} handleUpload={handleUpload} />
                     <UploadedFiles />
                 </Stack>
-
-                </Stack>
-            </Container>
-        </div>
+            </Stack>
+        </Container>
     );
 }
 

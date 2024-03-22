@@ -4,6 +4,8 @@ import { WatchType } from "shared/api";
 import Zip from "jszip";
 import Dropzone, { IDropzoneProps, IStyleCustomization } from "react-dropzone-uploader";
 import "react-dropzone-uploader/dist/styles.css";
+import FileIcon from "components/Icons";
+import { Stack } from "@mui/material";
 
 const dropzoneStyle: IStyleCustomization<React.CSSProperties> = {
     dropzone: {
@@ -14,18 +16,24 @@ const dropzoneStyle: IStyleCustomization<React.CSSProperties> = {
     },
     input: {
         color: "black",
+        fontFamily: "'Inter', sans-serif",
     },
     inputLabel: {
-        color: "black",
+        color: "#B7B7B7",
+        fontFamily: "'Inter', sans-serif",
+        fontWeight: 500,
     },
     inputLabelWithFiles: {
         color: "black",
+        fontFamily: "'Inter', sans-serif",
     },
     submitButton: {
         backgroundColor: "#FFD172",
         color: "black",
+        fontFamily: "'Inter', sans-serif",
     },
 };
+
 interface UploadedFile {
     file: File;
     remove: () => void;
@@ -178,14 +186,20 @@ function FileDropZone({ fileType, handleUpload }: Props): ReactElement<typeof Dr
         });
     };
 
-    console.log(filesPerYear);
-
     return (
         <Dropzone
             onChangeStatus={handleChangeStatus}
             onSubmit={handleSubmit}
+            inputContent={
+                <Stack justifyContent="center" alignItems="center" spacing={2}>
+                    <FileIcon />
+                    <span>Drag Files or Click to browse</span>
+                </Stack>
+            }
+            submitButtonContent="Upload"
             accept={fileType === WatchType.FITBIT ? "application/json" : "application/xml"}
             styles={dropzoneStyle}
+            disabled={filesPerYear["2018"]?.length > 0}
         />
     );
 }

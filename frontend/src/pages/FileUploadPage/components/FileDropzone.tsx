@@ -134,49 +134,54 @@ function FileDropZone({ fileType, handleUpload }: Props): ReactElement<typeof Dr
     };
 
     const handleChangeStatus: IDropzoneProps["onChangeStatus"] = (
-        { meta, file },
-        status,
-        allFiles,
+        { meta, file, remove },
+        status
     ) => {
-        if (status === "done") {
-            const files = { ...filesPerYear };
-            allFiles.forEach(({ meta: m, file: f, remove: r }) => {
-                const year = getYear(m.name);
-                if (files[year]) {
-                    const isDuplicate = files[year].filter((item) => item.file === f).length > 0;
-                    if (!isDuplicate) {
-                        files[year].push({
-                            file: f,
-                            remove: r,
-                        });
+        setTimeout(() => {
+            if (status === "done") {
+                setFilesPerYear((prevData) => {
+                    const files = { ...prevData };
+                    const year = getYear(meta.name);
+                    if (files[year]) {
+                        const isDuplicate = files[year].filter((item) => item.file === file).length > 0;
+                        if (!isDuplicate) {
+                            files[year].push({
+                                file: file,
+                                remove: remove,
+                            });
+                        }
+                    } else {
+                        files[year] = [
+                            {
+                                file: file,
+                                remove: remove,
+                            },
+                        ];
                     }
-                } else {
-                    files[year] = [
-                        {
-                            file: f,
-                            remove: r,
-                        },
-                    ];
-                }
-            });
-            setFilesPerYear(files);
-        }
-
-        if (status === "removed") {
-            const year = getYear(meta.name);
-            const files = { ...filesPerYear };
-
-            if (files[year]) {
-                files[year] = files[year].filter((item) => item.file !== file);
-
-                if (files[year].length === 0) {
-                    delete files[year];
-                }
-
-                setFilesPerYear(files);
+                    return files;
+                });
             }
-        }
-        setIsUpdatePreview(!isUpdatePreview);
+    
+            if (status === "removed") {
+                setFilesPerYear((prevData) => {
+                    const files = { ...prevData };
+                    const year = getYear(meta.name);
+
+                    if (!files[year]) {
+                        return files;
+                    }
+
+                    files[year] = files[year].filter((item) => item.file !== file);
+                    if (files[year].length === 0) {
+                        delete files[year];
+                    }
+                    return files;
+                });
+            }
+
+            // Makes sures we rerender the dropzone
+            setIsUpdatePreview(!isUpdatePreview);
+        }, 500)
     };
 
     const handleSubmit: IDropzoneProps["onSubmit"] = () => {
@@ -193,13 +198,12 @@ function FileDropZone({ fileType, handleUpload }: Props): ReactElement<typeof Dr
             inputContent={
                 <Stack justifyContent="center" alignItems="center" spacing={2}>
                     <FileIcon />
-                    <span>Drag Files or Click to browse</span>
+                    <span>Drop items here or Browse Files</span>
                 </Stack>
             }
             submitButtonContent="Upload"
             accept={fileType === WatchType.FITBIT ? "application/json" : "application/xml"}
             styles={dropzoneStyle}
-            disabled={filesPerYear["2018"]?.length > 0}
         />
     );
 }

@@ -30,8 +30,9 @@ function FileUploadPage(): ReactElement {
     };
 
     return (
-        <Container sx={{ marginTop: 2 }}>
+        <Container sx={{ marginTop: 4 }}>
             <Stack spacing={2}>
+                <h3>Upload File</h3>
                 <FileDropZoneControls onRadioChange={onChange} />
                 {uploadError && <Alert severity="error">{uploadError}</Alert>}
                 <Stack

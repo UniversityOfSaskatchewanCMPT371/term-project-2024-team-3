@@ -49,6 +49,9 @@ public class PredictedData {
     private byte[] data;
 
     @Column
+    private String year;
+
+    @Column
     @Enumerated(EnumType.STRING)
     private predictionType predictionType;
 
@@ -59,17 +62,19 @@ public class PredictedData {
     public PredictedData() {
     }
 
-    public PredictedData(byte[] data, PredictedData.predictionType predictionType, Timestamp dateTime) {
+    public PredictedData(byte[] data, PredictedData.predictionType predictionType, Timestamp dateTime, String year) {
         this.data = data;
         this.predictionType = predictionType;
         this.dateTime = dateTime;
+        this.year = year;
     }
 
-    public PredictedData(Long id, byte[] data, PredictedData.predictionType predictionType, Timestamp dateTime) {
+    public PredictedData(Long id, byte[] data, PredictedData.predictionType predictionType, Timestamp dateTime, String year) {
         this.id = id;
         this.data = data;
         this.predictionType = predictionType;
         this.dateTime = dateTime;
+        this.year = year;
     }
 
 
@@ -106,6 +111,14 @@ public class PredictedData {
         this.dateTime = dateTime;
     }
 
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
+    }
+
     @Override
     public String toString() {
         return "PredictedData{" +
@@ -113,6 +126,7 @@ public class PredictedData {
                 ", data=" + Arrays.toString(data) +
                 ", predictionType=" + predictionType +
                 ", dateTime=" + dateTime +
+                ", year='" + year +
                 '}';
     }
 }

@@ -221,6 +221,7 @@ function FileDropZone({
             submitButtonContent="Upload"
             accept={fileType === WatchType.FITBIT ? "application/json" : "text/xml"}
             styles={dropzoneStyle}
+            data-testid="dropZone"
         />
     );
 }

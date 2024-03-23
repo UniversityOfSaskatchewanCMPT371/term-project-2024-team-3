@@ -38,7 +38,7 @@ function FileUploadPage(): ReactElement {
                     message,
                     isVisible: false,
                 });
-            }, 5000);
+            }, 2000);
         } else {
             setProgressbar({
                 percentage,

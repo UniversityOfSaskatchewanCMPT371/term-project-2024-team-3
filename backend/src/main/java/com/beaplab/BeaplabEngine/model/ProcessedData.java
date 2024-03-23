@@ -34,22 +34,27 @@ public class ProcessedData {
     @Column
     private java.sql.Timestamp dateTime;
 
+    @Column
+    private String year;
+
 
     public ProcessedData() {
     }
 
 
-    public ProcessedData(byte[] data, Set<PredictedData> predictedDataIDs, Timestamp dateTime) {
+    public ProcessedData(byte[] data, Set<PredictedData> predictedDataIDs, Timestamp dateTime, String year) {
         this.data = data;
         this.predictedDataIDs = predictedDataIDs;
         this.dateTime = dateTime;
+        this.year = year;
     }
 
-    public ProcessedData(Long id, byte[] data, Set<PredictedData> predictedDataIDs, Timestamp dateTime) {
+    public ProcessedData(Long id, byte[] data, Set<PredictedData> predictedDataIDs, Timestamp dateTime, String year) {
         this.id = id;
         this.data = data;
         this.predictedDataIDs = predictedDataIDs;
         this.dateTime = dateTime;
+        this.year = year;
     }
 
     public Long getId() {
@@ -84,6 +89,14 @@ public class ProcessedData {
         this.dateTime = dateTime;
     }
 
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
+    }
+
     /**
      * check to see whether predictedDataIDs is loaded or not (for Lazy fetchType)
      * @return
@@ -100,6 +113,7 @@ public class ProcessedData {
                 ", data=" + Arrays.toString(data) +
                 ", predictedDataIDs=" + predictedDataIDs +
                 ", dateTime=" + dateTime +
+                ", year='" + year +
                 '}';
     }
 }

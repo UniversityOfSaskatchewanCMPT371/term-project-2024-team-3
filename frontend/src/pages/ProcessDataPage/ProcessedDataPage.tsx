@@ -23,10 +23,12 @@ const ProcessedDataPage = function () {
         "selectedModel should be initialized to PredictionType.SVM",
     );
 
+
     const [percentage, setPercentage] = useState<number>(-1);
 
     const { handlePredict, error: usePredictError } = usePredictFile();
     const { handleDownload, error: useDownloadError } = useDownload();
+
 
     const { uploadedFiles: fitbitFiles } = useGetProcessedDataList(WatchType.FITBIT);
 
@@ -99,9 +101,11 @@ const ProcessedDataPage = function () {
             const { id, watch } = currentFile;
             const stringID = id.toString();
             handleDownload(stringID, DownloadType.PROCESS, watch);
+
             if (useDownloadError) {
                 rollbar.error(useDownloadError);
             }
+
         }
     };
 

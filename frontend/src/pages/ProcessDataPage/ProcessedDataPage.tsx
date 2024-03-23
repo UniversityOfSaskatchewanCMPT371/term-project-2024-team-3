@@ -79,7 +79,7 @@ const ProcessedDataPage = function () {
 
             // TODO: Do a better job of guestimating percentages...
             setPercentage(20);
-            handlePredict(id, selectedModel, lowerCaseWatch);
+            await handlePredict(id, selectedModel, lowerCaseWatch);
             setPercentage(100);
             if (usePredictError) {
                 rollbar.error(usePredictError);

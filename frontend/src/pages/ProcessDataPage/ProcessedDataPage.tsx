@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { RadioGroup, FormControl, FormControlLabel, Radio, Button, Container } from "@mui/material";
 import { DataType, PredictionType, ProcessedFileData, WatchType, DownloadType } from "shared/api";
+import ProgressBar from "components/ProgressBar/ProgressBar";
 import useGetProcessedDataList from "shared/hooks/useGetProcessedDataList";
 import moment from "moment";
 import usePredictFile from "shared/hooks/usePredictFile";
@@ -22,6 +23,8 @@ const ProcessedDataPage = function () {
         "selectedModel should be initialized to PredictionType.SVM",
     );
 
+
+    const [percentage, setPercentage] = useState<number>(-1);
 
     const { handlePredict, error: usePredictError } = usePredictFile();
     const { handleDownload, error: useDownloadError } = useDownload();
@@ -75,7 +78,11 @@ const ProcessedDataPage = function () {
         if (currentFile) {
             const { id, watch } = currentFile;
             const lowerCaseWatch = watch.toLowerCase();
-            handlePredict(id, selectedModel, lowerCaseWatch);
+
+            // TODO: Do a better job of guestimating percentages...
+            setPercentage(20);
+            await handlePredict(id, selectedModel, lowerCaseWatch);
+            setPercentage(100);
             if (usePredictError) {
                 rollbar.error(usePredictError);
             }
@@ -149,6 +156,11 @@ const ProcessedDataPage = function () {
 
     return (
         <div>
+            <ProgressBar
+                percentage={percentage}
+                message="Your request is being processed. Please wait..."
+                isVisible
+            />
             <Container className={styles.containerDiv}>
                 <div className={styles.action_bar}>
                     <FormControl component="fieldset">

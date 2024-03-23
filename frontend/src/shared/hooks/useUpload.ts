@@ -21,10 +21,7 @@ const useUpload = (): UseUpload => {
         try {
             await upload(form, year, watchType);
         } catch (error) {
-            if (error instanceof Error) {
-                setErrorState(`${error.message}. Please try again later!`);
-            }
-            throw error;
+            setErrorState(`${error.message}. Please try again later!`);
         } finally {
             setIsLoading(false);
         }

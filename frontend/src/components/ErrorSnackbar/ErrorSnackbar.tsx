@@ -42,12 +42,14 @@ function ErrorSnackbar({ error }: Props): React.ReactElement<typeof Snackbar> | 
             open={open}
             autoHideDuration={6000}
             onClose={handleClose}
+            data-testid="errorSnackbar"
         >
             <Alert
                 severity="error"
                 variant="filled"
                 sx={{ width: "100%" }}
                 onClose={handleSnackbarClose}
+                data-testid="errorAlert"
             >
                 {error}
             </Alert>

@@ -157,6 +157,7 @@ function UploadedFiles({ refetch, onProgressChange }: Props) {
                                                             )
                                                         }
                                                         color="primary"
+                                                        data-testid={`${file.id.toString()}-cbox`}
                                                     />
                                                 }
                                                 label={`${file.watch === WatchType.APPLE_WATCH ? "AppleWatch" : "Fitbit"} - ${file.id}`}
@@ -184,6 +185,7 @@ function UploadedFiles({ refetch, onProgressChange }: Props) {
                         variant="contained"
                         disabled={filesProcessLength <= 0 || proccessLoading}
                         onClick={onProcess}
+                        data-testid="processBtn"
                     >
                         {filesProcessLength <= 1
                             ? "Process"

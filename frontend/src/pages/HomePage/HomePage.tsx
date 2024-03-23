@@ -12,7 +12,7 @@ import engineOverview from "../../assets/engine-overview.png";
 function HomePage(): ReactElement {
     const rollbar = useRollbar();
     invariant(rollbar, "Rollbar context is not available");
-    rollbar.debug("Reached Home page");
+    rollbar.info("Reached Home page");
 
     const navigate = useNavigate();
     invariant(navigate, "Navigation function is not available");

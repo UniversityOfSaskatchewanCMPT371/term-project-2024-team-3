@@ -7,7 +7,7 @@ import beapLogo from "../../assets/beap_lab_hex_small.png";
 function PrivacyPolicy(): ReactElement {
     const rollbar = useRollbar();
     invariant(rollbar, "Rollbar context is not available");
-    rollbar.debug("Reached Privacy Policy page");
+    rollbar.info("Reached Privacy Policy page");
     return (
         <div className={styles.container}>
             <div className={styles.brand}>

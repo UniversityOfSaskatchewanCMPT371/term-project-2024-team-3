@@ -19,7 +19,7 @@ const useGetUploadedFiles = (watchType: WatchType, refetch = false): UseGetUploa
                 setUploadedFiles(data.list);
             })
             .catch((error: Error) => {
-                setErrorState(`An error occured while getting uploaded files: ${error.toString}`);
+                setErrorState(`An error occured while getting uploaded files: ${error.message}`);
             })
             .finally(() => {
                 setIsLoading(false);

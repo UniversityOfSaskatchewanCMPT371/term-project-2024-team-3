@@ -6,6 +6,7 @@ import Dropzone, { IDropzoneProps, IStyleCustomization } from "react-dropzone-up
 import "react-dropzone-uploader/dist/styles.css";
 import FileIcon from "components/Icons";
 import { Stack } from "@mui/material";
+import { v4 as uuidv4 } from "uuid";
 
 const dropzoneStyle: IStyleCustomization<React.CSSProperties> = {
     dropzone: {
@@ -38,9 +39,6 @@ interface UploadedFile {
     file: File;
     remove: () => void;
 }
-interface UploadedFiles {
-    [key: string]: UploadedFile[];
-}
 
 type Props = {
     fileType: WatchType;
@@ -55,68 +53,37 @@ function FileDropZone({
 }: Props): ReactElement<typeof Dropzone> {
     const rollbar = useRollbar();
 
-    const [filesPerYear, setFilesPerYear] = useState<UploadedFiles>({});
+    const [files, setFiles] = useState<Array<UploadedFile>>([]);
     const [isUpdatePreview, setIsUpdatePreview] = useState(false);
 
     useEffect(() => {
         const clearFiles = () => {
-            Object.values(filesPerYear).forEach((fileArray) => {
-                fileArray.forEach((file) => {
-                    file.remove();
-                });
+            files.forEach((file) => {
+                file.remove();
             });
-            setFilesPerYear({});
+            setFiles([]);
         };
 
         clearFiles();
     }, [fileType]);
 
-    /**
-     * For fitbit files parse the year out of the files name
-     * Can be used for any file but currently only fitbit files are expected to have a year in their name
-     * Precondition: year is full year (2019) not last 2 digits (19)
-     * Returns: The year or undefined if no year is found
-     */
-    const getYear = (fName: string): string => {
-        // check if the year is the last number in the date
-        console.debug("Parsing year from: ".concat(fName));
+    const uploadFiles = async () => {
+        const filesToZip = [...files];
+        const totalTasks = filesToZip.length + 1;
+        onProgressChange(0, `Preparing ${totalTasks} files for upload`, true);
+        rollbar.debug(`Preparing ${totalTasks} files for upload`);
 
-        let fullDate = fName.match("[0-9]{2}([-/ .])[0-9]{2}[-/ .][0-9]{4}");
-        if (fullDate) {
-            const splitDate = fullDate[0].split(fullDate[1]);
-            rollbar.debug("Year is the last number: ".concat(splitDate[2]));
-            return splitDate[2];
-        }
-
-        // check if the year is the first number in the date
-        fullDate = fName.match("[0-9]{4}([-/ .])[0-9]{2}[-/ .][0-9]{2}");
-        if (fullDate) {
-            const splitDate = fullDate[0].split(fullDate[1]);
-            rollbar.debug("Year is the first number: ".concat(splitDate[0]));
-            return splitDate[0];
-        }
-
-        if (fileType === WatchType.APPLE_WATCH) {
-            return "Apple Export";
-        }
-        return "Fitbit Export";
-    };
-
-    const uploadFiles = async (year: string) => {
-        onProgressChange(0, "Preparing files for upload", true);
-        rollbar.debug("Upload called with year: ".concat(year));
-        const files = { ...filesPerYear };
-        console.assert(Object.keys(files).includes(year), "Year doesn't have any files");
-        const filesToZip = [...files[year]];
         const zip = new Zip();
-        if (filesToZip.length < 1) {
+        if (totalTasks < 1) {
             onProgressChange(100, "Done", false);
             return;
         }
         let tasksDone = 0;
-        const totalTasks = Object.keys(files).length;
 
         filesToZip.forEach((file) => {
+            tasksDone += 1;
+            const progressPercentage = Math.round((tasksDone / totalTasks) * 100);
+            onProgressChange(progressPercentage, `Zipping ${file.file.name}`, true);
             zip.file(file.file.name, file.file);
         });
 
@@ -126,86 +93,48 @@ function FileDropZone({
             compressionOptions: { level: 6 },
         }).then(async (content) => {
             const formData = new FormData();
-            formData.set("fname", `${year}-${filesToZip.length}.zip`);
+            const uuid = uuidv4();
+            formData.set("fname", `${uuid}.zip`);
             formData.set("data", content);
-            rollbar.info("sending upload");
+            rollbar.info("Sending upload");
+            tasksDone += 1;
+            const progressPercentage = Math.round((tasksDone / totalTasks) * 100);
+            onProgressChange(progressPercentage, `Uploading your files`, true);
 
-            await handleUpload(formData, year, fileType).then(() => {
+            await handleUpload(formData, fileType, fileType).then(() => {
                 filesToZip.forEach((f) => f.remove());
-                setFilesPerYear((prevData) => {
-                    const newData = { ...prevData };
-                    delete newData[year];
-                    if (Object.keys(newData).length === 0) {
-                        onProgressChange(100, "Done", true);
-                    } else {
-                        tasksDone += 1; // Increment tasksDone when handling each upload task
-                        const progressPercentage = Math.round((tasksDone / totalTasks) * 100);
-                        onProgressChange(progressPercentage, `Uploading ${year} files`, true);
-                    }
-                    return newData;
+                setFiles(() => {
+                    onProgressChange(100, `Done!`, true);
+                    return [];
                 });
             });
+            rollbar.info("Successful upload");
         });
     };
 
-    const handleChangeStatus: IDropzoneProps["onChangeStatus"] = (
-        { meta, file, remove },
-        status,
-    ) => {
-        console.log(status);
+    const handleChangeStatus: IDropzoneProps["onChangeStatus"] = ({ file, remove }, status) => {
         setTimeout(() => {
             if (status === "done") {
-                setFilesPerYear((prevData) => {
-                    const files = { ...prevData };
-                    const year = getYear(meta.name);
-                    if (files[year]) {
-                        const isDuplicate =
-                            files[year].filter((item) => item.file === file).length > 0;
-                        if (!isDuplicate) {
-                            files[year].push({
-                                file: file,
-                                remove: remove,
-                            });
-                        }
-                    } else {
-                        files[year] = [
-                            {
-                                file: file,
-                                remove: remove,
-                            },
-                        ];
+                setFiles((prevData) => {
+                    const exists = prevData.some((f) => f.file === file);
+                    if (!exists) {
+                        return [...prevData, { file: file, remove: remove }];
                     }
-                    return files;
+                    return prevData;
                 });
             }
         }, 500);
 
         if (status === "removed") {
-            setFilesPerYear((prevData) => {
-                const files = { ...prevData };
-                const year = getYear(meta.name);
-
-                if (!files[year]) {
-                    return files;
-                }
-
-                files[year] = files[year].filter((item) => item.file !== file);
-                if (files[year].length === 0) {
-                    delete files[year];
-                }
-                return files;
-            });
+            setFiles((prevData) => prevData.filter((f) => f.file !== file));
         }
 
         // Makes sures we rerender the dropzone
         setIsUpdatePreview(!isUpdatePreview);
     };
 
-    const handleSubmit: IDropzoneProps["onSubmit"] = () => {
-        const years = Object.keys(filesPerYear);
-        years.forEach(async (year) => {
-            await uploadFiles(year);
-        });
+    const handleSubmit: IDropzoneProps["onSubmit"] = async () => {
+        await uploadFiles();
     };
 
     return (

@@ -97,7 +97,7 @@ public class AccessGroupControllerTest {
     /**
      *   Preconditions: Access GroupDto is not null
      *   Post-conditions: Returns a Response Entity with an AccessGroupDto Object and
-     *   a CREATED status
+     *   a CREATED status. The AccessGroupDto is saved into the database
      */
     @Test
     public void testSave(){
@@ -141,6 +141,11 @@ public class AccessGroupControllerTest {
 
     }
 
+    /**
+     *   Preconditions: Access GroupDto is not null
+     *   Post-conditions: Returns a Response Entity with a CREATED status and the updated access group. The Access
+     *   Group information is updated in the database
+     */
     @Test
     public void testUpdate(){
 
@@ -156,6 +161,10 @@ public class AccessGroupControllerTest {
 
     }
 
+    /**
+     *   Preconditions: Access GroupDto is null
+     *   Post-conditions: Returns a Response Entity with a BAD_REQUEST status
+     */
     @Test
     public void testUpdateNull(){
 
@@ -169,6 +178,11 @@ public class AccessGroupControllerTest {
 
     }
 
+    /**
+     *   Preconditions: Access GroupDto is not null
+     *   Post-conditions: Returns a Response Entity with an OK status and the desired
+     *   Access Group Dto specified by the id
+     */
     @Test
     public void testGet(){
 
@@ -189,6 +203,10 @@ public class AccessGroupControllerTest {
     }
 
 
+    /**
+     *   Preconditions: Access GroupDto is null
+     *   Post-conditions: Returns a Response Entity with a NOT_FOUND status
+     */
     @Test
     public void testGetNull(){
 
@@ -209,6 +227,11 @@ public class AccessGroupControllerTest {
 
     }
 
+    /**
+     *   Preconditions: Access GroupDto is not null
+     *   Post-conditions: Returns a Response Entity with a NO_CONTENT status, and access group is deleted from
+     *   database
+     */
     @Test
     public void testDelete(){
 
@@ -230,6 +253,10 @@ public class AccessGroupControllerTest {
 
     }
 
+    /**
+     *   Preconditions: Access GroupDto is null
+     *   Post-conditions: Returns a Response Entity with a NOT_FOUND status
+     */
     @Test
     public void testDeleteNull(){
 

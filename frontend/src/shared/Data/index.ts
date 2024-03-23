@@ -8,6 +8,7 @@ import {
     PredictionType,
     DownloadType,
 } from "shared/api";
+import axios from "axios";
 
 /**
  * Uploads a file
@@ -82,8 +83,15 @@ export const deleteFile = async (id: string, watchType: WatchType): Promise<void
  * @returns the list of uploaded files
  */
 export async function getUploadedFiles(watchType: WatchType): Promise<RawFilesData> {
-    const response = await api.get(`/rest/beapengine/${watchType}/list/raw`);
-    return { list: response.data.list ?? [] };
+    try {
+        const response = await api.get(`/rest/beapengine/${watchType}/list/raw`);
+        return { list: response.data.list ?? [] };
+    } catch (error) {
+        if (axios.isAxiosError(error) && error.response?.data.message === "Raw data not found") {
+            return { list: [] };
+        }
+        throw error;
+    }
 }
 
 /**

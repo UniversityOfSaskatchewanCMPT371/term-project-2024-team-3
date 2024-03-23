@@ -15,6 +15,7 @@ import useGetUploadedFiles from "shared/hooks/useGetUploadedFiles";
 import useProcessFile from "shared/hooks/useProcessFile";
 import { RawFileData, WatchType } from "shared/api";
 import moment from "moment";
+import ErrorSnackbar from "components/ErrorSnackbar/ErrorSnackbar";
 import styles from "./UploadedFiles.module.css";
 
 type FilesForProcessing = {
@@ -26,12 +27,12 @@ type Props = {
 };
 
 function UploadedFiles({ refetch }: Props) {
-    const { handleProcess, isLoading: proccessLoading } = useProcessFile();
-    const { uploadedFiles: fitbitFiles } = useGetUploadedFiles(
+    const { handleProcess, isLoading: proccessLoading, error: processingError } = useProcessFile();
+    const { uploadedFiles: fitbitFiles, error: fitbitFilesError } = useGetUploadedFiles(
         WatchType.FITBIT,
         refetch || proccessLoading,
     );
-    const { uploadedFiles: appleWatchFiles } = useGetUploadedFiles(
+    const { uploadedFiles: appleWatchFiles, error: appleWatchFilesError } = useGetUploadedFiles(
         WatchType.APPLE_WATCH,
         refetch || proccessLoading,
     );
@@ -70,8 +71,6 @@ function UploadedFiles({ refetch }: Props) {
             return new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime();
         });
 
-    console.log(checkedItems);
-
     const handleToggle = (id: string, watch: WatchType) => {
         setCheckedItems((prev) => {
             const newState = { ...prev };
@@ -98,6 +97,9 @@ function UploadedFiles({ refetch }: Props) {
 
     return (
         <Container className={styles.box}>
+            <ErrorSnackbar error={processingError} />
+            <ErrorSnackbar error={fitbitFilesError} />
+            <ErrorSnackbar error={appleWatchFilesError} />
             <Grid
                 container
                 direction="column"

@@ -18,7 +18,9 @@ const useProcessFile = (): UseProcessFile => {
             await process(id, watchType);
             setErrorState(null);
         } catch (error) {
-            setErrorState(`Predict File failed: ${error.message}`);
+            if (error instanceof Error) {
+                setErrorState(`Processing ${watchType} file ${id} error: ${error.message}`);
+            }
         } finally {
             setIsLoading(false);
         }

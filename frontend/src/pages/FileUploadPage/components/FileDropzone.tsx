@@ -152,6 +152,7 @@ function FileDropZone({
         { meta, file, remove },
         status,
     ) => {
+        console.log(status);
         setTimeout(() => {
             if (status === "done") {
                 setFilesPerYear((prevData) => {
@@ -218,7 +219,7 @@ function FileDropZone({
                 </Stack>
             }
             submitButtonContent="Upload"
-            accept={fileType === WatchType.FITBIT ? "application/json" : "application/xml"}
+            accept={fileType === WatchType.FITBIT ? "application/json" : "text/xml"}
             styles={dropzoneStyle}
         />
     );

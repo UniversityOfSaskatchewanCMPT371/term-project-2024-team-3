@@ -42,7 +42,11 @@ const mockHandleUpload = jest.fn();
 
 test(" TID 1.6. Renders FileDropzone components", () => {
     const { getByText } = renderWithProvider(
-        <FileDropzone fileType={WatchType.FITBIT} handleUpload={mockHandleUpload} />,
+        <FileDropzone
+            fileType={WatchType.FITBIT}
+            handleUpload={mockHandleUpload}
+            onProgressChange={jest.fn()}
+        />,
     );
     getByText("FileDropzoneControls");
 });
@@ -60,7 +64,11 @@ test("invoke onDragEnter when dragenter event occurs", async () => {
         error: null,
     });
     const { getByTestId, rerender, getByText } = renderWithProvider(
-        <FileDropzone fileType={WatchType.FITBIT} handleUpload={mockHandleUpload} />,
+        <FileDropzone
+            onProgressChange={jest.fn()}
+            fileType={WatchType.FITBIT}
+            handleUpload={mockHandleUpload}
+        />,
     );
     getByText("Drop files here, or Click");
     const dropzone = getByTestId("dropZone");
@@ -69,7 +77,11 @@ test("invoke onDragEnter when dragenter event occurs", async () => {
 
     await flushPromises(
         rerender,
-        <FileDropzone fileType={WatchType.FITBIT} handleUpload={mockHandleUpload} />,
+        <FileDropzone
+            onProgressChange={jest.fn()}
+            fileType={WatchType.FITBIT}
+            handleUpload={mockHandleUpload}
+        />,
     );
 
     getByText("2018");

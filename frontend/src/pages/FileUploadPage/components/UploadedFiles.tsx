@@ -24,9 +24,10 @@ type FilesForProcessing = {
 
 type Props = {
     refetch: boolean;
+    onProgressChange: (percentage: number, message: string, isVisible: boolean) => void;
 };
 
-function UploadedFiles({ refetch }: Props) {
+function UploadedFiles({ refetch, onProgressChange }: Props) {
     const { handleProcess, isLoading: proccessLoading, error: processingError } = useProcessFile();
     const { uploadedFiles: fitbitFiles, error: fitbitFilesError } = useGetUploadedFiles(
         WatchType.FITBIT,
@@ -85,14 +86,34 @@ function UploadedFiles({ refetch }: Props) {
 
     const filesProcessLength = Object.keys(checkedItems).length;
 
-    const onProcess = () => {
+    const onProcess = async () => {
         const items = { ...checkedItems };
-        Object.keys(checkedItems).forEach(async (id) => {
-            handleProcess(id, items[id]).then(() => {
-                delete items[id];
+        const totalTasks = Object.keys(items).length;
+        onProgressChange(0, `Preparing ${totalTasks} files for processing`, true);
+        let tasksDone = 0;
+        // eslint-disable-next-line
+        for (const id of Object.keys(items)) {
+            let progressPercentage = Math.round((tasksDone / totalTasks) * 100);
+            onProgressChange(
+                progressPercentage,
+                `Processing ${items[id]} File ${id}. This may take a few minutes...`,
+                true,
+            );
+            // eslint-disable-next-line
+            await handleProcess(id, items[id]);
+            setCheckedItems((prev) => {
+                const newState = { ...prev };
+                delete newState[id];
+                return newState;
             });
-        });
-        setCheckedItems(items);
+            tasksDone += 1; // Increment tasksDone when handling each upload task
+            progressPercentage = Math.round((tasksDone / totalTasks) * 100);
+            onProgressChange(
+                progressPercentage,
+                progressPercentage >= 100 ? `Done!` : `Preparing next file for processing`,
+                true,
+            );
+        }
     };
 
     return (

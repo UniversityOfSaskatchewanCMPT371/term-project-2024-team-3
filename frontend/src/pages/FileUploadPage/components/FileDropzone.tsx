@@ -45,9 +45,14 @@ interface UploadedFiles {
 type Props = {
     fileType: WatchType;
     handleUpload: (form: FormData, year: string, watchType: WatchType) => Promise<void>;
+    onProgressChange: (percentage: number, message: string, isVisible: boolean) => void;
 };
 
-function FileDropZone({ fileType, handleUpload }: Props): ReactElement<typeof Dropzone> {
+function FileDropZone({
+    fileType,
+    handleUpload,
+    onProgressChange,
+}: Props): ReactElement<typeof Dropzone> {
     const rollbar = useRollbar();
 
     const [filesPerYear, setFilesPerYear] = useState<UploadedFiles>({});
@@ -98,39 +103,49 @@ function FileDropZone({ fileType, handleUpload }: Props): ReactElement<typeof Dr
     };
 
     const uploadFiles = async (year: string) => {
+        onProgressChange(0, "Preparing files for upload", true);
         rollbar.debug("Upload called with year: ".concat(year));
         const files = { ...filesPerYear };
         console.assert(Object.keys(files).includes(year), "Year doesn't have any files");
         const filesToZip = [...files[year]];
         const zip = new Zip();
         if (filesToZip.length < 1) {
+            onProgressChange(100, "Done", false);
             return;
         }
+        let tasksDone = 0;
+        const totalTasks = Object.keys(files).length;
 
         filesToZip.forEach((file) => {
             zip.file(file.file.name, file.file);
         });
-        await zip
-            .generateAsync({
-                type: "blob",
-                compression: "DEFLATE",
-                compressionOptions: { level: 6 },
-            })
-            .then(async (content) => {
-                const formData = new FormData();
-                formData.set("fname", `${year}-${filesToZip.length}.zip`);
-                formData.set("data", content);
-                rollbar.info("sending upload");
-                await handleUpload(formData, year, fileType).then(() => {
-                    filesToZip.forEach((f) => f.remove());
-                    delete files[year];
-                    setFilesPerYear((prevData) => {
-                        const newData = { ...prevData };
-                        delete newData[year];
-                        return newData;
-                    });
+
+        zip.generateAsync({
+            type: "blob",
+            compression: "DEFLATE",
+            compressionOptions: { level: 6 },
+        }).then(async (content) => {
+            const formData = new FormData();
+            formData.set("fname", `${year}-${filesToZip.length}.zip`);
+            formData.set("data", content);
+            rollbar.info("sending upload");
+
+            await handleUpload(formData, year, fileType).then(() => {
+                filesToZip.forEach((f) => f.remove());
+                setFilesPerYear((prevData) => {
+                    const newData = { ...prevData };
+                    delete newData[year];
+                    if (Object.keys(newData).length === 0) {
+                        onProgressChange(100, "Done", true);
+                    } else {
+                        tasksDone += 1; // Increment tasksDone when handling each upload task
+                        const progressPercentage = Math.round((tasksDone / totalTasks) * 100);
+                        onProgressChange(progressPercentage, `Uploading ${year} files`, true);
+                    }
+                    return newData;
                 });
             });
+        });
     };
 
     const handleChangeStatus: IDropzoneProps["onChangeStatus"] = (

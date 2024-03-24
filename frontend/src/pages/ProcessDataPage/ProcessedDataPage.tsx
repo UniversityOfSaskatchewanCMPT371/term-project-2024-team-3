@@ -9,10 +9,14 @@ import useDownload from "shared/hooks/useDownload";
 import { useRollbar } from "@rollbar/react";
 import styles from "./ProcessedDataPage.module.css";
 
+type ProcessedFile = ProcessedFileData & {
+    watch: string;
+};
+
 const ProcessedDataPage = function () {
     const rollbar = useRollbar();
 
-    const [currentFile, setCurrentFile] = useState<any>();
+    const [currentFile, setCurrentFile] = useState<ProcessedFile>();
     const [selectedModel, setSelectedModel] = useState<PredictionType>(PredictionType.SVM);
 
     const [progressbar, setProgressbar] = useState<ProgressBarType>({
@@ -119,9 +123,14 @@ const ProcessedDataPage = function () {
         if (currentFile) {
             const { id, watch } = currentFile;
             const lowerCaseWatch = watch.toLowerCase();
+            let predictWatch = WatchType.FITBIT;
 
             onProgressChange(30, "Your file is being predicted.", true);
-            await handlePredict(id, selectedModel, lowerCaseWatch);
+            if (lowerCaseWatch === "applewatch") {
+                predictWatch = WatchType.APPLE_WATCH;
+            }
+
+            await handlePredict(id.toString(), selectedModel, predictWatch);
             onProgressChange(100, "Your file has been predicted!", true);
 
             if (usePredictError) {
@@ -169,7 +178,7 @@ const ProcessedDataPage = function () {
      */
     const getRendersOfFiles = () => {
         console.assert(files.length > 0, "Files array should contain data for rendering");
-        renders = files.map((file: any) => {
+        renders = files.map((file: ProcessedFile) => {
             const date = moment(file.dateTime ?? "");
             let dateString;
 

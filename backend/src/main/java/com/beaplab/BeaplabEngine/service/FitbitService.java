@@ -11,6 +11,7 @@
 package com.beaplab.BeaplabEngine.service;
 
 import com.beaplab.BeaplabEngine.constants.BeapEngineConstants;
+import com.beaplab.BeaplabEngine.service.interfaces.*;
 import com.beaplab.BeaplabEngine.metadata.PredictedDataDto;
 import com.beaplab.BeaplabEngine.metadata.ProcessedDataDto;
 import com.beaplab.BeaplabEngine.metadata.RawDataDto;
@@ -44,7 +45,7 @@ import java.util.zip.ZipInputStream;
 @Service("fitbitService")
 @ComponentScan("com.beaplab.BeaplabEngine")
 @PropertySource("classpath:r_repo.properties")
-public class FitbitService {
+public class FitbitService implements WatchService{
 
     final static Logger logger = LogManager.getLogger(FitbitService.class.getName());
 

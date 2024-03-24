@@ -6,6 +6,7 @@
 package com.beaplab.BeaplabEngine.service;
 
 import com.beaplab.BeaplabEngine.constants.BeapEngineConstants;
+import com.beaplab.BeaplabEngine.service.interfaces.*;
 import com.beaplab.BeaplabEngine.metadata.PredictedDataDto;
 import com.beaplab.BeaplabEngine.metadata.ProcessedDataDto;
 import com.beaplab.BeaplabEngine.metadata.RawDataDto;
@@ -37,7 +38,7 @@ import java.util.zip.ZipOutputStream;
 @Service("appleWatchService")
 @ComponentScan("com.beaplab.BeaplabEngine")
 @PropertySource("classpath:r_repo.properties")
-public class AppleWatchService {
+public class AppleWatchService implements WatchService{
 
     final static Logger logger = LogManager.getLogger(AppleWatchService.class.getName());
 

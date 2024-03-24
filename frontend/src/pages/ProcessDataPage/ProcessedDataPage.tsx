@@ -123,9 +123,14 @@ const ProcessedDataPage = function () {
         if (currentFile) {
             const { id, watch } = currentFile;
             const lowerCaseWatch = watch.toLowerCase();
+            let predictWatch = WatchType.FITBIT;
 
             onProgressChange(30, "Your file is being predicted.", true);
-            await handlePredict(id, selectedModel, lowerCaseWatch);
+            if (lowerCaseWatch === "applewatch") {
+                predictWatch = WatchType.APPLE_WATCH;
+            }
+
+            await handlePredict(id.toString(), selectedModel, predictWatch);
             onProgressChange(100, "Your file has been predicted!", true);
 
             if (usePredictError) {

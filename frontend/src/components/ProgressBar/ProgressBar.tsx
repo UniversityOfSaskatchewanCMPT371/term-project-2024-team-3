@@ -7,7 +7,7 @@ import {
 import { useAuth } from "../Authentication/useAuth";
 import styles from "./ProgressBar.module.css";
 
-type Props = {
+export type ProgressBarType = {
     percentage: number;
     message: string;
     isVisible: boolean;
@@ -22,7 +22,7 @@ type Props = {
  * @returns either a progress bar popup with a screen overlay, or nothing
  * requires percentage, message, isVisible
  */
-function ProgressBar(props: Props): React.ReactElement | null {
+export function ProgressBar(props: ProgressBarType): React.ReactElement | null {
     const { isAuthenticated } = useAuth(); // use the useAuth hook to get the current user
     // If the user is not logged in, don't render the progressBar
     if (!isAuthenticated) {
@@ -127,5 +127,3 @@ function ProgressBar(props: Props): React.ReactElement | null {
     }
     return null;
 }
-
-export default ProgressBar;

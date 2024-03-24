@@ -22,9 +22,7 @@ const useDownload = (): UseDownload => {
      * @param sliceSize the size of the slice for the blob
      * @returns a blob for downloading
      */
-    const b64toBlob = function (b64Data: string, contentType: string, sliceSize: number) {
-        // contentType = contentType || "";
-        // sliceSize = sliceSize || 512; // sliceSize represent the bytes to be process in each batch(loop), 512 bytes seems to be the ideal slice size for the performance wise
+    const b64toBlob = function (b64Data: string, contentType: string, sliceSize: number): Blob {
         const byteCharacters = atob(b64Data);
         const byteArrays = [];
         for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
@@ -41,7 +39,6 @@ const useDownload = (): UseDownload => {
     };
 
     /**
-     *
      * @param id the id of the file
      * @param type 'process', 'predict'
      * @param watchType The type of watch to be downloaded
@@ -53,13 +50,14 @@ const useDownload = (): UseDownload => {
     ): Promise<void> => {
         setIsLoading(true);
         try {
-            await download(id, type, watchType).then((response: any) => {
-                // response.data.file is an array of bytes
-                const blob = b64toBlob(response.data.file, "application/octet-stream", 512);
+            const response = await download(id, type, watchType);
+            // response.file is an array of bytes
+            if (response.file) {
+                const fileBlob = b64toBlob(response.file, "application/octet-stream", 512);
                 setIsDownloading(true);
-                saveAs(blob, `${watchType} ${id}.zip`);
-            });
-            setErrorState(null);
+                setErrorState(null);
+                saveAs(fileBlob, `${watchType} ${id}.zip`);
+            }
         } catch (error) {
             setErrorState(`An error has occured while downloading a file: ${error}`);
         } finally {

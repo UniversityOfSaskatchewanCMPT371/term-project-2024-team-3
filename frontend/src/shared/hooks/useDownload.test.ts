@@ -17,7 +17,7 @@ const mockData = {
     watchType: WatchType.APPLE_WATCH,
 };
 
-const byteData: Uint8Array = new Uint8Array(10);
+const byteData: string = "123456789";
 
 const mockReturnData = {
     file: byteData,
@@ -26,9 +26,7 @@ const mockReturnData = {
 const downloadFileSpy = jest.spyOn(API, "download").mockImplementation(async () => mockReturnData);
 
 describe("useDownload", () => {
-
     it("T4.3 should download a file from the database", async () => {
-
         const { result } = renderHook(useDownload);
         await result.current.handleDownload(mockData.id, mockData.type, mockData.watchType);
 
@@ -46,9 +44,7 @@ describe("useDownload", () => {
         });
     });
 
-
     it("T4.4 should handle download when it errors", async () => {
-
         const { result } = renderHook(useDownload);
         await result.current.handleDownload(mockData.id, mockData.type, mockData.watchType);
 

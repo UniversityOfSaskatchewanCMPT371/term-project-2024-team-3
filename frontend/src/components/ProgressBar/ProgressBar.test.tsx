@@ -2,7 +2,7 @@ import React from "react";
 import userEvent from "@testing-library/user-event";
 import { renderWithProvider } from "shared/util/tests/render";
 import * as useAuth from "components/Authentication/useAuth";
-import ProgressBar from "./ProgressBar";
+import { ProgressBar } from "./ProgressBar";
 
 // Define the type for the mock return value of useAuth
 type AuthReturnValue = {

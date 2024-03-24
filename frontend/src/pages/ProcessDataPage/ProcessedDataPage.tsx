@@ -169,9 +169,11 @@ const ProcessedDataPage = function () {
      */
     const getRendersOfFiles = () => {
         console.assert(files.length > 0, "Files array should contain data for rendering");
-        renders = files.map((file: ProcessedFileData) => {
+        renders = files.map((file: any) => {
             const date = moment(file.dateTime ?? "");
             let dateString;
+
+            const { id, watch } = file;
 
             if (date.isValid()) {
                 dateString = date.format("YYYY/MM/DD");
@@ -182,7 +184,7 @@ const ProcessedDataPage = function () {
             return (
                 <div className={styles.fileSelector}>
                     <FormControlLabel
-                        value={file.id}
+                        value={id}
                         onClick={() => setCurrentFile(file)}
                         control={
                             <Radio
@@ -194,7 +196,7 @@ const ProcessedDataPage = function () {
                                 }}
                             />
                         }
-                        label={file.id.toString()}
+                        label={`${watch} ${id.toString()}`}
                         labelPlacement="end"
                     />
                     <div className={styles.fileTextBox}>

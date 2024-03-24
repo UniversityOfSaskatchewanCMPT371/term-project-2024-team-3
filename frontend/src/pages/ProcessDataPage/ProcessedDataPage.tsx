@@ -9,10 +9,14 @@ import useDownload from "shared/hooks/useDownload";
 import { useRollbar } from "@rollbar/react";
 import styles from "./ProcessedDataPage.module.css";
 
+type ProcessedFile = ProcessedFileData & {
+    watch: string;
+};
+
 const ProcessedDataPage = function () {
     const rollbar = useRollbar();
 
-    const [currentFile, setCurrentFile] = useState<any>();
+    const [currentFile, setCurrentFile] = useState<ProcessedFile>();
     const [selectedModel, setSelectedModel] = useState<PredictionType>(PredictionType.SVM);
 
     const [progressbar, setProgressbar] = useState<ProgressBarType>({
@@ -169,7 +173,7 @@ const ProcessedDataPage = function () {
      */
     const getRendersOfFiles = () => {
         console.assert(files.length > 0, "Files array should contain data for rendering");
-        renders = files.map((file: any) => {
+        renders = files.map((file: ProcessedFile) => {
             const date = moment(file.dateTime ?? "");
             let dateString;
 

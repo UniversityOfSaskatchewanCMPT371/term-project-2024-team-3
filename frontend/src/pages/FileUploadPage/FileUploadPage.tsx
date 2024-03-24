@@ -3,16 +3,10 @@ import { Container, Stack, Alert } from "@mui/material";
 import { useRollbar } from "@rollbar/react";
 import { WatchType } from "shared/api/types";
 import useUpload from "shared/hooks/useUpload";
-import ProgressBar from "components/ProgressBar/ProgressBar";
+import { ProgressBar, ProgressBarType } from "components/ProgressBar/ProgressBar";
 import FileDropZone from "./components/FileDropzone";
 import UploadedFiles from "./components/UploadedFiles";
 import FileDropZoneControls from "./components/FileDropzoneControls";
-
-type ProgressBarType = {
-    percentage: number;
-    message: string;
-    isVisible: boolean;
-};
 
 function FileUploadPage(): ReactElement {
     const [fileType, setFileType] = useState<WatchType>(WatchType.FITBIT);

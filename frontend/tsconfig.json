@@ -23,7 +23,8 @@
     "noImplicitThis": true,
     "strictNullChecks": true,
     "typeRoots": ["./src/global.d.ts"],
-    "baseUrl": "src"
+    "baseUrl": "src",
+    "useUnknownInCatchVariables": false
   },
   "include": [
     "src",

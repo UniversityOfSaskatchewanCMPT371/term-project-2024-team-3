@@ -52,12 +52,13 @@ const useDownload = (): UseDownload => {
         try {
             const response = await download(id, type, watchType);
             // response.file is an array of bytes
-            if (response.file) {
-                const fileBlob = b64toBlob(response.file, "application/octet-stream", 512);
-                setIsDownloading(true);
-                setErrorState(null);
-                saveAs(fileBlob, `${watchType} ${id}.zip`);
+            if (!response.file) {
+                return;
             }
+            const fileBlob = b64toBlob(response.file, "application/octet-stream", 512);
+            setIsDownloading(true);
+            setErrorState(null);
+            saveAs(fileBlob, `${watchType} ${id}.zip`);
         } catch (error) {
             setErrorState(`An error has occured while downloading a file: ${error}`);
         } finally {

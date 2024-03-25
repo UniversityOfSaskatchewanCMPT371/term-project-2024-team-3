@@ -114,7 +114,7 @@ public class WatchController {
         }
 
 
-        if(watchType != "applewatch" && watchType != "fitbit"){
+        if(!watchType.equals("applewatch") && !watchType.equals("fitbit")){
             JSONObject jsonObject = new JSONObject();
             jsonObject.put(BeapEngineConstants.SUCCESS_STR, false);
             jsonObject.put("message", "Invalid watch type in url");
@@ -162,7 +162,7 @@ public class WatchController {
         rollbar.info("in WatchController/processFiles");
 
 
-        if(watchType != "applewatch" && watchType != "fitbit"){
+        if(!watchType.equals("applewatch") && !watchType.equals("fitbit")){
             JSONObject jsonObject = new JSONObject();
             jsonObject.put(BeapEngineConstants.SUCCESS_STR, false);
             jsonObject.put("message", "Invalid watch type in url");
@@ -212,7 +212,7 @@ public class WatchController {
 
         JSONObject result = new JSONObject();
 
-        if(watchType != "applewatch" && watchType != "fitbit"){
+        if(!watchType.equals("applewatch") && !watchType.equals("fitbit")){
             JSONObject jsonObject = new JSONObject();
             jsonObject.put(BeapEngineConstants.SUCCESS_STR, false);
             jsonObject.put("message", "Invalid watch type in url");
@@ -262,7 +262,7 @@ public class WatchController {
         byte[] downloadedFile = null;
 
 
-        if(watchType != "applewatch" && watchType != "fitbit"){
+        if(!watchType.equals("applewatch") && !watchType.equals("fitbit")){
             jsonObject.put(BeapEngineConstants.SUCCESS_STR, false);
             jsonObject.put("message", "Invalid watch type in url");
             jsonObject.put("status_code", 400);
@@ -328,7 +328,7 @@ public class WatchController {
             return new ResponseEntity<>(jsonObject, (HttpStatus.valueOf((int)jsonObject.get("status_code"))));
         }
 
-        if(watchType != "applewatch" && watchType != "fitbit"){
+        if(!watchType.equals("applewatch") && !watchType.equals("fitbit")){
             JSONObject jsonObject = new JSONObject();
             jsonObject.put(BeapEngineConstants.SUCCESS_STR, false);
             jsonObject.put("message", "Invalid watch type in url");

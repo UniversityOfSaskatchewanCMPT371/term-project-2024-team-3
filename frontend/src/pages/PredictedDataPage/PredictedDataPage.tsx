@@ -8,10 +8,13 @@ import {
     ListItemIcon,
     ListItemText,
 } from "@mui/material";
+
 import { useRollbar } from "@rollbar/react";
-import { FileData, WatchType } from "shared/api";
+import { DownloadType, FileData, WatchType } from "shared/api";
 import moment from "moment";
 import useGetPredictedDataList from "shared/hooks/useGetPredictedDataList";
+import useDownload from "shared/hooks/useDownload";
+import { assert } from "console";
 import styles from "./PredictedDataPage.module.css";
 
 type PredictedFileWithType = FileData & { watch: WatchType; name: String; isSelected: boolean };
@@ -20,10 +23,12 @@ const PredictedDataPage = function () {
     const rollbar = useRollbar();
     rollbar.info("Reached Predicted Data page");
 
-    // #TODO download selected files
     // #TODO refresh predicted file list
+    // #TODO create rule to enable/disable download button
+    // #TODO make pretty
+    // #TODO write tests
 
-    const selectedFiles: { [index: number]: PredictedFileWithType } = {};
+    const selectedFiles: Array<PredictedFileWithType> = [];
 
     const [checked, setChecked] = useState<Array<Number>>([]);
 
@@ -44,9 +49,10 @@ const PredictedDataPage = function () {
             newChecked.splice(currentIndex, 1);
             selectedFiles[value].isSelected = false;
         }
-
         setChecked(newChecked);
     };
+
+    const { handleDownload, error: useDownloadError } = useDownload();
 
     const { uploadedFiles: fitBitFiles, error: predictedFitbitError } = useGetPredictedDataList(
         WatchType.FITBIT,
@@ -117,7 +123,30 @@ const PredictedDataPage = function () {
         fitbitPredictedFiles.concat(appleWatchPredictedFiles);
 
     /**
-     * mapping avaliable files to html components
+     * Pre-conditions: A file is selected
+     * Post-conditions: Downloads the currently selected files to the users computer
+     */
+    const downloadFiles = (event: React.MouseEvent) => {
+        event.preventDefault();
+
+        // make sure at least one file is selected before you attempt to download it
+        assert(selectedFiles.some((file: PredictedFileWithType) => file.isSelected));
+
+        selectedFiles.forEach((file: PredictedFileWithType) => {
+            if (file.isSelected) {
+                const { id, watch } = file;
+                const stringID = id.toString();
+                handleDownload(stringID, DownloadType.PREDICT, watch);
+
+                if (useDownloadError) {
+                    rollbar.error(useDownloadError);
+                }
+            }
+        });
+    };
+
+    /**
+     * map avaliable files to html list items
      */
     const availableFilesDisplay =
         availableFiles.length > 0 ? (
@@ -152,9 +181,9 @@ const PredictedDataPage = function () {
                 );
             })
         ) : (
-            <li className={styles.list} style={{ marginTop: "15px" }}>
+            <ListItem className={styles.list} style={{ marginTop: "15px" }}>
                 No files
-            </li>
+            </ListItem>
         );
 
     return (
@@ -171,7 +200,12 @@ const PredictedDataPage = function () {
                 <div className={styles.container}>
                     <h1>Files: </h1>
                     <div>
-                        <Button variant="contained" className={styles.downloadBtn}>
+                        <Button
+                            variant="contained"
+                            onClick={downloadFiles}
+                            className={styles.downloadBtn}
+                            data-testid="Download_Button"
+                        >
                             Download File(s)
                         </Button>
                         <Button

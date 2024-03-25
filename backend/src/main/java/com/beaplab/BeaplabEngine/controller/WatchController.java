@@ -8,6 +8,8 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -29,29 +31,24 @@ import com.beaplab.BeaplabEngine.service.FitbitService;
 import com.rollbar.notifier.Rollbar;
 
 
+
+@Controller
+@RequestMapping(BeapEngineConstants.REQUEST_MAPPING_PATTERN)
+@Secured({"ROLE_ADMIN", "ROLE_USER"})
 public class WatchController {
 
     @Autowired
     private final Rollbar rollbar;
 
-    /**
-     * injecting AppleWatchService into this class
-     */
     @Autowired
     private AppleWatchService appleWatchService;
 
-    /**
-     * injecting AppleWatchService into this class
-     */
     @Autowired
     private FitbitService fitbitService;
 
     public WatchController(Rollbar rollbar){
         this.rollbar = rollbar;
-    }
-
-    // want to handle api here. Get watch type from url parameter, call controller accordingly
-    
+    }    
 
     // getUploadView
     @RequestMapping(value = "/{watchType}/uploadview", method = RequestMethod.GET)
@@ -114,10 +111,10 @@ public class WatchController {
         }
 
 
-        if(watchType != "applewatch" && watchType != "fitbit"){
+        if(!watchType.equals("applewatch") && !watchType.equals("fitbit")){
             JSONObject jsonObject = new JSONObject();
             jsonObject.put(BeapEngineConstants.SUCCESS_STR, false);
-            jsonObject.put("message", "Invalid watch type in url");
+            jsonObject.put("message", "Invalid watch type in url " + watchType);
             jsonObject.put("status_code", 400);
             return new ResponseEntity<>(jsonObject, (HttpStatus.valueOf((int)jsonObject.get("status_code"))));
         }
@@ -162,10 +159,10 @@ public class WatchController {
         rollbar.info("in WatchController/processFiles");
 
 
-        if(watchType != "applewatch" && watchType != "fitbit"){
+        if(!watchType.equals("applewatch") && !watchType.equals("fitbit")){
             JSONObject jsonObject = new JSONObject();
             jsonObject.put(BeapEngineConstants.SUCCESS_STR, false);
-            jsonObject.put("message", "Invalid watch type in url");
+            jsonObject.put("message", "Invalid watch type in url " + watchType);
             jsonObject.put("status_code", 400);
             return new ResponseEntity<>(jsonObject, (HttpStatus.valueOf((int)jsonObject.get("status_code"))));
         }
@@ -212,10 +209,10 @@ public class WatchController {
 
         JSONObject result = new JSONObject();
 
-        if(watchType != "applewatch" && watchType != "fitbit"){
+        if(!watchType.equals("applewatch") && !watchType.equals("fitbit")){
             JSONObject jsonObject = new JSONObject();
             jsonObject.put(BeapEngineConstants.SUCCESS_STR, false);
-            jsonObject.put("message", "Invalid watch type in url");
+            jsonObject.put("message", "Invalid watch type in url " + watchType);
             jsonObject.put("status_code", 400);
             return new ResponseEntity<>(jsonObject, (HttpStatus.valueOf((int)jsonObject.get("status_code"))));
         }
@@ -248,7 +245,7 @@ public class WatchController {
             @ApiResponse(code = 400, message = "{success: false, message: Invalid watch type}"),
             @ApiResponse(code = 404, message = "{success: false, message: Requested .zip file not found at the server}"),
     })
-    public ResponseEntity<JSONObject> downloadAppleWatch(HttpServletRequest req, HttpServletResponse resp,
+    public ResponseEntity<JSONObject> downloadFile(HttpServletRequest req, HttpServletResponse resp,
                                                      @ApiParam(value = "id of the file to be downloaded", required = true)
                                                      @PathVariable("id") String id,
                                                      @ApiParam(value = "type of file to be downloaded: process or predict", required = true)
@@ -262,9 +259,9 @@ public class WatchController {
         byte[] downloadedFile = null;
 
 
-        if(watchType != "applewatch" && watchType != "fitbit"){
+        if(!watchType.equals("applewatch") && !watchType.equals("fitbit")){
             jsonObject.put(BeapEngineConstants.SUCCESS_STR, false);
-            jsonObject.put("message", "Invalid watch type in url");
+            jsonObject.put("message", "Invalid watch type in url " + watchType);
             jsonObject.put("status_code", 400);
             return new ResponseEntity<>(jsonObject, (HttpStatus.valueOf((int)jsonObject.get("status_code"))));
         }
@@ -280,7 +277,12 @@ public class WatchController {
                 break;
             default:
                 rollbar.error("Incorrect watch type selected: " + watchType);
-                throw new Exception("Incorrect watch type selected: " + watchType);
+                jsonObject.put(BeapEngineConstants.SUCCESS_STR, false);
+                jsonObject.put("message", "Invalid watch type in url " + watchType);
+                jsonObject.put("status_code", 400);
+                return new ResponseEntity<>(jsonObject, (HttpStatus.valueOf((int)jsonObject.get("status_code"))));
+                
+                // throw new Exception("Incorrect watch type selected: " + watchType);
         }
 
 
@@ -328,11 +330,10 @@ public class WatchController {
             return new ResponseEntity<>(jsonObject, (HttpStatus.valueOf((int)jsonObject.get("status_code"))));
         }
 
-        if(watchType != "applewatch" && watchType != "fitbit"){
+        if(!watchType.equals("applewatch") && !watchType.equals("fitbit")){
             JSONObject jsonObject = new JSONObject();
             jsonObject.put(BeapEngineConstants.SUCCESS_STR, false);
-            jsonObject.put("message", "Invalid watch type in url");
-            // wrong status_code
+            jsonObject.put("message", "Invalid watch type in url " + watchType);
             jsonObject.put("status_code", 400);
             return new ResponseEntity<>(jsonObject, (HttpStatus.valueOf((int)jsonObject.get("status_code"))));
         }

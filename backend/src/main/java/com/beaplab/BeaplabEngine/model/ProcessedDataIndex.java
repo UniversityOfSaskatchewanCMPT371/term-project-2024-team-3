@@ -80,13 +80,13 @@ public class ProcessedDataIndex {
             PredictedData.predictionType predictionType = null;
             if (!this.getPrediction_type().isEmpty())
                 predictionType = PredictedData.predictionType.valueOf(this.getPrediction_type());
-            PredictedData predictedData = new PredictedData(this.getPredicted_data_id().longValue(), null, predictionType, this.datetime, this.year);
+            PredictedData predictedData = new PredictedData(this.getPredicted_data_id().longValue(), null, predictionType, this.datetime);
             Set<PredictedData> predictedDataSet= new HashSet<>();
             predictedDataSet.add(predictedData);
-            return new ProcessedData(this.id.longValue(), null, predictedDataSet, this.datetime, this.year);
+            return new ProcessedData(this.id.longValue(), null, predictedDataSet, this.datetime);
         }
         else
-            return new ProcessedData(this.id.longValue(), null, null, this.datetime, this.year);
+            return new ProcessedData(this.id.longValue(), null, null, this.datetime);
     }
 
     public ProcessedData addToPredictedDataSet(ProcessedData processedData, BigInteger predictedDataId) {
@@ -94,7 +94,7 @@ public class ProcessedDataIndex {
         if (!this.getPrediction_type().isEmpty())
             predictionType = PredictedData.predictionType.valueOf(this.getPrediction_type());
 
-        PredictedData predictedData = new PredictedData(predictedDataId.longValue(), null, predictionType, this.datetime, this.year);
+        PredictedData predictedData = new PredictedData(predictedDataId.longValue(), null, predictionType, this.datetime);
         processedData.getPredictedDataIDs().add(predictedData);
         return processedData;
     }

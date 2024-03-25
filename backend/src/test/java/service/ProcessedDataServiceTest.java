@@ -54,7 +54,6 @@ public class ProcessedDataServiceTest {
         byte[] data = new byte[10];
         Long rawDataId = 1L;
         Timestamp timestamp = TestHelper.getTimestamp(2024, 2, 3, 4, 3);
-        String year = "2024";
 
         when(util.getCurrentTimeStamp()).thenReturn(timestamp);
         when(processedDataDao.save(Matchers.<ProcessedData>any(), eq(rawDataId))).thenReturn(1L);
@@ -66,7 +65,6 @@ public class ProcessedDataServiceTest {
         assertEquals(Long.valueOf(1L), result);
         assertArrayEquals(data, argument.getValue().getData());
         assertEquals(argument.getValue().getDateTime(), timestamp);
-        assertEquals(year, argument.getValue().getYear());
     }
 
     @Test

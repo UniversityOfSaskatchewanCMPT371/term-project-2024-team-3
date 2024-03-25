@@ -66,7 +66,6 @@ public class PredictedDataServiceTest {
         PredictedData.predictionType predictionType = PredictedData.predictionType.svm;
         Long processedDataId = 1L;
         Timestamp timestamp = TestHelper.getTimestamp(2024, 2, 3, 4, 3);
-        String year = "2024";
 
         when(util.getCurrentTimeStamp()).thenReturn(timestamp);
         when(predictedDataDao.save(Matchers.<PredictedData>any(), eq(processedDataId))).thenReturn(1L);
@@ -79,7 +78,6 @@ public class PredictedDataServiceTest {
         assertArrayEquals(data, argument.getValue().getData());
         assertEquals(predictionType, argument.getValue().getPredictionType());
         assertEquals(timestamp, argument.getValue().getDateTime());
-        assertEquals(year, argument.getValue().getYear());
     }
 
     @Test

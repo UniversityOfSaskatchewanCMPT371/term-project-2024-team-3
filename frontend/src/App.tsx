@@ -7,6 +7,7 @@ import PrivacyPolicy from "components/PrivacyPolicy/PrivacyPolicy";
 import SignUpPage from "pages/SignUpPage/SignUpPage";
 import rollbarConfig from "shared/config/rollbar";
 import LoadingSpinner from "components/LoadingSpinner/LoadingSpinner";
+import ProfilePage from "pages/ProfilePage/ProfilePage";
 import Navbar from "./components/Navbar/Navbar";
 import Logout from "./pages/LogoutPage/Logout";
 import ProcessedDataPage from "./pages/ProcessDataPage/ProcessedDataPage";
@@ -31,11 +32,10 @@ function App(): React.ReactElement<typeof Router> {
                             <Route path="/login" element={<LoginPage />} />
                             <Route path="/logout" element={<Logout />} />
                             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-
                             <Route path="/signup" element={<SignUpPage />} />
                             <Route path="/loading" element={<LoadingSpinner loading />} />
                             <Route
-                                path="/ProcessedDataPage"
+                                path="/processed-data"
                                 element={
                                     <ProtectedRoute>
                                         <ProcessedDataPage />
@@ -43,7 +43,7 @@ function App(): React.ReactElement<typeof Router> {
                                 }
                             />
                             <Route
-                                path="/PredictedDataPage"
+                                path="/predicted-data"
                                 element={
                                     <ProtectedRoute>
                                         <PredictedDataPage />
@@ -51,10 +51,18 @@ function App(): React.ReactElement<typeof Router> {
                                 }
                             />
                             <Route
-                                path="/FileUploadPage"
+                                path="/file-upload"
                                 element={
                                     <ProtectedRoute>
                                         <FileUploadPage />
+                                    </ProtectedRoute>
+                                }
+                            />
+                            <Route
+                                path="/profile"
+                                element={
+                                    <ProtectedRoute>
+                                        <ProfilePage />
                                     </ProtectedRoute>
                                 }
                             />

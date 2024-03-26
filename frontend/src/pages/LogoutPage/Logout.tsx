@@ -14,7 +14,7 @@ function Logout(): React.ReactElement | null {
         };
 
         logoutAndRedirect();
-    }, [handleLogout, navigate]);
+    }, []);
 
     if (isLoading) {
         return (

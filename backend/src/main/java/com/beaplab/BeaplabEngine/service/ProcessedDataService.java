@@ -11,7 +11,6 @@ import com.beaplab.BeaplabEngine.model.PredictedData;
 import com.beaplab.BeaplabEngine.model.ProcessedData;
 import com.beaplab.BeaplabEngine.model.RawData;
 import com.beaplab.BeaplabEngine.repository.ProcessedDataDao;
-import com.beaplab.BeaplabEngine.util.Util;
 import com.beaplab.BeaplabEngine.util.objectMapper.ProcessedDataMapper;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -20,7 +19,6 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -34,16 +32,12 @@ public class ProcessedDataService {
     @Autowired
     ProcessedDataMapper processedDataMapper;
 
-    @Autowired
-    Util util;
-
 
     public Long save(byte[] data, Long rawDataId) {
         logger.info("in ProcessedDataService: save");
 
-        Timestamp timestamp = util.getCurrentTimeStamp();
-
-        ProcessedData processedData = new ProcessedData(data, null, timestamp); //TODO is sending null correct?
+        Date date = new Date();
+        ProcessedData processedData = new ProcessedData(data, null, new Timestamp(date.getTime())); //TODO is sending null correct?
 
         return processedDataDao.save(processedData, rawDataId);
     }

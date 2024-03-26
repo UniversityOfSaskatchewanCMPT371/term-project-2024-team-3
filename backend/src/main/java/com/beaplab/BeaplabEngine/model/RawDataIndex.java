@@ -3,10 +3,8 @@
  * a.bozorgi67@gmail.com
  */
 
-
 package com.beaplab.BeaplabEngine.model;
 
-import java.util.Calendar;
 import java.math.BigInteger;
 import java.sql.Timestamp;
 
@@ -25,9 +23,7 @@ public class RawDataIndex {
         this.datetime = datetime;
         this.processed_data_id = processedDataId;
         // TODO: Replace with proper passing
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(datetime);
-        this.year = String.valueOf(cal.get(Calendar.YEAR));
+        this.year = "2024";
     }
 
     public BigInteger getId() {
@@ -64,7 +60,7 @@ public class RawDataIndex {
 
     public RawData toRawData() {
         // TODO: Pass in the year to constructor
-        return new RawData(this.id.longValue(), null, null, this.processed_data_id.longValue() , this.datetime, this.year);
+        return new RawData(this.id.longValue(), null, null, this.processed_data_id.longValue() , this.datetime, "2024");
     }
 
 
@@ -74,7 +70,6 @@ public class RawDataIndex {
                 "id=" + id +
                 ", datetime=" + datetime +
                 ", processedDataId=" + processed_data_id +
-                ", year='" + year +
                 '}';
     }
 }

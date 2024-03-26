@@ -7,9 +7,9 @@ package com.beaplab.BeaplabEngine.service;
 
 import com.beaplab.BeaplabEngine.metadata.PredictedDataDto;
 import com.beaplab.BeaplabEngine.model.PredictedData;
+import com.beaplab.BeaplabEngine.model.ProcessedData;
 import com.beaplab.BeaplabEngine.model.RawData;
 import com.beaplab.BeaplabEngine.repository.PredictedDataDao;
-import com.beaplab.BeaplabEngine.util.Util;
 import com.beaplab.BeaplabEngine.util.objectMapper.PredictedDataMapper;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -17,10 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.util.Calendar;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-
 
 @Service("predictedDataService")
 public class PredictedDataService {
@@ -33,18 +32,12 @@ public class PredictedDataService {
     @Autowired
     PredictedDataMapper predictedDataMapper;
 
-    @Autowired
-    Util util;
 
     public Long save(byte[] data, PredictedData.predictionType predictionType, Long processedDataId) {
         logger.info("in PredictedDataService: save");
 
-        Timestamp timestamp = util.getCurrentTimeStamp();
-
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(timestamp);
-
-        PredictedData predictedData = new PredictedData(data, predictionType, timestamp);
+        Date date = new Date();
+        PredictedData predictedData = new PredictedData(data, predictionType, new Timestamp(date.getTime()));
 
         return predictedDataDao.save(predictedData, processedDataId);
     }

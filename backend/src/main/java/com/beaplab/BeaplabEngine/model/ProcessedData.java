@@ -34,6 +34,7 @@ public class ProcessedData {
     @Column
     private java.sql.Timestamp dateTime;
 
+
     public ProcessedData() {
     }
 

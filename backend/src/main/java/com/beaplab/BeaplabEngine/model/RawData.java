@@ -8,7 +8,6 @@ package com.beaplab.BeaplabEngine.model;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
-import java.util.Calendar;
 import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Date;
@@ -55,10 +54,7 @@ public class RawData {
         this.type = type;
         this.processedDataID = processedDataID;
         this.dateTime = dateTime;
-
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(dateTime);
-        this.year = String.valueOf(cal.get(Calendar.YEAR));
+        this.year = year;
     }
 
     public RawData(Long id, byte[] data, dataType type, Long processedDataID, Timestamp dateTime, String year) {
@@ -67,10 +63,7 @@ public class RawData {
         this.type = type;
         this.processedDataID = processedDataID;
         this.dateTime = dateTime;
-
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(dateTime);
-        this.year = String.valueOf(cal.get(Calendar.YEAR));
+        this.year = year;
     }
 
     public Long getId() {

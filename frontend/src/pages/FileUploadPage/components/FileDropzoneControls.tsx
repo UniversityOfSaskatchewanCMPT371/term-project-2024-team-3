@@ -1,5 +1,6 @@
 import React, { ChangeEvent, ReactElement } from "react";
-import { FormControl, FormControlLabel, RadioGroup, Radio, Stack } from "@mui/material";
+import { FormControl, FormControlLabel, RadioGroup, Radio } from "@mui/material";
+import styles from "../FileUpload.module.css";
 
 interface FileDropZoneControlsProps {
     onRadioChange: (event: ChangeEvent, value: string) => void;
@@ -7,9 +8,9 @@ interface FileDropZoneControlsProps {
 
 function FileDropZoneControls({ onRadioChange }: FileDropZoneControlsProps): ReactElement {
     return (
-        <Stack direction="row" alignItems="center" spacing={2} justifyContent="flex-start">
+        <div className={styles.fd_header}>
             <span>Select File Type: </span>
-            <FormControl component="fieldset">
+            <FormControl component="fieldset" className={styles.f_radio}>
                 <RadioGroup
                     row
                     defaultValue="fitbit"
@@ -17,37 +18,19 @@ function FileDropZoneControls({ onRadioChange }: FileDropZoneControlsProps): Rea
                 >
                     <FormControlLabel
                         value="fitbit"
-                        control={
-                            <Radio
-                                color="primary"
-                                sx={{
-                                    "&, &.Mui-checked": {
-                                        color: "#5FCED3",
-                                    },
-                                }}
-                            />
-                        }
+                        control={<Radio color="primary" />}
                         label="Fitbit"
-                        labelPlacement="end"
+                        labelPlacement="start"
                     />
                     <FormControlLabel
                         value="apple"
-                        control={
-                            <Radio
-                                color="primary"
-                                sx={{
-                                    "&, &.Mui-checked": {
-                                        color: "#5FCED3",
-                                    },
-                                }}
-                            />
-                        }
+                        control={<Radio color="primary" />}
                         label="Apple Watch"
-                        labelPlacement="end"
+                        labelPlacement="start"
                     />
                 </RadioGroup>
             </FormControl>
-        </Stack>
+        </div>
     );
 }
 

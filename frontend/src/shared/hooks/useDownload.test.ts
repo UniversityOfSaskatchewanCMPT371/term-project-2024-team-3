@@ -17,7 +17,7 @@ const mockData = {
     watchType: WatchType.APPLE_WATCH,
 };
 
-const byteData: string = "123456789";
+const byteData: Uint8Array = new Uint8Array(10);
 
 const mockReturnData = {
     file: byteData,

@@ -34,7 +34,7 @@
 }
 
 .page_body {
-  background: url(https://media.giphy.com/media/5xtDarqiAfN6mqPwdyw/giphy.gif) no-repeat top;
+  background: url(../../assets/beap-square-logo.gif) no-repeat top;
   flex-grow: 1;
   display: flex;
   flex-direction: column;

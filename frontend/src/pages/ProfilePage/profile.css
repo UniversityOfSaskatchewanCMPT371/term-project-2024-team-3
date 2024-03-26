@@ -1,0 +1,45 @@
+.profile-subheading {
+    color: #757575;
+}
+
+.label {
+    display: flex;
+    margin-right: 10px;
+}
+
+.button {
+  font-family: 'Inter', sans-serif;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.button:hover {
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  transform: translateY(-2px);
+}
+
+.button:active {
+  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+  transform: translateY(0);
+}
+
+.edit-btn {
+  font-family: 'Inter', sans-serif;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #36bdc4;
+  cursor: pointer;
+}
+
+.delete-btn {
+    font-family: 'Inter', sans-serif;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #d9534f;
+    cursor: pointer;
+  }

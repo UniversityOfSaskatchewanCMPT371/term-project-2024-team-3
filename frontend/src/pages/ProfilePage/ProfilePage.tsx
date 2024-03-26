@@ -37,7 +37,7 @@ function ProfilePage(): React.ReactElement | null {
                 preventOutsideClick
             />
             <h5 className="profile-subheading">Manage your account</h5>
-            <h1>Your Account details</h1>
+            <h1>Your account details</h1>
             <Box>
                 <h5>Personal information</h5>
                 <hr />

@@ -12,8 +12,9 @@ import {
 import { useRollbar } from "@rollbar/react";
 import { DownloadType, FileData, WatchType } from "shared/api";
 import moment from "moment";
-// import useGetPredictedDataList from "shared/hooks/useGetPredictedDataList";
+import useGetPredictedDataList from "shared/hooks/useGetPredictedDataList";
 import useDownload from "shared/hooks/useDownload";
+// import ErrorSnackbar from "components/ErrorSnackbar/ErrorSnackbar";
 import styles from "./PredictedDataPage.module.css";
 
 type PredictedFileWithType = FileData & { watch: WatchType; name: string };
@@ -28,11 +29,6 @@ const PredictedDataPage = function () {
     const { handleDownload, error: useDownloadError } = useDownload();
     const [checked, setChecked] = useState<Array<number>>([]);
     const [isDownloadButtonDisabled, setIsDownloadButtonDisabled] = useState<boolean>(true);
-    let availableFiles: Array<PredictedFileWithType> = [];
-    const setAvailableFiles = (arr: Array<PredictedFileWithType>) => {
-        availableFiles = [];
-        arr.forEach((file) => availableFiles.push(file));
-    };
 
     /**
      * Handles check/un-check of items in file list
@@ -43,10 +39,6 @@ const PredictedDataPage = function () {
     const handleToggle = (value: number) => () => {
         const currentIndex = checked.indexOf(value);
         const newChecked = [...checked];
-
-        const filename = availableFiles[value].name;
-        console.log(value);
-        console.log(filename);
 
         // adding to checked list
         if (currentIndex === -1) {
@@ -63,90 +55,78 @@ const PredictedDataPage = function () {
         } // disable otherwise
     };
 
-    const getAvailableFiles = (): Array<PredictedFileWithType> => {
-        // #region Real Data
-        // const { uploadedFiles: fitBitFiles, error: predictedFitbitError } = useGetPredictedDataList(
-        //     WatchType.FITBIT,
-        // );
-        // if (predictedFitbitError) {
-        //     rollbar.error(predictedFitbitError.toString());
-        // }
+    // #region Real Data
+    const { uploadedFiles: fitBitFiles, error: predictedFitbitError } = useGetPredictedDataList(
+        WatchType.FITBIT,
+    );
+    if (predictedFitbitError) {
+        rollbar.error(predictedFitbitError.toString());
+    }
 
-        // const { uploadedFiles: appleWatchFiles, error: predictedAppleError } =
-        //     useGetPredictedDataList(WatchType.APPLE_WATCH);
-        // if (predictedAppleError) {
-        //     rollbar.error(predictedAppleError.toString());
-        // }
-        // #endregion
+    const { uploadedFiles: appleWatchFiles, error: predictedAppleError } = useGetPredictedDataList(
+        WatchType.APPLE_WATCH,
+    );
+    if (predictedAppleError) {
+        rollbar.error(predictedAppleError.toString());
+    }
+    // #endregion
 
-        // #region Mock Data
-        const fitBitFiles = [
-            // mock data
-            {
-                id: 123,
-                data: new Uint8Array([1, 2]),
-                predictionType: null,
-                dateTime: new Date(),
-            },
-            {
-                id: 456,
-                data: new Uint8Array([5, 6]),
-                predictionType: null,
-                dateTime: new Date(),
-            },
-        ];
+    // #region Mock Data
+    // const fitBitFiles = [
+    //     {
+    //         id: 123,
+    //         data: new Uint8Array([1, 2]),
+    //         predictionType: null,
+    //         dateTime: new Date(),
+    //     },
+    //     {
+    //         id: 456,
+    //         data: new Uint8Array([5, 6]),
+    //         predictionType: null,
+    //         dateTime: new Date(),
+    //     },
+    // ];
 
-        const appleWatchFiles = [
-            {
-                id: 123,
-                data: new Uint8Array([1, 2]),
-                predictionType: null,
-                dateTime: new Date(),
-            },
-            {
-                id: 456,
-                data: new Uint8Array([5, 6]),
-                predictionType: null,
-                dateTime: new Date(),
-            },
-        ];
-        // #endregion
+    // const appleWatchFiles = [
+    //     {
+    //         id: 123,
+    //         data: new Uint8Array([1, 2]),
+    //         predictionType: null,
+    //         dateTime: new Date(),
+    //     },
+    //     {
+    //         id: 456,
+    //         data: new Uint8Array([5, 6]),
+    //         predictionType: null,
+    //         dateTime: new Date(),
+    //     },
+    // ];
+    // #endregion
 
-        const appleWatchPredictedFiles: Array<PredictedFileWithType> =
-            appleWatchFiles?.length !== 0
-                ? appleWatchFiles.map((file: FileData) => ({
-                      ...file,
-                      watch: WatchType.APPLE_WATCH,
-                      name: `${WatchType.APPLE_WATCH} ${file.id.toString()}`,
-                  }))
-                : [];
+    const appleWatchPredictedFiles: Array<PredictedFileWithType> =
+        appleWatchFiles?.length !== 0
+            ? appleWatchFiles.map((file: FileData) => ({
+                  ...file,
+                  watch: WatchType.APPLE_WATCH,
+                  name: `${WatchType.APPLE_WATCH} ${file.id.toString()}`,
+              }))
+            : [];
 
-        const fitbitPredictedFiles: Array<PredictedFileWithType> =
-            fitBitFiles?.length !== 0
-                ? fitBitFiles.map((file: FileData) => ({
-                      ...file,
-                      watch: WatchType.FITBIT,
-                      name: `${WatchType.FITBIT} ${file.id.toString()}`,
-                  }))
-                : [];
+    const fitbitPredictedFiles: Array<PredictedFileWithType> =
+        fitBitFiles?.length !== 0
+            ? fitBitFiles.map((file: FileData) => ({
+                  ...file,
+                  watch: WatchType.FITBIT,
+                  name: `${WatchType.FITBIT} ${file.id.toString()}`,
+              }))
+            : [];
 
-        return appleWatchPredictedFiles.concat(fitbitPredictedFiles);
-    };
-
-    setAvailableFiles(getAvailableFiles());
-
-    /**
-     * Request available files list from API
-     */
-    const refreshAvailableFiles = () => {
-        setAvailableFiles(getAvailableFiles());
-    };
+    const availableFiles = fitbitPredictedFiles.concat(appleWatchPredictedFiles);
 
     /**
      * Method Called by Refresh Button
      */
-    const refreshFileList = () => {
-        refreshAvailableFiles();
+    const refreshCheckList = () => {
         setIsDownloadButtonDisabled(true);
         setChecked([]);
     };
@@ -218,6 +198,7 @@ const PredictedDataPage = function () {
     return (
         <div>
             <Container className={styles.container}>
+                {/* <ErrorSnackbar error={useDownloadError} /> */}
                 <div className={styles.bannerinfo}>
                     <strong>Step 3 - Predicted data files: </strong>
                     <span>
@@ -240,11 +221,11 @@ const PredictedDataPage = function () {
                         </Button>
                         <Button
                             variant="contained"
-                            onClick={refreshFileList}
+                            onClick={refreshCheckList}
                             className={styles.predictBtn}
                             data-testid="Refresh_Button"
                         >
-                            Refresh List
+                            Clear Selection
                         </Button>
                     </div>
                 </div>

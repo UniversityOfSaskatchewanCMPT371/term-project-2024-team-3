@@ -6,10 +6,12 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UtilTest {
@@ -60,4 +62,33 @@ public class UtilTest {
 
         assertEquals(expectedDifference, difference);
     }
+
+    @Test
+    /*
+     * T.42
+     * Preconditions: None, as the method does not take any arguments
+     * Post-conditions: The method should return a Timestamp object representing the current time
+     */
+    public void testGetCurrentTimeStamp() {
+        // Get the current timestamp before calling the method
+        Timestamp before = new Timestamp(new Date().getTime());
+
+        // Call the method to get the current timestamp
+        Timestamp result = util.getCurrentTimeStamp();
+
+        // Get the current timestamp after calling the method
+        Timestamp after = new Timestamp(new Date().getTime());
+
+        // Check if the result is within the range
+        assertTrue(result.compareTo(before) >= 0 && result.compareTo(after) <= 0);
+
+        // Additional check to make the test more comprehensive:
+        // Check if the result is within a reasonable time of the current time (e.g., within 1 second)
+        long diff = after.getTime() - result.getTime();
+        assertTrue(diff >= 0 && diff < 1000);
+    }
+
+
+
+
 }

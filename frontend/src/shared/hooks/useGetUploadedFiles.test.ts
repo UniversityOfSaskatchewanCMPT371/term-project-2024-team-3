@@ -12,8 +12,8 @@ const mockData = {
             id: 123,
             data: new Uint8Array([1, 2]),
             type: DataType.APPLE_WATCH,
-            processedDataId: 20,
-            dateTime: new Date(),
+            processedDataID: 20,
+            dateTime: "",
         },
     ],
 };

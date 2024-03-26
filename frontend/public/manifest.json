@@ -3,8 +3,8 @@
   "name": "BEAPEngine",
   "icons": [
     {
-      "src": "beap_lab_hex_small.jpg",
-      "type": "image/jpg",
+      "src": "beap_lab_hex_small.png",
+      "type": "image/png",
       "sizes": "512x512 192x192"
     }
   ],

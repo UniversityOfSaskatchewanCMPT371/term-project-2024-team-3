@@ -3,6 +3,7 @@ import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Provider, ErrorBoundary } from "@rollbar/react";
 import ProtectedRoute from "components/Authentication/ProtectedRoute";
+import PrivacyPolicy from "components/PrivacyPolicy/PrivacyPolicy";
 import SignUpPage from "pages/SignUpPage/SignUpPage";
 import rollbarConfig from "shared/config/rollbar";
 import LoadingSpinner from "components/LoadingSpinner/LoadingSpinner";
@@ -29,6 +30,7 @@ function App(): React.ReactElement<typeof Router> {
                             <Route path="/" element={<HomePage />} />
                             <Route path="/login" element={<LoginPage />} />
                             <Route path="/logout" element={<Logout />} />
+                            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
 
                             <Route path="/signup" element={<SignUpPage />} />
                             <Route path="/loading" element={<LoadingSpinner loading />} />

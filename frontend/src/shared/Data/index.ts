@@ -8,6 +8,7 @@ import {
     PredictionType,
     DownloadType,
 } from "shared/api";
+import axios from "axios";
 
 /**
  * Uploads a file
@@ -17,11 +18,15 @@ import {
  * @returns
  */
 export async function upload(form: FormData, year: string, watchType: WatchType): Promise<void> {
-    await api.post(`/rest/beapengine/${watchType}/upload`, form, {
+    const response = await api.post(`/rest/beapengine/${watchType}/upload`, form, {
         headers: {
             "Content-Type": "multipart/form-data",
         },
     });
+
+    if (response.data?.success === false) {
+        throw new Error(response.data?.message);
+    }
 }
 
 /**
@@ -78,8 +83,15 @@ export const deleteFile = async (id: string, watchType: WatchType): Promise<void
  * @returns the list of uploaded files
  */
 export async function getUploadedFiles(watchType: WatchType): Promise<RawFilesData> {
-    const response = await api.get(`/rest/beapengine/${watchType}/list/raw`);
-    return { list: response.data.list ?? [] };
+    try {
+        const response = await api.get(`/rest/beapengine/${watchType}/list/raw`);
+        return { list: response.data.list ?? [] };
+    } catch (error) {
+        if (axios.isAxiosError(error) && error.response?.data.message === "Raw data not found") {
+            return { list: [] };
+        }
+        throw error;
+    }
 }
 
 /**

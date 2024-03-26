@@ -44,8 +44,8 @@ function ConfirmModal({
                     marginTop={2}
                 >
                     <button
-                        id="changePassBtn"
-                        data-testid="changePassBtn"
+                        id="cancelBtn"
+                        data-testid="cancelBtn"
                         type="button"
                         className="cancel-btn button"
                         onClick={onClose}
@@ -54,8 +54,8 @@ function ConfirmModal({
                         Cancel
                     </button>
                     <button
-                        id="changePassBtn"
-                        data-testid="changePassBtn"
+                        id="confirmBtn"
+                        data-testid="confirmBtn"
                         type="button"
                         className="confirm-btn button"
                         onClick={onConfirm}

@@ -5,6 +5,7 @@
 
 package com.beaplab.BeaplabEngine.model;
 
+import java.util.Calendar;
 import java.math.BigInteger;
 import java.sql.Timestamp;
 
@@ -13,6 +14,7 @@ public class PredictedDataIndex {
     private BigInteger id;
     private java.sql.Timestamp datetime;
     private String predictiontype;
+    private String year;
 
     public PredictedDataIndex() {
     }
@@ -21,6 +23,10 @@ public class PredictedDataIndex {
         this.id = id;
         this.datetime = datetime;
         this.predictiontype = predictiontype;
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(datetime);
+        this.year = String.valueOf(cal.get(Calendar.YEAR));
     }
 
     public BigInteger getId() {
@@ -47,6 +53,13 @@ public class PredictedDataIndex {
         this.predictiontype = predictiontype;
     }
 
+    public void setYear(String year) {
+        this.year = year;
+    }
+
+    public String getYear() {
+        return year;
+    }
 
     public PredictedData toPredictedData() {
         return new PredictedData(this.id.longValue(), null, PredictedData.predictionType.valueOf(this.predictiontype), this.datetime);
@@ -58,6 +71,7 @@ public class PredictedDataIndex {
                 "id=" + id +
                 ", datetime=" + datetime +
                 ", predictionType=" + predictiontype +
+                ", year='" + year +
                 '}';
     }
 }

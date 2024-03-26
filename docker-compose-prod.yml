@@ -1,0 +1,40 @@
+version: "3.8"
+
+services:
+  cache:
+    image: redis:6.2-alpine
+    restart: always
+    ports:
+      - 6379:6379
+    command: [ "redis-server", "--protected-mode", "no" ]
+    volumes: 
+      - cache:/data
+    networks:
+      - spring
+
+  beapengineapp:
+    container_name: beapengineapp-prod
+    environment:
+        - POSTGRESQL_URL=${POSTGRESQL_URL}
+        - PG_CRYPTO_KEY=${PG_CRYPTO_KEY}
+        - ROLLBAR_ACCESS_TOKEN=${ROLLBAR_ACCESS_TOKEN}
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt
+      - ./services/ml-service:/usr/local/tomcat/webapps/ml-service
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      - spring
+    depends_on:
+      - cache
+  
+volumes:
+  cache:
+
+networks:
+  spring:

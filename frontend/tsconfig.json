@@ -22,12 +22,13 @@
     "noImplicitAny": true,
     "noImplicitThis": true,
     "strictNullChecks": true,
-    "typeRoots": ["./src/global.d.ts"]
+    "typeRoots": ["./src/global.d.ts"],
+    "baseUrl": "src",
+    "useUnknownInCatchVariables": false
   },
   "include": [
     "src",
     "playwright.config.ts",
-    "tests_end2end/example.spec.ts"
-
+    "tests_end2end/*"
   ]
 }

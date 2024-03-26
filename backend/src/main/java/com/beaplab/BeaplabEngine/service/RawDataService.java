@@ -8,12 +8,15 @@ package com.beaplab.BeaplabEngine.service;
 import com.beaplab.BeaplabEngine.metadata.RawDataDto;
 import com.beaplab.BeaplabEngine.model.RawData;
 import com.beaplab.BeaplabEngine.repository.RawDataDao;
+import com.beaplab.BeaplabEngine.util.Util;
 import com.beaplab.BeaplabEngine.util.objectMapper.RawDataMapper;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Calendar;
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -29,12 +32,21 @@ public class RawDataService {
     @Autowired
     RawDataMapper rawDataMapper;
 
+    @Autowired
+    Util util;
+
 
     public Long save(byte[] data, RawData.dataType type, Long userId) {
         logger.info("in RawDataService: save");
 
-        Date date = new Date();
-        RawData rawData = new RawData(data, type, Long.valueOf(-1), new Timestamp(date.getTime()));
+        // TODO: Pass in the year to constructor
+        Timestamp timestamp = util.getCurrentTimeStamp();
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(timestamp);
+        String year = String.valueOf(cal.get(Calendar.YEAR));
+
+        RawData rawData = new RawData(data, type, Long.valueOf(-1), timestamp, year);
 
         return rawDataDao.save(rawData, userId);
     }

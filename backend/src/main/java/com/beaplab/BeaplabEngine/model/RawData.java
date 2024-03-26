@@ -8,6 +8,7 @@ package com.beaplab.BeaplabEngine.model;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import java.util.Calendar;
 import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Date;
@@ -43,24 +44,33 @@ public class RawData {
     @Column
     private java.sql.Timestamp dateTime;
 
-
+    @Column
+    private String year;
 
     public RawData() {
     }
 
-    public RawData(byte[] data, dataType type, Long processedDataID, Timestamp dateTime) {
+    public RawData(byte[] data, dataType type, Long processedDataID, Timestamp dateTime, String year) {
         this.data = data;
         this.type = type;
         this.processedDataID = processedDataID;
         this.dateTime = dateTime;
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(dateTime);
+        this.year = String.valueOf(cal.get(Calendar.YEAR));
     }
 
-    public RawData(Long id, byte[] data, dataType type, Long processedDataID, Timestamp dateTime) {
+    public RawData(Long id, byte[] data, dataType type, Long processedDataID, Timestamp dateTime, String year) {
         this.id = id;
         this.data = data;
         this.type = type;
         this.processedDataID = processedDataID;
         this.dateTime = dateTime;
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(dateTime);
+        this.year = String.valueOf(cal.get(Calendar.YEAR));
     }
 
     public Long getId() {
@@ -114,6 +124,13 @@ public class RawData {
         return "";
     }
 
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
+    }
 
     @Override
     public String toString() {
@@ -123,6 +140,7 @@ public class RawData {
                 ", type=" + type +
                 ", processedDataID=" + processedDataID +
                 ", dateTime=" + dateTime +
+                ", year=" + year +
                 '}';
     }
 }

@@ -20,6 +20,52 @@
   justify-content: center;
 }
 
+.auth_buttons {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.login_button {
+  padding: 10px;
+  font-weight: 600;
+  background-color: transparent;
+  margin: 4px 2px;
+  border: none;
+  cursor: pointer;
+}
+
+.signup_button {
+  padding: 10px;
+  font-weight: 600;
+  background-color: transparent; /* Green */
+  border: 1px solid silver;
+  color: black;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+.login_button {border-radius: 12px;}
+.signup_button {border-radius: 12px;}
+
+.signup_button:hover {
+  background-color: #FF7572;
+  color: white;
+  transform: translateY(-2px);
+  transition: all 0.2s ease-in-out;
+}
+
+.login_button:hover {
+  background-color: #FFD172;
+  color: white;
+  transform: translateY(-2px);
+  transition: all 0.2s ease-in-out;
+}
+
+
 @keyframes fadeDown {
   from {
       opacity: 0;
@@ -43,7 +89,7 @@
 }
 
 .page_body > h1 {
-  color: #5B6582;
+  color: #017176;
   font-size: 90px;
   margin-bottom: 0px;
   text-align: center;
@@ -67,6 +113,7 @@ a {
   display: flex;
   justify-content: center;
 }
+
 
 @keyframes updown {
   0% {
@@ -198,6 +245,43 @@ a {
   justify-content: space-around;
   width: 50%;
 }
+
+.footer {
+  position: relative;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: #333;
+  color: white;
+  text-align: center;
+  padding: 10px 0;
+}
+
+.footer a {
+  color: white;
+  margin: 0 10px;
+  text-decoration: none;
+}
+
+@keyframes focus-in-expand {
+  0% {
+    letter-spacing: -0.5em;
+    filter: blur(10px);
+    opacity: 0;
+  }
+  100% {
+    filter: blur(0px);
+    opacity: 1;
+  }
+}
+
+
+.h6Glow {
+  animation: focus-in-expand 1.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+}
+
+
+
 
 @media(max-width: 1000px) {
   .bottom > img {

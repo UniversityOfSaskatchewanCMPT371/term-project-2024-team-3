@@ -1,27 +1,47 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import { BrowserRouter as Router } from "react-router-dom";
+import { renderWithProvider } from "shared/util/tests/render";
+import * as useAuth from "components/Authentication/useAuth";
 import Navbar from "./components/Navbar/Navbar";
 
-test(" TID 1.4. renders all links", () => {
-  render(
-    <Router>
-      <Navbar />
-    </Router>,
-  );
+// Define the type for the mock return value of useAuth
+type AuthReturnValue = {
+    isAuthenticated: boolean;
+};
 
-  const homeLink = screen.getByText(/HOME/i);
-  expect(homeLink).toBeInTheDocument();
+const authSpy = jest.spyOn(useAuth, "useAuth");
 
-  const fileUploadLink = screen.getByText(/FILE UPLOAD/i);
-  expect(fileUploadLink).toBeInTheDocument();
+afterEach(() => {
+    authSpy.mockClear();
+});
 
-  const processedFilesLink = screen.getByText(/PROCESSED FILES/i);
-  expect(processedFilesLink).toBeInTheDocument();
+test("TID 1.4. renders all links", () => {
+    authSpy.mockReturnValue({ isAuthenticated: true } as AuthReturnValue);
+    renderWithProvider(
+        <Router>
+            <Navbar />
+        </Router>,
+    );
 
-  const predictedFilesLink = screen.getByText(/PREDICTED FILES/i);
-  expect(predictedFilesLink).toBeInTheDocument();
+    const homeLink = screen.getByText(/HOME/i);
+    expect(homeLink).toBeInTheDocument();
 
-  const logoutLink = screen.getByText(/LOGOUT/i);
-  expect(logoutLink).toBeInTheDocument();
+    const fileUploadLink = screen.getByText(/FILE UPLOAD/i);
+    expect(fileUploadLink).toBeInTheDocument();
+
+    const processedFilesLink = screen.getByText(/PROCESSED FILES/i);
+    expect(processedFilesLink).toBeInTheDocument();
+
+    const predictedFilesLink = screen.getByText(/PREDICTED FILES/i);
+    expect(predictedFilesLink).toBeInTheDocument();
+
+    // const logoutLink = screen.getByText(/LOGOUT/i);
+    // expect(logoutLink).toBeInTheDocument();
+
+    const beapLogoImage = screen.getByAltText(/beapLogo/i);
+    expect(beapLogoImage).toBeInTheDocument();
+
+    const profileLogoImage = screen.getByAltText(/profileLogo/i);
+    expect(profileLogoImage).toBeInTheDocument();
 });

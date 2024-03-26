@@ -7,6 +7,7 @@ package com.beaplab.BeaplabEngine.model;
 
 import java.math.BigInteger;
 import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -17,6 +18,7 @@ public class ProcessedDataIndex {
     private java.sql.Timestamp datetime;
     private BigInteger predicted_data_id;
     private String prediction_type;
+    private String year;
 
     public ProcessedDataIndex() {
     }
@@ -26,6 +28,11 @@ public class ProcessedDataIndex {
         this.datetime = datetime;
         this.predicted_data_id = predicted_data_id;
         this.prediction_type = prediction_type;
+        // TODO: Implement passing of the year
+        
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(datetime);
+        this.year = String.valueOf(cal.get(Calendar.YEAR));
     }
 
     public BigInteger getId() {
@@ -59,13 +66,21 @@ public class ProcessedDataIndex {
     public void setPrediction_type(String prediction_type) {
         this.prediction_type = prediction_type;
     }
+    
+    public void setYear(String year) {
+        this.year = year;
+    }
+
+    public String getYear() {
+        return year;
+    }
 
     public ProcessedData toProcessedData() {
         if (this.getPredicted_data_id() != null) {
             PredictedData.predictionType predictionType = null;
             if (!this.getPrediction_type().isEmpty())
                 predictionType = PredictedData.predictionType.valueOf(this.getPrediction_type());
-            PredictedData predictedData = new PredictedData(this.getPredicted_data_id().longValue(), null, predictionType, null);
+            PredictedData predictedData = new PredictedData(this.getPredicted_data_id().longValue(), null, predictionType, this.datetime);
             Set<PredictedData> predictedDataSet= new HashSet<>();
             predictedDataSet.add(predictedData);
             return new ProcessedData(this.id.longValue(), null, predictedDataSet, this.datetime);
@@ -79,7 +94,7 @@ public class ProcessedDataIndex {
         if (!this.getPrediction_type().isEmpty())
             predictionType = PredictedData.predictionType.valueOf(this.getPrediction_type());
 
-        PredictedData predictedData = new PredictedData(predictedDataId.longValue(), null, predictionType, null);
+        PredictedData predictedData = new PredictedData(predictedDataId.longValue(), null, predictionType, this.datetime);
         processedData.getPredictedDataIDs().add(predictedData);
         return processedData;
     }
@@ -90,6 +105,8 @@ public class ProcessedDataIndex {
         return "ProcessedDataIndex{" +
                 "id=" + id +
                 ", datetime=" + datetime +
+                ", predictedDataId=" + predicted_data_id +
+                ", year='" + year +
                 '}';
     }
 }

@@ -3,8 +3,10 @@
  * a.bozorgi67@gmail.com
  */
 
+
 package com.beaplab.BeaplabEngine.model;
 
+import java.util.Calendar;
 import java.math.BigInteger;
 import java.sql.Timestamp;
 
@@ -13,6 +15,7 @@ public class RawDataIndex {
     private BigInteger id;
     private java.sql.Timestamp datetime;
     private BigInteger processed_data_id;
+    private String year;
 
     public RawDataIndex() {
     }
@@ -21,6 +24,10 @@ public class RawDataIndex {
         this.id = id;
         this.datetime = datetime;
         this.processed_data_id = processedDataId;
+        // TODO: Replace with proper passing
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(datetime);
+        this.year = String.valueOf(cal.get(Calendar.YEAR));
     }
 
     public BigInteger getId() {
@@ -38,6 +45,14 @@ public class RawDataIndex {
     public void setDateTime(Timestamp datetime) {
         this.datetime = datetime;
     }
+    
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
+    }
 
     public BigInteger getProcessed_data_id() {
         return processed_data_id;
@@ -48,7 +63,8 @@ public class RawDataIndex {
     }
 
     public RawData toRawData() {
-        return new RawData(this.id.longValue(), null, null, this.processed_data_id.longValue() , this.datetime);
+        // TODO: Pass in the year to constructor
+        return new RawData(this.id.longValue(), null, null, this.processed_data_id.longValue() , this.datetime, this.year);
     }
 
 
@@ -58,6 +74,7 @@ public class RawDataIndex {
                 "id=" + id +
                 ", datetime=" + datetime +
                 ", processedDataId=" + processed_data_id +
+                ", year='" + year +
                 '}';
     }
 }

@@ -1,31 +1,70 @@
+// Importing necessary libraries and components
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { Provider, ErrorBoundary } from "@rollbar/react";
+import ProtectedRoute from "components/Authentication/ProtectedRoute";
+import PrivacyPolicy from "components/PrivacyPolicy/PrivacyPolicy";
+import SignUpPage from "pages/SignUpPage/SignUpPage";
+import rollbarConfig from "shared/config/rollbar";
+import LoadingSpinner from "components/LoadingSpinner/LoadingSpinner";
 import Navbar from "./components/Navbar/Navbar";
-import Logout from "./Logout";
+import Logout from "./pages/LogoutPage/Logout";
 import ProcessedDataPage from "./pages/ProcessDataPage/ProcessedDataPage";
-import PredictedFiles from "./PredictedFiles";
+import PredictedDataPage from "./pages/PredictedDataPage/PredictedDataPage";
 import FileUploadPage from "./pages/FileUploadPage/FileUploadPage";
 import "./App.css";
 import HomePage from "./pages/HomePage/HomePage";
+import HelpPopup from "./components/HelpPopup/HelpPopup";
+import { AuthProvider } from "./components/Authentication/useAuth";
+import LoginPage from "./pages/LoginPage/LoginPage";
 
 function App(): React.ReactElement<typeof Router> {
-  return (
-    <Router>
-      <Navbar />
-      <Routes>
-        {/* Public Routes */}
-        <Route path="/" element={<HomePage />} />
-        <Route path="/Logout" element={<Logout />} />
-        <Route path="/FileUpload" element={<FileUploadPage />} />
+    return (
+        <Provider config={rollbarConfig}>
+            <AuthProvider>
+                <ErrorBoundary>
+                    <Router>
+                        <Navbar />
+                        <HelpPopup />
+                        <Routes>
+                            <Route path="/" element={<HomePage />} />
+                            <Route path="/login" element={<LoginPage />} />
+                            <Route path="/logout" element={<Logout />} />
+                            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
 
-        {/* Protected Routes */}
-        {/* This tag is to be added when the implementation of authentication is to be created */}
-        {/* <Route element={<RequireAuth type={"user"} />}></Route> */}
-        <Route path="/ProcessedDataPage" element={<ProcessedDataPage />} />
-        <Route path="/PredictedFiles" element={<PredictedFiles />} />
-      </Routes>
-    </Router>
-  );
+                            <Route path="/signup" element={<SignUpPage />} />
+                            <Route path="/loading" element={<LoadingSpinner loading />} />
+                            <Route
+                                path="/ProcessedDataPage"
+                                element={
+                                    <ProtectedRoute>
+                                        <ProcessedDataPage />
+                                    </ProtectedRoute>
+                                }
+                            />
+                            <Route
+                                path="/PredictedDataPage"
+                                element={
+                                    <ProtectedRoute>
+                                        <PredictedDataPage />
+                                    </ProtectedRoute>
+                                }
+                            />
+                            <Route
+                                path="/FileUploadPage"
+                                element={
+                                    <ProtectedRoute>
+                                        <FileUploadPage />
+                                    </ProtectedRoute>
+                                }
+                            />
+                        </Routes>
+                    </Router>
+                </ErrorBoundary>
+            </AuthProvider>
+        </Provider>
+    );
 }
 
+// Exporting the App component
 export default App;

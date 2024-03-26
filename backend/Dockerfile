@@ -7,14 +7,16 @@ COPY src src
 
 RUN mvn clean install
 
-FROM tomcat:9.0-jre11
+FROM ralphgregorio/r-tomcat9:1.0
 
 WORKDIR /usr/local/tomcat/webapps
 
+# Remove default Tomcat webapp
 RUN rm -rf ROOT
 
-EXPOSE 8080
-
+# Deploy your WAR file
 COPY --from=build /app/target/BeaplabEngine-0.0.1-SNAPSHOT.war ROOT.war
+
+EXPOSE 8080
 
 CMD ["catalina.sh", "run"]

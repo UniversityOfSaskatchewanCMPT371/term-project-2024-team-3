@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 import React, { useState } from "react";
 import {
     Button,
@@ -14,30 +12,27 @@ import {
 import { useRollbar } from "@rollbar/react";
 import { DownloadType, FileData, WatchType } from "shared/api";
 import moment from "moment";
-import useGetPredictedDataList from "shared/hooks/useGetPredictedDataList";
+// import useGetPredictedDataList from "shared/hooks/useGetPredictedDataList";
 import useDownload from "shared/hooks/useDownload";
 import styles from "./PredictedDataPage.module.css";
 
-type PredictedFileWithType = FileData & { watch: WatchType; name: String; isSelected: boolean };
+type PredictedFileWithType = FileData & { watch: WatchType; name: string };
 
 const PredictedDataPage = function () {
     const rollbar = useRollbar();
     rollbar.info("Reached Predicted Data page");
 
-    // #TODO refresh predicted file list
-    // #TODO create rule to enable/disable download button
     // #TODO make pretty
     // #TODO write tests
 
-    const selectedFiles: Array<PredictedFileWithType> = [];
-
     const { handleDownload, error: useDownloadError } = useDownload();
-    const [checked, setChecked] = useState<Array<Number>>([]);
-    var availableFiles: Array<PredictedFileWithType> = [];
+    const [checked, setChecked] = useState<Array<number>>([]);
+    const [isDownloadButtonDisabled, setIsDownloadButtonDisabled] = useState<boolean>(true);
+    let availableFiles: Array<PredictedFileWithType> = [];
     const setAvailableFiles = (arr: Array<PredictedFileWithType>) => {
         availableFiles = [];
-        arr.forEach(file => availableFiles.push(file));
-    }
+        arr.forEach((file) => availableFiles.push(file));
+    };
 
     /**
      * Handles check/un-check of items in file list
@@ -49,15 +44,23 @@ const PredictedDataPage = function () {
         const currentIndex = checked.indexOf(value);
         const newChecked = [...checked];
 
+        const filename = availableFiles[value].name;
+        console.log(value);
+        console.log(filename);
+
         // adding to checked list
         if (currentIndex === -1) {
             newChecked.push(value);
-            selectedFiles[value].isSelected = true;
         } else {
             newChecked.splice(currentIndex, 1);
-            selectedFiles[value].isSelected = false;
         }
         setChecked(newChecked);
+
+        if (newChecked.length > 0) {
+            setIsDownloadButtonDisabled(false); // enable download button when at least one file is selected
+        } else {
+            setIsDownloadButtonDisabled(true);
+        } // disable otherwise
     };
 
     const getAvailableFiles = (): Array<PredictedFileWithType> => {
@@ -115,7 +118,6 @@ const PredictedDataPage = function () {
                       ...file,
                       watch: WatchType.APPLE_WATCH,
                       name: `${WatchType.APPLE_WATCH} ${file.id.toString()}`,
-                      isSelected: false,
                   }))
                 : [];
 
@@ -125,7 +127,6 @@ const PredictedDataPage = function () {
                       ...file,
                       watch: WatchType.FITBIT,
                       name: `${WatchType.FITBIT} ${file.id.toString()}`,
-                      isSelected: false,
                   }))
                 : [];
 
@@ -146,6 +147,8 @@ const PredictedDataPage = function () {
      */
     const refreshFileList = () => {
         refreshAvailableFiles();
+        setIsDownloadButtonDisabled(true);
+        setChecked([]);
     };
 
     /**
@@ -156,17 +159,14 @@ const PredictedDataPage = function () {
         event.preventDefault();
 
         // make sure at least one file is selected before you attempt to download it
-        // assert(selectedFiles.some((file: PredictedFileWithType) => file.isSelected));
 
-        selectedFiles.forEach((file: PredictedFileWithType) => {
-            if (file.isSelected) {
-                const { id, watch } = file;
-                const stringID = id.toString();
-                handleDownload(stringID, DownloadType.PREDICT, watch);
+        checked.forEach((i) => {
+            const { id, watch } = availableFiles[i];
+            const stringID = id.toString();
+            handleDownload(stringID, DownloadType.PREDICT, watch);
 
-                if (useDownloadError) {
-                    rollbar.error(useDownloadError);
-                }
+            if (useDownloadError) {
+                rollbar.error(useDownloadError);
             }
         });
     };
@@ -176,41 +176,44 @@ const PredictedDataPage = function () {
      */
     const availableFilesDisplay =
         availableFiles.length > 0 ? (
-            availableFiles.map((file, i) => {
-                selectedFiles[i] = file;
-                return (
-                    <ListItem
-                        key={file.id.toString()}
-                        style={{ paddingTop: "0px", paddingBottom: "0px", cursor: "pointer" }}
-                        onClick={handleToggle(i)}
-                        dense
-                    >
-                        <ListItemIcon>
-                            <Checkbox
-                                edge="start"
-                                checked={checked.indexOf(i) !== -1}
-                                tabIndex={-1}
-                                disableRipple
-                            />
-                        </ListItemIcon>
-                        <ListItemText primary={`${file.watch} - ${file.id}`} />
-                        {file.dateTime ? (
-                            <ListItemText
-                                primary={moment(file.dateTime).format(
-                                    "ddd, D MMM YYYY, hh:mm:ss A",
-                                )}
-                            />
-                        ) : (
-                            ""
-                        )}
-                    </ListItem>
-                );
-            })
+            availableFiles.map((file, i) => (
+                <ListItem
+                    key={file.id.toString()}
+                    style={{ paddingTop: "0px", paddingBottom: "0px", cursor: "pointer" }}
+                    onClick={handleToggle(i)}
+                    dense
+                >
+                    <ListItemIcon>
+                        <Checkbox
+                            edge="start"
+                            checked={checked.indexOf(i) !== -1}
+                            tabIndex={-1}
+                            disableRipple
+                        />
+                    </ListItemIcon>
+                    <ListItemText primary={`${file.watch} - ${file.id}`} />
+                    {file.dateTime ? (
+                        <ListItemText
+                            primary={moment(file.dateTime).format("ddd, D MMM YYYY, hh:mm:ss A")}
+                        />
+                    ) : (
+                        ""
+                    )}
+                </ListItem>
+            ))
         ) : (
             <ListItem className={styles.list} style={{ marginTop: "15px" }}>
                 No files
             </ListItem>
         );
+
+    const selectedFileListDisplay =
+        checked.length > 0
+            ? checked.map((i) => {
+                  const filename = availableFiles[i].name;
+                  return <li>{filename}</li>;
+              })
+            : "";
 
     return (
         <div>
@@ -230,6 +233,7 @@ const PredictedDataPage = function () {
                             variant="contained"
                             onClick={downloadFiles}
                             className={styles.downloadBtn}
+                            disabled={isDownloadButtonDisabled}
                             data-testid="Download_Button"
                         >
                             Download File(s)
@@ -254,6 +258,9 @@ const PredictedDataPage = function () {
                         can also click on individual steps to rerun a different machine learning
                         model if you want.
                     </span>
+                </div>
+                <div>
+                    <ul>{selectedFileListDisplay}</ul>
                 </div>
             </Container>
         </div>

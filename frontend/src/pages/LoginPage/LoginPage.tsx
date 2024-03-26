@@ -1,5 +1,4 @@
 import React, { useState, FormEvent } from "react";
-import { GoogleLogin } from "react-google-login";
 import useLogin from "shared/hooks/useLogin";
 import { useNavigate } from "react-router-dom";
 import { useRollbar } from "@rollbar/react";
@@ -7,7 +6,6 @@ import styles from "./LoginPage.module.css";
 import leftArrow from "../../assets/left-arrow.png";
 import rightArrow from "../../assets/right-arrow.png";
 
-const CLIENT_ID = "827529413912-celsdkun_YOUR_API_KEY_lsn28.apps.googleusercontent.com";
 
 const texts = [
     "Welcome to BEAPEngine, a research project founded by Dr. Daniel Fuller.",
@@ -67,34 +65,6 @@ function LoginPage() {
         setCurrentIndex((currentIndex - 1 + texts.length) % texts.length);
     };
 
-    /**
-     * Success handler for Google login response.
-     * Logs user information to the console.
-     * @param response - Response object containing user profile information
-     */
-    const responseGoogleSuccess = (response: any) => {
-        const userInfo = {
-            name: response.profileObj.name,
-            emailId: response.profileObj.email,
-        };
-        console.log(userInfo);
-    };
-
-    /**
-     * Error handler for Google login response.
-     * Logs the error response to the console and Rollbar.
-     * @param response - Error response object
-     */
-    const responseGoogleError = (response: any) => {
-        console.error(response);
-        rollbar.error(response);
-    };
-
-    /**
-     * Handles form submission for login.
-     * Validates username and password before attempting login.
-     * @param event - Form submission event
-     */
     const handleSubmit = async (event: FormEvent) => {
         event.preventDefault();
         console.assert(
@@ -123,25 +93,6 @@ function LoginPage() {
                     <p className={styles["login-text"]}>
                         Log into your existing BEAPENGINE account
                     </p>
-                    <GoogleLogin
-                        clientId={CLIENT_ID}
-                        buttonText="Login with Google"
-                        onSuccess={responseGoogleSuccess}
-                        onFailure={responseGoogleError}
-                        isSignedIn
-                        cookiePolicy="single_host_origin"
-                        render={(renderProps) => (
-                            <button
-                                type="button"
-                                onClick={renderProps.onClick}
-                                disabled={renderProps.disabled}
-                                className={styles["google-login"]}
-                            >
-                                Login with Google
-                            </button>
-                        )}
-                    />
-                    <p>OR</p>
                     <form onSubmit={handleSubmit} className={styles["form-box"]}>
                         <div className={styles.tabs}>
                             <button
@@ -180,7 +131,6 @@ function LoginPage() {
                             />
                         </div>
                         <div className={styles["button-container"]}>
-                            <p className={styles["forgot-password"]}>Forgot password?</p>
                             <button
                                 data-testid="submitButton"
                                 type="submit"

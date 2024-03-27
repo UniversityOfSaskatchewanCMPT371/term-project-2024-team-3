@@ -6,7 +6,6 @@ import styles from "./LoginPage.module.css";
 import leftArrow from "../../assets/left-arrow.png";
 import rightArrow from "../../assets/right-arrow.png";
 
-
 const texts = [
     "Welcome to BEAPEngine, a research project founded by Dr. Daniel Fuller.",
     "Help us in our mission to improve the lives of people with disabilities.",
@@ -84,7 +83,7 @@ function LoginPage() {
         }
 
         await handleLogin(username, password);
-            navigate("/FileUploadPage");
+        navigate("/FileUploadPage");
     };
 
     return (
@@ -144,13 +143,13 @@ function LoginPage() {
                     </form>
                     <div className={styles["button-container"]}>
                         <button
-                                data-testid="homeButton"
-                                type="button"
-                                className={`${styles.button} ${styles["go-home"]}`}
-                                onClick={() => navigate("/")}
-                            >
-                                Back To Homepage 
-                            </button>
+                            data-testid="homeButton"
+                            type="button"
+                            className={`${styles.button} ${styles["go-home"]}`}
+                            onClick={() => navigate("/")}
+                        >
+                            Back To Homepage
+                        </button>
                     </div>
                 </div>
                 <div className={styles["right-section"]}>
@@ -199,8 +198,8 @@ function LoginPage() {
                         </button>
                     </div>
                 </div>
-            </div> 
-       </div>
+            </div>
+        </div>
     );
 }
 

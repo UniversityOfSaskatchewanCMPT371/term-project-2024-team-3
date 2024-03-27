@@ -9,7 +9,7 @@ on:
 
 jobs:
   build-and-deploy:
-    if: ${{ github.event.workflow_run.conclusion == 'success'}}
+    # if: ${{ github.event.workflow_run.conclusion == 'success'}}
     runs-on: beapengine
     steps:
       - name: Checkout

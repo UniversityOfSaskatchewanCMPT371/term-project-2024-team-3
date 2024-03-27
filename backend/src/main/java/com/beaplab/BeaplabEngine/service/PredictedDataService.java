@@ -7,7 +7,6 @@ package com.beaplab.BeaplabEngine.service;
 
 import com.beaplab.BeaplabEngine.metadata.PredictedDataDto;
 import com.beaplab.BeaplabEngine.model.PredictedData;
-import com.beaplab.BeaplabEngine.model.ProcessedData;
 import com.beaplab.BeaplabEngine.model.RawData;
 import com.beaplab.BeaplabEngine.repository.PredictedDataDao;
 import com.beaplab.BeaplabEngine.util.Util;
@@ -20,7 +19,6 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 
@@ -45,9 +43,8 @@ public class PredictedDataService {
 
         Calendar cal = Calendar.getInstance();
         cal.setTime(timestamp);
-        String year = String.valueOf(cal.get(Calendar.YEAR));
 
-        PredictedData predictedData = new PredictedData(data, predictionType, timestamp, year);
+        PredictedData predictedData = new PredictedData(data, predictionType, timestamp);
 
         return predictedDataDao.save(predictedData, processedDataId);
     }

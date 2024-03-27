@@ -43,11 +43,7 @@ public class ProcessedDataService {
 
         Timestamp timestamp = util.getCurrentTimeStamp();
 
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(timestamp);
-        String year = String.valueOf(cal.get(Calendar.YEAR));
-
-        ProcessedData processedData = new ProcessedData(data, null, timestamp, year); //TODO is sending null correct?
+        ProcessedData processedData = new ProcessedData(data, null, timestamp); //TODO is sending null correct?
 
         return processedDataDao.save(processedData, rawDataId);
     }

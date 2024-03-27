@@ -23,8 +23,7 @@ public class PredictedDataIndex {
         this.id = id;
         this.datetime = datetime;
         this.predictiontype = predictiontype;
-        // TODO: Implement passing of the year
-        
+
         Calendar cal = Calendar.getInstance();
         cal.setTime(datetime);
         this.year = String.valueOf(cal.get(Calendar.YEAR));
@@ -63,7 +62,7 @@ public class PredictedDataIndex {
     }
 
     public PredictedData toPredictedData() {
-        return new PredictedData(this.id.longValue(), null, PredictedData.predictionType.valueOf(this.predictiontype), this.datetime, this.year);
+        return new PredictedData(this.id.longValue(), null, PredictedData.predictionType.valueOf(this.predictiontype), this.datetime);
     }
 
     @Override

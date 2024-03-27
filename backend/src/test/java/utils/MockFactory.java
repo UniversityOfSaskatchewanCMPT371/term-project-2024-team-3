@@ -22,8 +22,7 @@ public class MockFactory {
                 1L,
                 new byte[]{0x01, 0x02, 0x03},
                 predictionType,
-                new Timestamp(cal.getTimeInMillis()),
-                "2023"
+                new Timestamp(cal.getTimeInMillis())
         );
     }
 
@@ -51,8 +50,7 @@ public class MockFactory {
                 1L,
                 new byte[]{0x01, 0x02, 0x03},
                 null,
-                new Timestamp(cal.getTimeInMillis()),
-                "2023"
+                new Timestamp(cal.getTimeInMillis())
         );
     }
 

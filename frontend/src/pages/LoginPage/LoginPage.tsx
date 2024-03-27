@@ -83,6 +83,7 @@ function LoginPage() {
             rollbar.error("Assertion failed: password should be a non-null string");
         }
         await handleLogin(username, password);
+            navigate("/FileUploadPage");
     };
 
     return (

@@ -82,6 +82,7 @@ function LoginPage() {
         if (typeof password !== "string" || password === "") {
             rollbar.error("Assertion failed: password should be a non-null string");
         }
+
         await handleLogin(username, password);
             navigate("/FileUploadPage");
     };
@@ -134,13 +135,23 @@ function LoginPage() {
                         <div className={styles["button-container"]}>
                             <button
                                 data-testid="submitButton"
-                                type="submit"
+                                type="button"
                                 className={`${styles.button} ${styles["sign-in"]}`}
                             >
                                 Sign In
                             </button>
                         </div>
                     </form>
+                    <div className={styles["button-container"]}>
+                        <button
+                                data-testid="homeButton"
+                                type="button"
+                                className={`${styles.button} ${styles["go-home"]}`}
+                                onClick={() => navigate("/")}
+                            >
+                                Back To Homepage 
+                            </button>
+                    </div>
                 </div>
                 <div className={styles["right-section"]}>
                     <h1>
@@ -188,8 +199,8 @@ function LoginPage() {
                         </button>
                     </div>
                 </div>
-            </div>
-        </div>
+            </div> 
+       </div>
     );
 }
 

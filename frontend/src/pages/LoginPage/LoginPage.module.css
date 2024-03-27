@@ -11,7 +11,8 @@ body {
 
 /* Button styles */
 .sign-in,
-.sign-up {
+.sign-up,
+.go-home {
   font-family: 'Inter', sans-serif;
   padding: 10px 20px;
   border: none;
@@ -46,13 +47,35 @@ body {
   transition: background-color 0.3s ease, box-shadow 0.2s ease, transform 0.2s ease; /* Add transition for transform */
 }
 
+.go-home {
+  font-weight: 600;
+  padding: 10px 34px;
+  border: none;
+  border-radius: 5px;
+  background-color: #017176;
+  color: white;
+  cursor: pointer;
+  margin-bottom: 50px;
+  transition: background-color 0.3s ease, box-shadow 0.2s ease, transform 0.2s ease; /* Add transition for transform */
+}
 
-.sign-in:hover {
+
+.sign-in:hover{
   box-shadow: 0 5px 15px rgba(0,0,0,0.3); /* Increase shadow when hovered */
   transform: translateY(-2px); /* Move up when hovered */
 }
 
-.sign-in:active {
+.go-home:hover {
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3); /* Increase shadow when hovered */
+  transform: translateY(-2px); /* Move up when hovered */
+}
+
+.sign-in:active{
+  box-shadow: 0 2px 5px rgba(0,0,0,0.15); /* Reduce shadow when clicked */
+  transform: translateY(0); /* Move back down when clicked */
+}
+
+.go-home:active{
   box-shadow: 0 2px 5px rgba(0,0,0,0.15); /* Reduce shadow when clicked */
   transform: translateY(0); /* Move back down when clicked */
 }
@@ -63,8 +86,6 @@ body {
   align-items: center;
   margin-top: 48px;
 }
-
-
 
 .sign-up:hover {
   background-color: #017176;
@@ -77,16 +98,6 @@ body {
   background-color: #e0e0e0;
   transform: translateY(0);
 }
-
-/*
- * p.forgot-password {
- *  font-family: 'Inter', sans-serif;
- *  font-weight: 550;
- *  font-size: 14px;
- *  margin: 0;
- *  color: #017176;
- *}
- */
 
 /* Login page styles */
 .login-page {

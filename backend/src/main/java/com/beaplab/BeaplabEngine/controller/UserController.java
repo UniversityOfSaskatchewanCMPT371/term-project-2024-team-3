@@ -130,6 +130,31 @@ public class UserController {
         return new ResponseEntity<UserDto>(userDto, HttpStatus.OK);
     }
 
+    /**
+     * handles a GET request for retrieving a user account name, first name, last name
+     * @param id
+     * @return ResponseEntity<String>
+     */
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @RequestMapping(value = "/rest/beapengine/user/{id}/accountName", method = RequestMethod.GET, produces = "application/json")
+    @ApiOperation(value = "Find User account name by ID", notes = "Finding a User account name, first name, and last name by input id and returning the result in an object of type UserDto", response = UserDto.class)
+    public ResponseEntity<JSONObject> getAccountName(@PathVariable("id") String id) {
+
+        logger.info("in UserController/user/{" + id + "}/accountName GET method");
+
+        UserDto userDto = userService.get(id);
+        if (userDto == null) {
+            return new ResponseEntity<JSONObject>(HttpStatus.NOT_FOUND);
+        }
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("username", userDto.getUsername());
+        jsonObject.put("firstName", userDto.getFirstName());
+        jsonObject.put("lastName", userDto.getLastName());
+
+        return new ResponseEntity<JSONObject>(userDto, HttpStatus.OK);
+    }
+
 
 
     /**

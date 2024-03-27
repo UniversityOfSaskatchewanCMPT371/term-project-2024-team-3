@@ -352,15 +352,15 @@ public class AppleWatchService implements WatchService{
         File dataDir = new File(dataPath);
         if(!dataDir.exists()) dataDir.mkdirs();
 
-//        // get the processed data id by the raw data id
-//        Long processedDataId = rawDataService.getProcessDataId(rawDataId);
-//        if (processedDataId == -1) {
-//            // data is not processed yet, it should be processed before being predicted
-//            jsonObject.put(BeapEngineConstants.SUCCESS_STR, false);
-//            jsonObject.put("message", "Data not processed yet.");
-//            jsonObject.put("status_code", HttpStatus.INTERNAL_SERVER_ERROR.value());
-//            return jsonObject;
-//        }
+    //        // get the processed data id by the raw data id
+    //        Long processedDataId = rawDataService.getProcessDataId(rawDataId);
+    //        if (processedDataId == -1) {
+    //            // data is not processed yet, it should be processed before being predicted
+    //            jsonObject.put(BeapEngineConstants.SUCCESS_STR, false);
+    //            jsonObject.put("message", "Data not processed yet.");
+    //            jsonObject.put("status_code", HttpStatus.INTERNAL_SERVER_ERROR.value());
+    //            return jsonObject;
+    //        }
 
         String zipFilePath = rawPath + File.separator + processedDataId + ".zip";
 

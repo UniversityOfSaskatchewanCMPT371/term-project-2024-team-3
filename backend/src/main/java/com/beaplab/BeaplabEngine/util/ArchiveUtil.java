@@ -6,7 +6,7 @@
 package com.beaplab.BeaplabEngine.util;
 
 import com.beaplab.BeaplabEngine.constants.BeapEngineConstants;
-import com.beaplab.BeaplabEngine.controller.AppleWatchController;
+// import com.beaplab.BeaplabEngine.controller.AppleWatchController;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;

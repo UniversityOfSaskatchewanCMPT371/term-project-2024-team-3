@@ -6,6 +6,7 @@
 package com.beaplab.BeaplabEngine.service;
 
 import com.beaplab.BeaplabEngine.constants.BeapEngineConstants;
+import com.beaplab.BeaplabEngine.service.interfaces.*;
 import com.beaplab.BeaplabEngine.metadata.PredictedDataDto;
 import com.beaplab.BeaplabEngine.metadata.ProcessedDataDto;
 import com.beaplab.BeaplabEngine.metadata.RawDataDto;
@@ -37,7 +38,7 @@ import java.util.zip.ZipOutputStream;
 @Service("appleWatchService")
 @ComponentScan("com.beaplab.BeaplabEngine")
 @PropertySource("classpath:r_repo.properties")
-public class AppleWatchService {
+public class AppleWatchService implements WatchService{
 
     final static Logger logger = LogManager.getLogger(AppleWatchService.class.getName());
 
@@ -351,15 +352,15 @@ public class AppleWatchService {
         File dataDir = new File(dataPath);
         if(!dataDir.exists()) dataDir.mkdirs();
 
-//        // get the processed data id by the raw data id
-//        Long processedDataId = rawDataService.getProcessDataId(rawDataId);
-//        if (processedDataId == -1) {
-//            // data is not processed yet, it should be processed before being predicted
-//            jsonObject.put(BeapEngineConstants.SUCCESS_STR, false);
-//            jsonObject.put("message", "Data not processed yet.");
-//            jsonObject.put("status_code", HttpStatus.INTERNAL_SERVER_ERROR.value());
-//            return jsonObject;
-//        }
+    //        // get the processed data id by the raw data id
+    //        Long processedDataId = rawDataService.getProcessDataId(rawDataId);
+    //        if (processedDataId == -1) {
+    //            // data is not processed yet, it should be processed before being predicted
+    //            jsonObject.put(BeapEngineConstants.SUCCESS_STR, false);
+    //            jsonObject.put("message", "Data not processed yet.");
+    //            jsonObject.put("status_code", HttpStatus.INTERNAL_SERVER_ERROR.value());
+    //            return jsonObject;
+    //        }
 
         String zipFilePath = rawPath + File.separator + processedDataId + ".zip";
 

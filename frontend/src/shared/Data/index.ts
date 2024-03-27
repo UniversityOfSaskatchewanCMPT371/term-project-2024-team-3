@@ -55,7 +55,7 @@ export async function predict(
 /**
  * Downloads a file
  * @param id a string id corresponding to a file
- * @param type the type of download
+ * @param type the type of download, either process or download
  * @param watchType the type of watch being predicted
  * @returns
  */

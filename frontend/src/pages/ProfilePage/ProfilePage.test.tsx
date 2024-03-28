@@ -8,10 +8,10 @@ describe("Profile Page", () => {
         getByText("Manage your account");
         getByText("Your account details");
         getByText("Personal information");
-        getByText("First Name");
-        getByText("Last Name");
+        getByText("First Name:");
+        getByText("Last Name:");
         getByText("Login information");
-        getByText("Username");
+        getByText("Username:");
         expect(queryByText("New Password")).not.toBeInTheDocument();
         expect(queryByText("Confirm Password")).not.toBeInTheDocument();
         expect(queryByText("Update My Password")).not.toBeInTheDocument();

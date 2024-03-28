@@ -6,6 +6,7 @@ import ConfirmModal from "components/ConfirmModal/ConfirmModal";
 function ProfilePage(): React.ReactElement | null {
     const [isDeleteAccountModalOpen, setIsDeleteAccountModalOpen] = useState(false);
     const [isDeleteDataModalOpen, setIsDeleteDataModalOpen] = useState(false);
+    const [isPasswordChangeModalOpen, setIsPasswordChangeModalOpen] = useState(false);
     const [changePassword, setChangePassword] = useState(false);
 
     const onAccountDeletionConfirm = () => {
@@ -18,8 +19,21 @@ function ProfilePage(): React.ReactElement | null {
         setIsDeleteDataModalOpen(false);
     };
 
+    const onPasswordChangeConfirm = () => {
+        console.log("Password changed");
+        setIsPasswordChangeModalOpen(false);
+    };
+
     return (
         <Container className="profile">
+            <ConfirmModal
+                isVisible={isPasswordChangeModalOpen}
+                header="Confirm Password Change"
+                content="Are you sure you want to change your password?"
+                onClose={() => setIsPasswordChangeModalOpen(false)}
+                onConfirm={onPasswordChangeConfirm}
+                preventOutsideClick
+            />
             <ConfirmModal
                 isVisible={isDeleteAccountModalOpen}
                 header="Confirm Account Deletion"
@@ -41,33 +55,29 @@ function ProfilePage(): React.ReactElement | null {
             <Box>
                 <h5>Personal information</h5>
                 <hr />
-                <form>
-                    <div>
-                        <label htmlFor="firstname" className="label">
-                            First Name
-                        </label>
-                        <input id="firstname" type="text" placeholder="" value="" disabled />
-                    </div>
-                    <div>
-                        <label htmlFor="lastname" className="label">
-                            Last Name
-                        </label>
-                        <input id="lastname" type="text" placeholder="" value="" disabled />
-                    </div>
-                </form>
+                <Stack spacing={2}>
+                    <Stack direction="row" spacing={1}>
+                        <span className="label">First Name:</span>
+                        <span>Sean</span>
+                    </Stack>
+                    <Stack direction="row" spacing={1}>
+                        <span className="label">Last Name:</span>
+                        <span>Sean</span>
+                    </Stack>
+                </Stack>
             </Box>
             <Box>
                 <h5>Login information</h5>
                 <hr />
-                <div>
-                    <label htmlFor="username" className="label">
-                        Username
-                    </label>
-                    <input id="username" type="text" placeholder="" value="" disabled />
-                </div>
+                <Stack direction="row" spacing={1}>
+                    <span className="label">Username:</span>
+                    <span>Sean</span>
+                </Stack>
+            </Box>
+            <Box marginTop={1}>
                 {changePassword && (
                     <>
-                        <div>
+                        <div className="textField">
                             <label htmlFor="password" className="label">
                                 New Password
                             </label>
@@ -98,7 +108,7 @@ function ProfilePage(): React.ReactElement | null {
                         data-testid="updatePassBtn"
                         type="button"
                         className="edit-btn button"
-                        onClick={() => console.log("changed password")}
+                        onClick={() => setIsPasswordChangeModalOpen(true)}
                     >
                         Update My Password
                     </button>

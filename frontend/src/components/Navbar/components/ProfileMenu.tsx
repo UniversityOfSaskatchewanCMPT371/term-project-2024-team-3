@@ -38,7 +38,7 @@ export default function ProfileMenu() {
                     src={profileimage}
                     alt="profileLogo"
                     data-testid="profile"
-                    className="navbar-logo navbar-logout"
+                    className={`${styles["navbar-logo"]} ${styles["navbar-logout"]}`}
                 />
             </Button>
             <Menu

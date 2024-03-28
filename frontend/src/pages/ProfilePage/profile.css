@@ -3,8 +3,9 @@
 }
 
 .label {
-    display: flex;
+    display: flex; 
     margin-right: 10px;
+    font-weight: bold;
 }
 
 .button {
@@ -13,6 +14,8 @@
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  color: white;
+  font-weight: bold;
   transition: background-color 0.3s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
@@ -42,4 +45,4 @@
     border-radius: 5px;
     background-color: #d9534f;
     cursor: pointer;
-  }
+}

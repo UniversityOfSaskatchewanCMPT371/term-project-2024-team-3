@@ -135,10 +135,10 @@ public class UserController {
      * @param id
      * @return ResponseEntity<String>
      */
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     @RequestMapping(value = "/rest/beapengine/user/{id}/accountName", method = RequestMethod.GET, produces = "application/json")
     @ApiOperation(value = "Find User account name by ID", notes = "Finding a User account name, first name, and last name by input id and returning the result in an object of type UserDto", response = UserDto.class)
-    public ResponseEntity<JSONObject> getAccountName(@PathVariable("id") String id) {
+    public ResponseEntity<JSONObject> getAccountNameById(@PathVariable("id") String id) {
 
         logger.info("in UserController/user/{" + id + "}/accountName GET method");
 

@@ -4,6 +4,7 @@ import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import profileimage from "assets/profile.jpg";
+import styles from "../Navbar.module.css";
 
 export default function ProfileMenu() {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -25,7 +26,7 @@ export default function ProfileMenu() {
     };
 
     return (
-        <>
+        <div className={styles["navbar-profile"]}>
             <Button
                 id="basic-button"
                 aria-controls={open ? "basic-menu" : undefined}
@@ -52,6 +53,6 @@ export default function ProfileMenu() {
                 <MenuItem onClick={() => handleNavigate("/profile")}>My account</MenuItem>
                 <MenuItem onClick={() => handleNavigate("/logout")}>Logout</MenuItem>
             </Menu>
-        </>
+        </div>
     );
 }

@@ -5,7 +5,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../Authentication/useAuth";
 import styles from "./Navbar.module.css";
 import logoimage from "../../assets/beap_lab_hex_small.png";
-import profileimage from "../../assets/profile.jpg";
+import ProfileMenu from "./components/ProfileMenu";
 
 function Navbar(): React.ReactElement | null {
     const rollbar = useRollbar();
@@ -22,9 +22,9 @@ function Navbar(): React.ReactElement | null {
     }
 
     const routes = [
-        { path: "/FileUploadPage", name: "FILE UPLOAD" },
-        { path: "/ProcessedDataPage", name: "PROCESSED FILES" },
-        { path: "/PredictedDataPage", name: "PREDICTED FILES" },
+        { path: "/file-upload", name: "FILE UPLOAD" },
+        { path: "/processed-data", name: "PROCESSED FILES" },
+        { path: "/predicted-data", name: "PREDICTED FILES" },
     ];
 
     return (
@@ -47,14 +47,7 @@ function Navbar(): React.ReactElement | null {
                     ))}
                 </div>
 
-                <Link to="/Logout" className={styles["navbar-profile"]}>
-                    <img
-                        src={profileimage}
-                        alt="profileLogo"
-                        data-testid="profile"
-                        className={`${styles["navbar-logo"]} ${styles["navbar-logout"]}`}
-                    />
-                </Link>
+                <ProfileMenu />
             </nav>
         </div>
     );

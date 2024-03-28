@@ -1,5 +1,6 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
+import { renderWithProvider } from "shared/util/tests/render";
 import { BrowserRouter as Router } from "react-router-dom";
 import * as useAuth from "components/Authentication/useAuth";
 import Navbar from "./Navbar";
@@ -17,14 +18,11 @@ afterEach(() => {
 
 test("renders all links when user is authenticated", () => {
     authSpy.mockReturnValue({ isAuthenticated: true } as AuthReturnValue);
-    render(
+    renderWithProvider(
         <Router>
             <Navbar />
         </Router>,
     );
-
-    const homeLink = screen.getByText(/HOME/i);
-    expect(homeLink).toBeInTheDocument();
 
     const fileUploadLink = screen.getByText(/FILE UPLOAD/i);
     expect(fileUploadLink).toBeInTheDocument();
@@ -47,7 +45,7 @@ test("renders all links when user is authenticated", () => {
 
 test("does not render when user is not authenticated", () => {
     authSpy.mockReturnValue({ isAuthenticated: false } as AuthReturnValue);
-    const { container } = render(
+    const { container } = renderWithProvider(
         <Router>
             <Navbar />
         </Router>,

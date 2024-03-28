@@ -4,9 +4,7 @@ import FileIcon from ".";
 
 describe("Icons", () => {
     it("T5.?? should render file icon", () => {
-        const { getByTestId } = render(
-            <FileIcon />,
-        );
+        const { getByTestId } = render(<FileIcon />);
         getByTestId("file-icon");
     });
 });

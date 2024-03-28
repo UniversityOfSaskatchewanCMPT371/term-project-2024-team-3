@@ -4,9 +4,7 @@ import ProfilePage from "./ProfilePage";
 
 describe("Profile Page", () => {
     it("T5.?? should render profile page", () => {
-        const { getByText, queryByText } = render(
-            <ProfilePage />,
-        );
+        const { getByText, queryByText } = render(<ProfilePage />);
         getByText("Manage your account");
         getByText("Your account details");
         getByText("Personal information");

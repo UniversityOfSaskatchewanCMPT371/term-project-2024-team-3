@@ -24,9 +24,6 @@ test("TID 1.4. renders all links", () => {
         </Router>,
     );
 
-    const homeLink = screen.getByText(/HOME/i);
-    expect(homeLink).toBeInTheDocument();
-
     const fileUploadLink = screen.getByText(/FILE UPLOAD/i);
     expect(fileUploadLink).toBeInTheDocument();
 

@@ -1,0 +1,102 @@
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white;
+    padding: 12px 20px;
+    box-shadow: 0px 3px 6px 0px rgba(0,0,0,0.16);
+}
+
+.navbar-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.navbar a {
+    color: black;
+    text-align: center;
+    padding: 10px 12px;
+    text-decoration: none;
+}
+
+.navbar a:hover {
+    background-color: white;
+}
+
+.navbar-profile {
+    margin-left: auto;
+}
+
+.navbar-brand{
+    margin-right: auto;
+}
+
+.navbar-logo {
+    width:  40px;
+    height: 40px ;
+}
+
+.navbar .nav-link {
+    font-family: "Montserrat", sans-serif;
+    font-weight: 600;
+    color: #017176;
+    text-align: center;
+    padding: 14px 16px;
+    border-bottom: #017176 1px solid;
+    text-decoration: none;
+    transition: color 0.6s ease, transform 0.3s ease, box-shadow 0.3s ease; /* Add this */
+}
+
+.navbar .nav-link:hover {
+    transform: scale(1.05); /* Slightly reduce the scale effect */
+    background-color: whitesmoke;
+    border-top-right-radius: 15px;
+    border-bottom-left-radius: 15px;
+    border: none;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23); /* Add this */
+}
+
+
+.navbar .nav-link.active {
+    background-color: #017176;
+    color: white;
+    border-top-right-radius: 15px;
+    border-bottom-left-radius: 15px;
+}
+
+.navbar .nav-link:active {
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15); /* Reduce shadow when clicked */
+    transform: translateY(0); /* Move back down when clicked */
+}
+
+/* Media query for screens smaller than 600px */
+@media (max-width: 600px) {
+    .navbar {
+        flex-direction: column;
+        padding: 5px 5px; /* Increase vertical padding */
+    }
+
+    .navbar-nav {
+        flex-direction: row;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .navbar a {
+        padding: 8px 12px; /* Reduce padding */
+    }
+
+    .navbar-logo {
+        width:  30px;
+        height: 30px ;
+    }
+
+    .navbar .nav-link {
+        width: 10%;
+        height: 10%;
+        font-size: small;
+        padding: 2px 5px; /* Reduce padding */
+    }
+}
+

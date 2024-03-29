@@ -40,6 +40,8 @@ public class WatchControllerTest {
     @InjectMocks
     private WatchController watchController;
 
+
+    // mock services
     @Mock
     private AppleWatchService appleWatchService;
 
@@ -100,8 +102,24 @@ public class WatchControllerTest {
      * 
      */
     @Test
-    public void testList(){
-        
+    public void testListAppleProcessed(){
+        // call controller.list(type, watchtype)
+        // intercept service
+
+
+        // testing with appleWatchService and processed data
+        ArrayList<ProcessedDataDto> mockedData;
+        mockedData.add(mockProcessedDataDto())
+        mockedData.add(mockProcessedDataDto())
+
+        JSONObject mockedReturn;
+        mockedReturn.put(BeapEngineConstants.SUCCESS_STR, true);
+        mockedReturn.put("list", mockedData);
+        mockedReturn.put("status_code", HttpStatus.OK.value());
+
+        when(appleWatchService.list("123", "processed")).thenReturn(mockedReturn)
+
+        ResponseEntity<JSONObject> result = watchController.list("processed", "apple")
     }
 
 }

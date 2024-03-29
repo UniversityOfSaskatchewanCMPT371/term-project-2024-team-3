@@ -76,3 +76,9 @@ export type RawFilesData = {
 export type DownloadData = {
     file: string | null | undefined;
 };
+
+export type UserData = {
+    firstName: string | null;
+    lastName: string | null;
+    userName: string | null;
+};

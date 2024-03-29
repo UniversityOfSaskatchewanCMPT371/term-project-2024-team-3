@@ -1,5 +1,5 @@
 import api from "./baseapi";
-import { LoginResponseData } from "./types";
+import { LoginResponseData, UserData } from "./types";
 
 export const login = async (username: string, password: string): Promise<LoginResponseData> => {
     const formData = new FormData();
@@ -19,7 +19,7 @@ export const login = async (username: string, password: string): Promise<LoginRe
 
         return mappedData;
     } catch (error) {
-        throw new Error(error.response.data?.message ?? "Login Failed");
+        throw new Error(error.response?.data?.message ?? "Login Failed");
     }
 };
 
@@ -27,7 +27,7 @@ export const logout = async (): Promise<void> => {
     try {
         await api.get("/logoutuser");
     } catch (error) {
-        throw new Error(error.response.data?.message ?? "Logout Failed");
+        throw new Error(error.response?.data?.message ?? "Logout Failed");
     }
 };
 
@@ -54,23 +54,36 @@ export const signUp = async (
             },
         });
     } catch (error) {
-        throw new Error(error.response.data?.message ?? "Signup Failed");
+        throw new Error(error.response?.data?.message ?? "Signup Failed");
+    }
+};
+
+export const getUser = async (): Promise<UserData> => {
+    try {
+        const response = await api.get("/user");
+        return {
+            firstName: response.data.firstName,
+            lastName: response.data.lastName,
+            userName: response.data.userName,
+        };
+    } catch (error) {
+        throw new Error(error.response?.data?.message ?? "Failed to fetch user details");
     }
 };
 
 export const deleteAccount = async (): Promise<void> => {
     try {
-        await api.delete("/logoutuser");
+        await api.delete("/user");
     } catch (error) {
-        throw new Error(error.response.data?.message ?? "Delete Account Failed");
+        throw new Error(error.response?.data?.message ?? "Delete Account Failed");
     }
 };
 
 export const deleteData = async (): Promise<void> => {
     try {
-        await api.delete("/logoutuser");
+        await api.delete("/data");
     } catch (error) {
-        throw new Error(error.response.data?.message ?? "Delete Data Failed");
+        throw new Error(error.response?.data?.message ?? "Delete Data Failed");
     }
 };
 
@@ -81,6 +94,6 @@ export const changePassword = async (password: string): Promise<void> => {
     try {
         await api.post("/change-password", requestBody);
     } catch (error) {
-        throw new Error(error.response.data?.message ?? "Change Password Failed");
+        throw new Error(error.response?.data?.message ?? "Change Password Failed");
     }
 };

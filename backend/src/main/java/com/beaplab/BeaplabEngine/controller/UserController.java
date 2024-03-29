@@ -1,5 +1,6 @@
 package com.beaplab.BeaplabEngine.controller;
 
+import com.beaplab.BeaplabEngine.authentication.SessionDetails;
 import com.beaplab.BeaplabEngine.constants.BeapEngineConstants;
 import com.beaplab.BeaplabEngine.metadata.UserDto;
 import com.beaplab.BeaplabEngine.service.UserService;
@@ -23,10 +24,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import springfox.documentation.annotations.ApiIgnore;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 @Controller
 @ApiIgnore
 public class UserController {
-
 
     final static Logger logger = LogManager.getLogger(UserController.class.getName());
 
@@ -36,9 +39,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-
     /**
      * handles a POST request for creating an User
+     * 
      * @param userDto
      * @return ResponseEntity<UserDto>
      */
@@ -63,12 +66,12 @@ public class UserController {
 
         jsonObject = userService.save(userDto);
 
-        return new ResponseEntity(jsonObject, (HttpStatus.valueOf((int)jsonObject.get("status_code"))));
+        return new ResponseEntity(jsonObject, (HttpStatus.valueOf((int) jsonObject.get("status_code"))));
     }
-
 
     /**
      * handles a GET request for User list
+     * 
      * @return ResponseEntity<List<UserDto>>
      */
     @Secured("ADMIN")
@@ -86,10 +89,9 @@ public class UserController {
         return new ResponseEntity<List<UserDto>>(userDtos, HttpStatus.OK);
     }
 
-
-
     /**
      * handles a PUT request for updating an User
+     * 
      * @param userDto
      * @return ResponseEntity<UserDto>
      */
@@ -108,10 +110,9 @@ public class UserController {
         return new ResponseEntity<UserDto>(userDto, HttpStatus.CREATED);
     }
 
-
-
     /**
      * handles a GET request for retrieving an User by its id
+     * 
      * @param id
      * @return ResponseEntity<UserDto>
      */
@@ -131,34 +132,56 @@ public class UserController {
     }
 
     /**
-     * handles a GET request for retrieving a user account name, first name, last name
+     * handles a GET request for retrieving username, first name, last
+     * name from current session
+     * 
      * @param id
      * @return ResponseEntity<String>
      */
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
-    @RequestMapping(value = "/rest/beapengine/user/{id}/accountName", method = RequestMethod.GET, produces = "application/json")
-    @ApiOperation(value = "Find User account name by ID", notes = "Finding a User account name, first name, and last name by input id and returning the result in an object of type UserDto", response = UserDto.class)
-    public ResponseEntity<JSONObject> getAccountNameById(@PathVariable("id") String id) {
+    @RequestMapping(value = "/user", method = RequestMethod.GET, produces = "application/json")
+    @ApiOperation(value = "Find User account name from current session", notes = "Finding a User account name, first name, and last name from current session", response = JSONObject.class)
+    public ResponseEntity<JSONObject> getUsername(HttpServletRequest request) {
 
-        logger.info("in UserController/user/{" + id + "}/accountName GET method");
+        logger.info("in /user GET method");
 
-        UserDto userDto = userService.get(id);
-        if (userDto == null) {
-            return new ResponseEntity<JSONObject>(HttpStatus.NOT_FOUND);
+        HttpSession session = request.getSession(false);
+
+        if (null == session || !request.isRequestedSessionIdValid()) // invalid session
+        {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put(BeapEngineConstants.SUCCESS_STR, false);
+            jsonObject.put("message", "Invalid session");
+            jsonObject.put("status_code", HttpStatus.NON_AUTHORITATIVE_INFORMATION.value());
+
+            return new ResponseEntity<>(jsonObject, (HttpStatus.valueOf((int) jsonObject.get("status_code"))));
+        }
+
+        SessionDetails sessionDetails = (SessionDetails) session.getAttribute("SESSION_DETAILS");
+        UserDto userDto = userService.get(sessionDetails.getUserId().toString());
+
+        if (userDto == null) { // user not found
+
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put(BeapEngineConstants.SUCCESS_STR, false);
+            jsonObject.put("message", "User not found");
+            jsonObject.put("status_code", HttpStatus.NOT_FOUND.value());
+
+            return new ResponseEntity<>(jsonObject, (HttpStatus.valueOf((int) jsonObject.get("status_code"))));
         }
 
         JSONObject jsonObject = new JSONObject();
+        jsonObject.put(BeapEngineConstants.SUCCESS_STR, true);
         jsonObject.put("username", userDto.getUsername());
         jsonObject.put("firstName", userDto.getFirstName());
         jsonObject.put("lastName", userDto.getLastName());
 
-        return new ResponseEntity<JSONObject>(userDto, HttpStatus.OK);
+        return new ResponseEntity<JSONObject>(jsonObject, HttpStatus.OK);
     }
-
-
 
     /**
      * handles a DELETE request for deleting an User by its id
+     * 
      * @param id
      * @return ResponseEntity<UserDto>
      */
@@ -178,7 +201,5 @@ public class UserController {
 
         return new ResponseEntity<UserDto>(HttpStatus.NO_CONTENT);
     }
-
-
 
 }

@@ -97,17 +97,12 @@ public class WatchControllerTest {
      */
     @Test
     public void testUpload() {
-        // upload Apple
         JSONObject mockedReturn = new JSONObject();
         mockedReturn.put(BeapEngineConstants.SUCCESS_STR, true);
         mockedReturn.put("raw_data_id", 123);
         mockedReturn.put("status_code", HttpStatus.OK.value());
 
-        Map<String, MultipartFile> fileMap;
-
         // mocking request and session details
-        // MockHttpServletRequest request = new MockHttpServletRequest();
-
         byte[] bytes = { 1, 2, 3 };
         MockMultipartFile file = new MockMultipartFile("123", bytes);
 
@@ -149,7 +144,46 @@ public class WatchControllerTest {
      */
     @Test
     public void testUploadWithInvalidData() {
+        JSONObject mockedReturn = new JSONObject();
+        mockedReturn.put(BeapEngineConstants.SUCCESS_STR, true);
+        mockedReturn.put("raw_data_id", 123);
+        mockedReturn.put("status_code", HttpStatus.OK.value());
 
+        // mocking request and session details
+        byte[] bytes = { 1, 2, 3 };
+        MockMultipartFile file = new MockMultipartFile("123", bytes);
+
+        MockMultipartHttpServletRequest request = new MockMultipartHttpServletRequest();
+        request.setSession(httpSession);
+        request.addFile(file);
+
+        SessionDetails session = new SessionDetails();
+        session.setUserId(1L);
+
+        when(appleWatchService.UploadAndPersist(request.getFileMap(), 1L)).thenReturn(mockedReturn);
+        when(fitbitService.UploadAndPersist(request.getFileMap(), 1L)).thenReturn(mockedReturn);
+
+        when(httpSession.getAttribute("SESSION_DETAILS")).thenReturn(session);
+
+        /**
+         * apple
+         */
+        ResponseEntity<JSONObject> responseEntity = watchController.upload("applewatch", request);
+
+        HttpStatus expectedStatus = HttpStatus.OK;
+        HttpStatus resultStatus = responseEntity.getStatusCode();
+
+        assertEquals(expectedStatus, resultStatus);
+        assertEquals(mockedReturn, responseEntity.getBody());
+
+        /**
+         * fitbit
+         */
+        responseEntity = watchController.upload("fitbit", request);
+        resultStatus = responseEntity.getStatusCode();
+
+        assertEquals(expectedStatus, resultStatus);
+        assertEquals(mockedReturn, responseEntity.getBody());
     }
 
     /**

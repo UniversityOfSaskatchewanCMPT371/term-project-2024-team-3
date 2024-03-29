@@ -46,9 +46,6 @@ public class WatchController {
     @Autowired
     private FitbitService fitbitService;
 
-    private appleWatch = "applewatch"
-    private fitbit = "fitbit"
-
     public WatchController(Rollbar rollbar){
         this.rollbar = rollbar;
     }    
@@ -61,10 +58,10 @@ public class WatchController {
             // getting the appropriate viewName
             String viewName = "";
             switch (watchType) {
-                case appleWatch:
+                case "applewatch":
                     viewName = "appleWatch";
                     break;
-                case fitbit:
+                case "fitbit":
                     viewName = "fitbit";
                     break;
                 default:
@@ -114,7 +111,7 @@ public class WatchController {
         }
 
 
-        if(!watchType.equals(appleWatch) && !watchType.equals(fitbit)){
+        if(!watchType.equals("applewatch") && !watchType.equals("fitbit")){
             JSONObject jsonObject = new JSONObject();
             jsonObject.put(BeapEngineConstants.SUCCESS_STR, false);
             jsonObject.put("message", "Invalid watch type in url");
@@ -126,11 +123,11 @@ public class WatchController {
 
         JSONObject result = new JSONObject();
         switch (watchType) {
-            case appleWatch:
+            case "applewatch":
                 result = appleWatchService.UploadAndPersist(request.getFileMap(), sessionDetails.getUserId());
                 break;
         
-            case fitbit:
+            case "fitbit":
                 result = fitbitService.UploadAndPersist(request.getFileMap(), sessionDetails.getUserId());
                 break;
             default:
@@ -162,7 +159,7 @@ public class WatchController {
         rollbar.info("in WatchController/processFiles");
 
 
-        if(!watchType.equals(appleWatch) && !watchType.equals(fitbit)){
+        if(!watchType.equals("applewatch") && !watchType.equals("fitbit")){
             JSONObject jsonObject = new JSONObject();
             jsonObject.put(BeapEngineConstants.SUCCESS_STR, false);
             jsonObject.put("message", "Invalid watch type in url");
@@ -173,11 +170,11 @@ public class WatchController {
         JSONObject result = new JSONObject();
 
         switch (watchType) {
-            case appleWatch:
+            case "applewatch":
                 result = appleWatchService.processData(Long.parseLong(rawDataId));
             break;
         
-            case fitbit:
+            case "fitbit":
                 result = fitbitService.processData(Long.parseLong(rawDataId));
             break;
             default:
@@ -212,7 +209,7 @@ public class WatchController {
 
         JSONObject result = new JSONObject();
 
-        if(!watchType.equals(appleWatch) && !watchType.equals(fitbit)){
+        if(!watchType.equals("applewatch") && !watchType.equals("fitbit")){
             JSONObject jsonObject = new JSONObject();
             jsonObject.put(BeapEngineConstants.SUCCESS_STR, false);
             jsonObject.put("message", "Invalid watch type in url");
@@ -222,11 +219,11 @@ public class WatchController {
 
 
         switch (watchType) {
-            case appleWatch:
+            case "applewatch":
                 result = appleWatchService.predictData(Long.parseLong(processedDataId), predictionModel);
             break;
         
-            case fitbit:
+            case "fitbit":
                 result = fitbitService.predictData(Long.parseLong(processedDataId), predictionModel);
             break;
             default:
@@ -262,7 +259,7 @@ public class WatchController {
         byte[] downloadedFile = null;
 
 
-        if(!watchType.equals(appleWatch) && !watchType.equals(fitbit)){
+        if(!watchType.equals("applewatch") && !watchType.equals("fitbit")){
             jsonObject.put(BeapEngineConstants.SUCCESS_STR, false);
             jsonObject.put("message", "Invalid watch type in url");
             jsonObject.put("status_code", 400);
@@ -271,11 +268,11 @@ public class WatchController {
 
 
         switch (watchType) {
-            case appleWatch:
+            case "applewatch":
                 downloadedFile = appleWatchService.download(id, type);
                 break;
         
-            case fitbit:
+            case "fitbit":
                 downloadedFile = fitbitService.download(id, type);
                 break;
             default:
@@ -333,7 +330,7 @@ public class WatchController {
             return new ResponseEntity<>(jsonObject, (HttpStatus.valueOf((int)jsonObject.get("status_code"))));
         }
 
-        if(!watchType.equals(appleWatch) && !watchType.equals(fitbit)){
+        if(!watchType.equals("applewatch") && !watchType.equals("fitbit")){
             JSONObject jsonObject = new JSONObject();
             jsonObject.put(BeapEngineConstants.SUCCESS_STR, false);
             jsonObject.put("message", "Invalid watch type in url");
@@ -346,10 +343,10 @@ public class WatchController {
 
         JSONObject result = new JSONObject();
         switch (watchType) {
-            case appleWatch:
+            case "applewatch":
                 result = appleWatchService.list(sessionDetails.getUserId(), type);
                 break;
-            case fitbit:
+            case "fitbit":
                 result = fitbitService.list(sessionDetails.getUserId(), type);
                 break;
             default:

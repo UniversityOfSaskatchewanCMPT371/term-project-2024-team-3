@@ -439,7 +439,7 @@ public class WatchControllerTest {
      * 
      */
     @Test
-    public void testDownloadFile() {
+    public void testDownloadFileApple() {
 
         byte[] bytes = { 1, 2, 3 };
 
@@ -465,6 +465,142 @@ public class WatchControllerTest {
                 "applewatch");
 
         HttpStatus expectedStatus = HttpStatus.OK;
+        HttpStatus resultStatus = responseEntity.getStatusCode();
+
+        assertEquals(expectedStatus, resultStatus);
+        assertEquals(mockedReturn, responseEntity.getBody());
+    }
+
+    /**
+    * 
+    */
+    @Test
+    public void testDownloadFileAppleFileNotFound() {
+        JSONObject mockedReturn = new JSONObject();
+        mockedReturn.put(BeapEngineConstants.SUCCESS_STR, false);
+        mockedReturn.put("message", "Requested .zip file not found at the server");
+        mockedReturn.put("status_code", HttpStatus.NOT_FOUND.value());
+
+        when(appleWatchService.download("1", "process")).thenReturn(null);
+
+        // mocking request and session details
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setSession(httpSession);
+
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        SessionDetails session = new SessionDetails();
+        session.setUserId(1L);
+
+        when(httpSession.getAttribute("SESSION_DETAILS")).thenReturn(session);
+
+        ResponseEntity<JSONObject> responseEntity = watchController.downloadFile(request, response, "1", "process",
+                "applewatch");
+
+        HttpStatus expectedStatus = HttpStatus.NOT_FOUND;
+        HttpStatus resultStatus = responseEntity.getStatusCode();
+
+        assertEquals(expectedStatus, resultStatus);
+        assertEquals(mockedReturn, responseEntity.getBody());
+    }
+
+    /**
+    * 
+    */
+    @Test
+    public void testDownloadFileFitbit() {
+
+        byte[] bytes = { 1, 2, 3 };
+
+        JSONObject mockedReturn = new JSONObject();
+        mockedReturn.put(BeapEngineConstants.SUCCESS_STR, true);
+        mockedReturn.put("file", bytes);
+        mockedReturn.put("status_code", HttpStatus.OK.value());
+
+        when(fitbitService.download("1", "process")).thenReturn(bytes);
+
+        // mocking request and session details
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setSession(httpSession);
+
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        SessionDetails session = new SessionDetails();
+        session.setUserId(1L);
+
+        when(httpSession.getAttribute("SESSION_DETAILS")).thenReturn(session);
+
+        ResponseEntity<JSONObject> responseEntity = watchController.downloadFile(request, response, "1", "process",
+                "fitbit");
+
+        HttpStatus expectedStatus = HttpStatus.OK;
+        HttpStatus resultStatus = responseEntity.getStatusCode();
+
+        assertEquals(expectedStatus, resultStatus);
+        assertEquals(mockedReturn, responseEntity.getBody());
+    }
+
+    /**
+    * 
+    */
+    @Test
+    public void testDownloadFileFitbitFileNotFound() {
+        JSONObject mockedReturn = new JSONObject();
+        mockedReturn.put(BeapEngineConstants.SUCCESS_STR, false);
+        mockedReturn.put("message", "Requested .zip file not found at the server");
+        mockedReturn.put("status_code", HttpStatus.NOT_FOUND.value());
+
+        when(fitbitService.download("1", "process")).thenReturn(null);
+
+        // mocking request and session details
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setSession(httpSession);
+
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        SessionDetails session = new SessionDetails();
+        session.setUserId(1L);
+
+        when(httpSession.getAttribute("SESSION_DETAILS")).thenReturn(session);
+
+        ResponseEntity<JSONObject> responseEntity = watchController.downloadFile(request, response, "1", "process",
+                "fitbit");
+
+        HttpStatus expectedStatus = HttpStatus.NOT_FOUND;
+        HttpStatus resultStatus = responseEntity.getStatusCode();
+
+        assertEquals(expectedStatus, resultStatus);
+        assertEquals(mockedReturn, responseEntity.getBody());
+    }
+
+    /**
+    * 
+    */
+    @Test
+    public void testDownloadFileInvalidWatch() {
+
+        byte[] bytes = { 1, 2, 3 };
+
+        JSONObject mockedReturn = new JSONObject();
+        mockedReturn.put(BeapEngineConstants.SUCCESS_STR, false);
+        mockedReturn.put("message", "Invalid watch type in url");
+        mockedReturn.put("status_code", 400);
+
+        // mocking request and session details
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setSession(httpSession);
+
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        SessionDetails session = new SessionDetails();
+        session.setUserId(1L);
+
+        when(httpSession.getAttribute("SESSION_DETAILS")).thenReturn(session);
+
+        ResponseEntity<JSONObject> responseEntity = watchController.downloadFile(request, response, "1", "process",
+                "jibberish");
+
+        HttpStatus expectedStatus = HttpStatus.valueOf(400);
         HttpStatus resultStatus = responseEntity.getStatusCode();
 
         assertEquals(expectedStatus, resultStatus);

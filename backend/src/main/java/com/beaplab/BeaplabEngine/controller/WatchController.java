@@ -257,7 +257,6 @@ public class WatchController {
         }
 
         if (downloadedFile != null) {
-
             jsonObject.put(BeapEngineConstants.SUCCESS_STR, true);
             jsonObject.put("status_code", HttpStatus.OK.value());
             jsonObject.put("file", downloadedFile);

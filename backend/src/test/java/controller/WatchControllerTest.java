@@ -67,7 +67,7 @@ public class WatchControllerTest {
     }
 
     /**
-     * T5.43
+     * T5.44
      * 
      */
     @Test
@@ -79,7 +79,7 @@ public class WatchControllerTest {
     }
 
     /**
-     * T5.43
+     * T5.45
      * 
      */
     @Test
@@ -90,7 +90,7 @@ public class WatchControllerTest {
     }
 
     /**
-     * T5.44
+     * T5.46
      */
     @Test
     public void testUploadFitbit() {
@@ -126,7 +126,7 @@ public class WatchControllerTest {
     }
 
     /**
-     * T5.44
+     * T5.47
      */
     @Test
     public void testUploadFitbitNoData() {
@@ -162,7 +162,7 @@ public class WatchControllerTest {
     }
 
     /**
-     * T5.44
+     * T5.48
      */
     @Test
     public void testUploadApple() {
@@ -198,7 +198,7 @@ public class WatchControllerTest {
     }
 
     /**
-     * T5.44
+     * T5.49
      */
     @Test
     public void testUploadAppleNoData() {
@@ -234,7 +234,7 @@ public class WatchControllerTest {
     }
 
     /**
-     * T5.44
+     * T5.50
      */
     @Test
     public void testUploadInvalidWatch() {
@@ -266,7 +266,7 @@ public class WatchControllerTest {
     }
 
     /**
-     * T5.44
+     * T5.51
      */
     @Test
     public void testUploadInvalidSession() {
@@ -696,6 +696,38 @@ public class WatchControllerTest {
         ResponseEntity<JSONObject> responseEntity = watchController.list(request, "processed", "fitbit");
 
         HttpStatus expectedStatus = HttpStatus.OK;
+        HttpStatus resultStatus = responseEntity.getStatusCode();
+
+        assertEquals(expectedStatus, resultStatus);
+        assertEquals(mockedReturn, responseEntity.getBody());
+    }
+
+    /**
+    * 
+    */
+    @Test
+    public void testListProcessedInvalidWatch() {
+        ArrayList<ProcessedDataDto> mockedData = new ArrayList<>();
+        mockedData.add(mockProcessedDataDto());
+        mockedData.add(mockProcessedDataDto());
+
+        JSONObject mockedReturn = new JSONObject();
+        mockedReturn.put(BeapEngineConstants.SUCCESS_STR, false);
+        mockedReturn.put("message", "Invalid watch type in url");
+        mockedReturn.put("status_code", 400);
+
+        // mocking request and session details
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setSession(httpSession);
+
+        SessionDetails session = new SessionDetails();
+        session.setUserId(1L);
+
+        when(httpSession.getAttribute("SESSION_DETAILS")).thenReturn(session);
+
+        ResponseEntity<JSONObject> responseEntity = watchController.list(request, "processed", "jibberish");
+
+        HttpStatus expectedStatus = HttpStatus.valueOf(400);
         HttpStatus resultStatus = responseEntity.getStatusCode();
 
         assertEquals(expectedStatus, resultStatus);

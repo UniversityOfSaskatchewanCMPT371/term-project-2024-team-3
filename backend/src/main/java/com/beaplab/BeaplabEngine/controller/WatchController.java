@@ -36,17 +36,13 @@ import com.rollbar.notifier.Rollbar;
 public class WatchController {
 
     @Autowired
-    private final Rollbar rollbar;
+    private Rollbar rollbar;
 
     @Autowired
     private AppleWatchService appleWatchService;
 
     @Autowired
     private FitbitService fitbitService;
-
-    public WatchController(Rollbar rollbar) {
-        this.rollbar = rollbar;
-    }
 
     // getUploadView
     @RequestMapping(value = "/{watchType}/uploadview", method = RequestMethod.GET)

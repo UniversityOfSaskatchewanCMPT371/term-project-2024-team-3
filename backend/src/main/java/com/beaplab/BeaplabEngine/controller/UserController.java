@@ -70,6 +70,40 @@ public class UserController {
     }
 
     /**
+     * handles a POST request for updating a user's password
+     * 
+     * @param userDto
+     * @return ResponseEntity<UserDto>
+     */
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+    @RequestMapping(value = "/rest/beapengine/user/{password}", method = RequestMethod.POST)
+    @ApiOperation(value = "Update existing User", notes = "Updating an existing User and returning the updated User in an object of type UserDto", response = UserDto.class)
+    public ResponseEntity<UserDto> updatePassword(HttpServletRequest request,
+            @PathVariable("password") String password) {
+
+        logger.info("in /rest/beapengine/user/{ " + password + "} POST method");
+
+        HttpSession session = request.getSession(false);
+
+        if (null == session || !request.isRequestedSessionIdValid()) // invalid session
+        {
+            return new ResponseEntity<>(HttpStatus.NON_AUTHORITATIVE_INFORMATION);
+        }
+
+        SessionDetails sessionDetails = (SessionDetails) session.getAttribute("SESSION_DETAILS");
+        UserDto userDto = userService.get(sessionDetails.getUserId().toString());
+
+        if (userDto == null) {
+            return new ResponseEntity<UserDto>(HttpStatus.BAD_REQUEST);
+        }
+
+        userDto.setPassword(password);
+        userService.update(userDto);
+
+        return new ResponseEntity<UserDto>(userDto, HttpStatus.OK);
+    }
+
+    /**
      * handles a GET request for User list
      * 
      * @return ResponseEntity<List<UserDto>>
@@ -135,8 +169,8 @@ public class UserController {
      * handles a GET request for retrieving username, first name, last
      * name from current session
      * 
-     * @param id
-     * @return ResponseEntity<String>
+     * @param HttpServletRequest
+     * @return ResponseEntity<JSONObject>
      */
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     @RequestMapping(value = "/user", method = RequestMethod.GET, produces = "application/json")

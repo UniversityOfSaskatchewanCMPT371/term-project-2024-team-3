@@ -266,6 +266,36 @@ public class WatchControllerTest {
     }
 
     /**
+     * T5.44
+     */
+    @Test
+    public void testUploadInvalidSession() {
+        JSONObject mockedReturn = new JSONObject();
+        mockedReturn.put(BeapEngineConstants.SUCCESS_STR, false);
+        mockedReturn.put("message", "Invalid session");
+        mockedReturn.put("status_code", HttpStatus.NON_AUTHORITATIVE_INFORMATION.value());
+
+        // mocking request and session details
+        byte[] bytes = { 1, 2, 3 };
+        MockMultipartFile file = new MockMultipartFile("123", bytes);
+
+        MockMultipartHttpServletRequest request = new MockMultipartHttpServletRequest();
+        request.setSession(null);
+        request.addFile(file);
+
+        SessionDetails session = new SessionDetails();
+        session.setUserId(1L);
+
+        ResponseEntity<JSONObject> responseEntity = watchController.upload("apple", request);
+
+        HttpStatus expectedStatus = HttpStatus.NON_AUTHORITATIVE_INFORMATION;
+        HttpStatus resultStatus = responseEntity.getStatusCode();
+
+        assertEquals(expectedStatus, resultStatus);
+        assertEquals(mockedReturn, responseEntity.getBody());
+    }
+
+    /**
      * 
      */
     @Test
@@ -578,9 +608,6 @@ public class WatchControllerTest {
     */
     @Test
     public void testDownloadFileInvalidWatch() {
-
-        byte[] bytes = { 1, 2, 3 };
-
         JSONObject mockedReturn = new JSONObject();
         mockedReturn.put(BeapEngineConstants.SUCCESS_STR, false);
         mockedReturn.put("message", "Invalid watch type in url");
@@ -611,7 +638,7 @@ public class WatchControllerTest {
      * 
      */
     @Test
-    public void testListProcessed() {
+    public void testListProcessedApple() {
         ArrayList<ProcessedDataDto> mockedData = new ArrayList<>();
         mockedData.add(mockProcessedDataDto());
         mockedData.add(mockProcessedDataDto());
@@ -635,6 +662,69 @@ public class WatchControllerTest {
         ResponseEntity<JSONObject> responseEntity = watchController.list(request, "processed", "applewatch");
 
         HttpStatus expectedStatus = HttpStatus.OK;
+        HttpStatus resultStatus = responseEntity.getStatusCode();
+
+        assertEquals(expectedStatus, resultStatus);
+        assertEquals(mockedReturn, responseEntity.getBody());
+    }
+
+    /**
+    * 
+    */
+    @Test
+    public void testListProcessedFitbit() {
+        ArrayList<ProcessedDataDto> mockedData = new ArrayList<>();
+        mockedData.add(mockProcessedDataDto());
+        mockedData.add(mockProcessedDataDto());
+
+        JSONObject mockedReturn = new JSONObject();
+        mockedReturn.put(BeapEngineConstants.SUCCESS_STR, true);
+        mockedReturn.put("list", mockedData);
+        mockedReturn.put("status_code", HttpStatus.OK.value());
+
+        when(fitbitService.list(1L, "processed")).thenReturn(mockedReturn);
+
+        // mocking request and session details
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setSession(httpSession);
+
+        SessionDetails session = new SessionDetails();
+        session.setUserId(1L);
+
+        when(httpSession.getAttribute("SESSION_DETAILS")).thenReturn(session);
+
+        ResponseEntity<JSONObject> responseEntity = watchController.list(request, "processed", "fitbit");
+
+        HttpStatus expectedStatus = HttpStatus.OK;
+        HttpStatus resultStatus = responseEntity.getStatusCode();
+
+        assertEquals(expectedStatus, resultStatus);
+        assertEquals(mockedReturn, responseEntity.getBody());
+    }
+
+    /**
+    * 
+    */
+    @Test
+    public void testListInvalidSession() {
+        JSONObject mockedReturn = new JSONObject();
+        mockedReturn.put(BeapEngineConstants.SUCCESS_STR, false);
+        mockedReturn.put("message", "Invalid session");
+        mockedReturn.put("status_code", HttpStatus.NON_AUTHORITATIVE_INFORMATION.value());
+
+        // mocking request and session details
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setSession(null);
+
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        SessionDetails session = new SessionDetails();
+        session.setUserId(1L);
+
+        ResponseEntity<JSONObject> responseEntity = watchController.list(request, "process",
+                "applewatch");
+
+        HttpStatus expectedStatus = HttpStatus.NON_AUTHORITATIVE_INFORMATION;
         HttpStatus resultStatus = responseEntity.getStatusCode();
 
         assertEquals(expectedStatus, resultStatus);

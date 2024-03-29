@@ -129,6 +129,42 @@ public class WatchControllerTest {
      * T5.44
      */
     @Test
+    public void testUploadFitbitNoData() {
+        JSONObject mockedReturn = new JSONObject();
+        mockedReturn.put(BeapEngineConstants.SUCCESS_STR, false);
+        mockedReturn.put("message", "Persisting raw data failed");
+        mockedReturn.put("status_code", HttpStatus.INTERNAL_SERVER_ERROR.value());
+
+        // mocking request and session details
+        byte[] bytes = { 1, 2, 3 };
+        MockMultipartFile file = new MockMultipartFile("123", bytes);
+
+        MockMultipartHttpServletRequest request = new MockMultipartHttpServletRequest();
+        request.setSession(httpSession);
+        request.addFile(file);
+
+        SessionDetails session = new SessionDetails();
+        session.setUserId(1L);
+
+        when(fitbitService.UploadAndPersist(request.getFileMap(), 1L)).thenReturn(mockedReturn);
+        when(httpSession.getAttribute("SESSION_DETAILS")).thenReturn(session);
+
+        /**
+         * apple
+         */
+        ResponseEntity<JSONObject> responseEntity = watchController.upload("fitbit", request);
+
+        HttpStatus expectedStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+        HttpStatus resultStatus = responseEntity.getStatusCode();
+
+        assertEquals(expectedStatus, resultStatus);
+        assertEquals(mockedReturn, responseEntity.getBody());
+    }
+
+    /**
+     * T5.44
+     */
+    @Test
     public void testUploadApple() {
         JSONObject mockedReturn = new JSONObject();
         mockedReturn.put(BeapEngineConstants.SUCCESS_STR, true);
@@ -155,6 +191,42 @@ public class WatchControllerTest {
         ResponseEntity<JSONObject> responseEntity = watchController.upload("applewatch", request);
 
         HttpStatus expectedStatus = HttpStatus.OK;
+        HttpStatus resultStatus = responseEntity.getStatusCode();
+
+        assertEquals(expectedStatus, resultStatus);
+        assertEquals(mockedReturn, responseEntity.getBody());
+    }
+
+    /**
+     * T5.44
+     */
+    @Test
+    public void testUploadAppleNoData() {
+        JSONObject mockedReturn = new JSONObject();
+        mockedReturn.put(BeapEngineConstants.SUCCESS_STR, false);
+        mockedReturn.put("message", "Persisting raw data failed");
+        mockedReturn.put("status_code", HttpStatus.INTERNAL_SERVER_ERROR.value());
+
+        // mocking request and session details
+        byte[] bytes = { 1, 2, 3 };
+        MockMultipartFile file = new MockMultipartFile("123", bytes);
+
+        MockMultipartHttpServletRequest request = new MockMultipartHttpServletRequest();
+        request.setSession(httpSession);
+        request.addFile(file);
+
+        SessionDetails session = new SessionDetails();
+        session.setUserId(1L);
+
+        when(appleWatchService.UploadAndPersist(request.getFileMap(), 1L)).thenReturn(mockedReturn);
+        when(httpSession.getAttribute("SESSION_DETAILS")).thenReturn(session);
+
+        /**
+         * apple
+         */
+        ResponseEntity<JSONObject> responseEntity = watchController.upload("applewatch", request);
+
+        HttpStatus expectedStatus = HttpStatus.INTERNAL_SERVER_ERROR;
         HttpStatus resultStatus = responseEntity.getStatusCode();
 
         assertEquals(expectedStatus, resultStatus);

@@ -49,6 +49,11 @@ public class UserControllerTest {
     /**
      * T5.67
      *
+     *   Preconditions: UserDto is not null
+     *   Post-conditions: Returns a Response Entity with a JSON Object and
+     *   the int value of CREATED status. The UserDto is saved into
+     *   the database
+     *
      * */
     @Test
     public void testSaveController(){
@@ -76,6 +81,8 @@ public class UserControllerTest {
     /**
      * T5.68
      *
+     * Preconditions: UserDto is null
+     * Post-conditions: Returns a Response Entity with the int value of BAD_REQUEST status
      * */
     @Test
     public void testSaveNull(){
@@ -100,6 +107,10 @@ public class UserControllerTest {
 
     /**
      * T5.69
+     *
+     * Preconditions: User Dto List is not empty
+     * Postconditions: Returns a Response Entity with a list of User Dto Objects
+     * and an OK status
      *
      * */
     @Test
@@ -127,6 +138,11 @@ public class UserControllerTest {
     /**
      * T5.70
      *
+     * Preconditions: UserDto List is empty
+     * Post-conditions: Returns a Response Entity with null
+     * and a NOT_FOUND status
+     *
+     *
      * */
     @Test
     public void testListNull(){
@@ -150,6 +166,9 @@ public class UserControllerTest {
     /**
      * T5.71
      *
+     * Preconditions: UserDto is not null
+     * Post-conditions: Returns a Response Entity with a CREATED status and the updated UserDto.
+     * The UserDto information is updated in the database
      * */
     @Test
     public void testUpdate(){
@@ -170,6 +189,9 @@ public class UserControllerTest {
     /**
      * T5.72
      *
+     * Preconditions: UserDto is null
+     * Post-conditions: Returns a Response Entity with a BAD_REQUEST status
+     *
      * */
     @Test
     public void testUpdateNull(){
@@ -185,7 +207,9 @@ public class UserControllerTest {
 
     /**
      * T5.73
-     *
+     * Preconditions: UsertDto is not null
+     * Post-conditions: Returns a Response Entity with an OK status and the desired
+     * UserDto specified by the id
      * */
     @Test
     public void testGet(){
@@ -207,6 +231,9 @@ public class UserControllerTest {
 
     /**
      * T5.74
+     *
+     * Precondition: UserDto is null
+     * Post-condition: Returns a Response Entity with a NOT_FOUND status
      *
      * */
     @Test
@@ -255,6 +282,8 @@ public class UserControllerTest {
     /**
      * T5.76
      *
+     * Preconditions: UserDto is null
+     * Post-condition: Returns a Response Entity with a NOT_FOUND status
      * */
     @Test
     public void testDeleteNull(){

@@ -1,5 +1,6 @@
 package com.beaplab.BeaplabEngine.controller;
 
+import com.beaplab.BeaplabEngine.authentication.SessionDetails;
 import com.beaplab.BeaplabEngine.constants.BeapEngineConstants;
 import com.beaplab.BeaplabEngine.metadata.UserDto;
 import com.beaplab.BeaplabEngine.service.UserService;
@@ -20,8 +21,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
 import springfox.documentation.annotations.ApiIgnore;
+import springfox.documentation.spring.web.json.Json;
+
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 @Controller
 @ApiIgnore
@@ -137,7 +144,7 @@ public class UserController {
      * @param id
      * @return ResponseEntity<UserDto>
      */
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') ")
     @RequestMapping(value = "/rest/beapengine/user/{id}", method = RequestMethod.DELETE, consumes = MediaType.APPLICATION_JSON_VALUE, produces = "application/json")
     @ApiOperation(value = "Delete User by ID", notes = "Deleting an User with ID = id", response = UserDto.class)
     public ResponseEntity<UserDto> delete(@PathVariable("id") String id) {
@@ -152,6 +159,57 @@ public class UserController {
         userService.delete(id);
 
         return new ResponseEntity<UserDto>(HttpStatus.NO_CONTENT);
+    }
+
+
+    /**
+     * handles a user's request to DELETE their account including all of their information
+     * @param request
+     * @return ResponseEntity<UserDto>
+     */
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+    @RequestMapping(value = "/rest/beapengine/user/deleteProfile", method = RequestMethod.DELETE,  produces = "application/json")
+    @ApiOperation(value = "Delete User profile by ID", notes = "Deleting current User's account and data", response = JSONObject.class)
+    public ResponseEntity<JSONObject> deleteProfile( HttpServletRequest request) {
+
+        // log for debugging
+        logger.info("in UserController/user/deleteProfile method");
+
+        // confirm user session is valid 
+        HttpSession session = request.getSession(false);
+        if(session == null || !request.isRequestedSessionIdValid()) { // invalid session
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put(BeapEngineConstants.SUCCESS_STR, false);
+            jsonObject.put("message", "Invalid session");
+            jsonObject.put("status_code", HttpStatus.NON_AUTHORITATIVE_INFORMATION.value());
+
+            return new ResponseEntity<JSONObject>(HttpStatus.NOT_FOUND);
+        }
+
+        // get current user's info from session. This is more secure as id is abstracted.
+        SessionDetails sessionDetails = (SessionDetails) session.getAttribute("SESSION_DETAILS");
+        Long id = sessionDetails.getUserId();
+        String idAsString = id.toString();
+        UserDto userDto = userService.get(idAsString);
+
+        // if user is not found
+        if (userDto == null)
+        {
+            return new ResponseEntity<JSONObject>(HttpStatus.NOT_FOUND);
+        }
+        //if found
+        userService.delete(idAsString);
+        
+
+        // sessionDetails.getUserId();
+        // UserDto userDto = userService.get(id);
+
+        // if (userDto == null) {
+        //     return new ResponseEntity<UserDto>(HttpStatus.NOT_FOUND);
+        // }
+        // userService.delete(id);
+
+        return new ResponseEntity<JSONObject>(HttpStatus.NO_CONTENT);
     }
 
 

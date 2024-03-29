@@ -17,6 +17,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.mock.web.MockMultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
@@ -158,7 +159,38 @@ public class WatchControllerTest {
      */
     @Test
     public void testPredictWatch() {
+        JSONObject mockedReturn = new JSONObject();
+        mockedReturn.put(BeapEngineConstants.SUCCESS_STR, true);
+        mockedReturn.put("predicted_id", 123);
+        mockedReturn.put("status_code", HttpStatus.OK.value());
 
+        SessionDetails session = new SessionDetails();
+        session.setUserId(1L);
+
+        when(appleWatchService.predictData(123L, "svm")).thenReturn(mockedReturn);
+        when(fitbitService.predictData(123L, "svm")).thenReturn(mockedReturn);
+
+        when(httpSession.getAttribute("SESSION_DETAILS")).thenReturn(session);
+
+        /**
+         * apple
+         */
+        ResponseEntity<JSONObject> responseEntity = watchController.predictWatch("123", "svm", "applewatch");
+
+        HttpStatus expectedStatus = HttpStatus.OK;
+        HttpStatus resultStatus = responseEntity.getStatusCode();
+
+        assertEquals(expectedStatus, resultStatus);
+        assertEquals(mockedReturn, responseEntity.getBody());
+
+        /**
+         * fitbit
+         */
+        responseEntity = watchController.predictWatch("123", "svm", "fitbit");
+        resultStatus = responseEntity.getStatusCode();
+
+        assertEquals(expectedStatus, resultStatus);
+        assertEquals(mockedReturn, responseEntity.getBody());
     }
 
     /**
@@ -167,13 +199,41 @@ public class WatchControllerTest {
     @Test
     public void testDownloadFile() {
 
+        byte[] bytes = { 1, 2, 3 };
+
+        JSONObject mockedReturn = new JSONObject();
+        mockedReturn.put(BeapEngineConstants.SUCCESS_STR, true);
+        mockedReturn.put("file", bytes);
+        mockedReturn.put("status_code", HttpStatus.OK.value());
+
+        when(appleWatchService.download("1", "process")).thenReturn(bytes);
+
+        // mocking request and session details
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setSession(httpSession);
+
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        SessionDetails session = new SessionDetails();
+        session.setUserId(1L);
+
+        when(httpSession.getAttribute("SESSION_DETAILS")).thenReturn(session);
+
+        ResponseEntity<JSONObject> responseEntity = watchController.downloadFile(request, response, "1", "process",
+                "applewatch");
+
+        HttpStatus expectedStatus = HttpStatus.OK;
+        HttpStatus resultStatus = responseEntity.getStatusCode();
+
+        assertEquals(expectedStatus, resultStatus);
+        assertEquals(mockedReturn, responseEntity.getBody());
     }
 
     /**
      * 
      */
     @Test
-    public void testListAppleProcessed() {
+    public void testListProcessed() {
         ArrayList<ProcessedDataDto> mockedData = new ArrayList<>();
         mockedData.add(mockProcessedDataDto());
         mockedData.add(mockProcessedDataDto());

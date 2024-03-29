@@ -151,6 +151,9 @@ function LoginPage() {
                             Back To Homepage
                         </button>
                     </div>
+                    <a href="/privacy-policy" target="_blank">
+                        Privacy Policy
+                    </a>
                 </div>
                 <div className={styles["right-section"]}>
                     <h1>

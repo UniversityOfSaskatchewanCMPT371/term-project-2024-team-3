@@ -269,7 +269,7 @@ public class WatchControllerTest {
      * 
      */
     @Test
-    public void testProcessFiles() {
+    public void testProcessFilesApple() {
         JSONObject mockedReturn = new JSONObject();
         mockedReturn.put(BeapEngineConstants.SUCCESS_STR, true);
         mockedReturn.put("processed_id", "processedDataId");
@@ -279,7 +279,6 @@ public class WatchControllerTest {
         session.setUserId(1L);
 
         when(appleWatchService.processData(123L)).thenReturn(mockedReturn);
-        when(fitbitService.processData(123L)).thenReturn(mockedReturn);
 
         when(httpSession.getAttribute("SESSION_DETAILS")).thenReturn(session);
 
@@ -293,12 +292,59 @@ public class WatchControllerTest {
 
         assertEquals(expectedStatus, resultStatus);
         assertEquals(mockedReturn, responseEntity.getBody());
+    }
+
+    /**
+    * 
+    */
+    @Test
+    public void testProcessFilesFitbit() {
+        JSONObject mockedReturn = new JSONObject();
+        mockedReturn.put(BeapEngineConstants.SUCCESS_STR, true);
+        mockedReturn.put("processed_id", "processedDataId");
+        mockedReturn.put("status_code", HttpStatus.OK.value());
+
+        SessionDetails session = new SessionDetails();
+        session.setUserId(1L);
+
+        when(fitbitService.processData(123L)).thenReturn(mockedReturn);
+
+        when(httpSession.getAttribute("SESSION_DETAILS")).thenReturn(session);
 
         /**
          * fitbit
          */
-        responseEntity = watchController.processFiles("123", "fitbit");
-        resultStatus = responseEntity.getStatusCode();
+        ResponseEntity<JSONObject> responseEntity = watchController.processFiles("123", "fitbit");
+
+        HttpStatus expectedStatus = HttpStatus.OK;
+        HttpStatus resultStatus = responseEntity.getStatusCode();
+
+        assertEquals(expectedStatus, resultStatus);
+        assertEquals(mockedReturn, responseEntity.getBody());
+    }
+
+    /**
+    * 
+    */
+    @Test
+    public void testProcessFilesInvalidWatch() {
+        JSONObject mockedReturn = new JSONObject();
+        mockedReturn.put(BeapEngineConstants.SUCCESS_STR, false);
+        mockedReturn.put("message", "Invalid watch type in url");
+        mockedReturn.put("status_code", 400);
+
+        SessionDetails session = new SessionDetails();
+        session.setUserId(1L);
+
+        when(httpSession.getAttribute("SESSION_DETAILS")).thenReturn(session);
+
+        /**
+         * invalid
+         */
+        ResponseEntity<JSONObject> responseEntity = watchController.processFiles("123", "jibberish");
+
+        HttpStatus expectedStatus = HttpStatus.valueOf(400);
+        HttpStatus resultStatus = responseEntity.getStatusCode();
 
         assertEquals(expectedStatus, resultStatus);
         assertEquals(mockedReturn, responseEntity.getBody());
@@ -308,7 +354,7 @@ public class WatchControllerTest {
      * 
      */
     @Test
-    public void testPredictWatch() {
+    public void testPredictWatchApple() {
         JSONObject mockedReturn = new JSONObject();
         mockedReturn.put(BeapEngineConstants.SUCCESS_STR, true);
         mockedReturn.put("predicted_id", 123);
@@ -318,7 +364,6 @@ public class WatchControllerTest {
         session.setUserId(1L);
 
         when(appleWatchService.predictData(123L, "svm")).thenReturn(mockedReturn);
-        when(fitbitService.predictData(123L, "svm")).thenReturn(mockedReturn);
 
         when(httpSession.getAttribute("SESSION_DETAILS")).thenReturn(session);
 
@@ -332,12 +377,59 @@ public class WatchControllerTest {
 
         assertEquals(expectedStatus, resultStatus);
         assertEquals(mockedReturn, responseEntity.getBody());
+    }
+
+    /**
+    * 
+    */
+    @Test
+    public void testPredictWatchFitbit() {
+        JSONObject mockedReturn = new JSONObject();
+        mockedReturn.put(BeapEngineConstants.SUCCESS_STR, true);
+        mockedReturn.put("predicted_id", 123);
+        mockedReturn.put("status_code", HttpStatus.OK.value());
+
+        SessionDetails session = new SessionDetails();
+        session.setUserId(1L);
+
+        when(fitbitService.predictData(123L, "svm")).thenReturn(mockedReturn);
+
+        when(httpSession.getAttribute("SESSION_DETAILS")).thenReturn(session);
 
         /**
          * fitbit
          */
-        responseEntity = watchController.predictWatch("123", "svm", "fitbit");
-        resultStatus = responseEntity.getStatusCode();
+        ResponseEntity<JSONObject> responseEntity = watchController.predictWatch("123", "svm", "fitbit");
+
+        HttpStatus expectedStatus = HttpStatus.OK;
+        HttpStatus resultStatus = responseEntity.getStatusCode();
+
+        assertEquals(expectedStatus, resultStatus);
+        assertEquals(mockedReturn, responseEntity.getBody());
+    }
+
+    /**
+    * 
+    */
+    @Test
+    public void testPredictWatchInvalidWatch() {
+        JSONObject mockedReturn = new JSONObject();
+        mockedReturn.put(BeapEngineConstants.SUCCESS_STR, false);
+        mockedReturn.put("message", "Invalid watch type in url");
+        mockedReturn.put("status_code", 400);
+
+        SessionDetails session = new SessionDetails();
+        session.setUserId(1L);
+
+        when(httpSession.getAttribute("SESSION_DETAILS")).thenReturn(session);
+
+        /**
+         * invalid
+         */
+        ResponseEntity<JSONObject> responseEntity = watchController.predictWatch("123", "svm", "jibberish");
+
+        HttpStatus expectedStatus = HttpStatus.valueOf(400);
+        HttpStatus resultStatus = responseEntity.getStatusCode();
 
         assertEquals(expectedStatus, resultStatus);
         assertEquals(mockedReturn, responseEntity.getBody());

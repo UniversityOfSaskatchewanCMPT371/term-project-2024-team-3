@@ -55,24 +55,81 @@ public class WatchControllerTest {
 
     /**
      * T5.43
+     * 
      */
     @Test
-    public void testGetUploadView() {
+    public void testGetUploadViewFitbit() {
         ModelAndView expected = new ModelAndView("fitbitFileUpload");
 
         ModelAndView result = watchController.getUploadView("fitbit");
-        assertEquals(expected.getViewName(), result.getViewName());
 
-        expected = new ModelAndView("appleWatchFileUpload");
-        result = watchController.getUploadView("applewatch");
         assertEquals(expected.getViewName(), result.getViewName());
+    }
+
+    /**
+     * T5.43
+     * 
+     */
+    @Test
+    public void testGetUploadViewAppleWatch() {
+        ModelAndView expected = new ModelAndView("appleWatchFileUpload");
+        ModelAndView result = watchController.getUploadView("applewatch");
+
+        assertEquals(expected.getViewName(), result.getViewName());
+    }
+
+    /**
+     * T5.43
+     * 
+     */
+    @Test
+    public void testGetUploadViewInvalidWatch() {
+        ModelAndView result = watchController.getUploadView("jibberish");
+
+        assertNull(null, result);
     }
 
     /**
      * T5.44
      */
     @Test
-    public void testUpload() {
+    public void testUploadFitbit() {
+        JSONObject mockedReturn = new JSONObject();
+        mockedReturn.put(BeapEngineConstants.SUCCESS_STR, true);
+        mockedReturn.put("raw_data_id", 123);
+        mockedReturn.put("status_code", HttpStatus.OK.value());
+
+        // mocking request and session details
+        byte[] bytes = { 1, 2, 3 };
+        MockMultipartFile file = new MockMultipartFile("123", bytes);
+
+        MockMultipartHttpServletRequest request = new MockMultipartHttpServletRequest();
+        request.setSession(httpSession);
+        request.addFile(file);
+
+        SessionDetails session = new SessionDetails();
+        session.setUserId(1L);
+
+        when(fitbitService.UploadAndPersist(request.getFileMap(), 1L)).thenReturn(mockedReturn);
+        when(httpSession.getAttribute("SESSION_DETAILS")).thenReturn(session);
+
+        /**
+         * fitbit
+         */
+        ResponseEntity<JSONObject> responseEntity = watchController.upload("fitbit", request);
+
+        HttpStatus expectedStatus = HttpStatus.OK;
+        HttpStatus resultStatus = responseEntity.getStatusCode();
+
+        assertEquals(expectedStatus, resultStatus);
+        assertEquals(mockedReturn, responseEntity.getBody());
+    }
+
+    /**
+     * T5.44
+     */
+    @Test
+    public void testUploadApple() {
         JSONObject mockedReturn = new JSONObject();
         mockedReturn.put(BeapEngineConstants.SUCCESS_STR, true);
         mockedReturn.put("raw_data_id", 123);
@@ -90,8 +147,6 @@ public class WatchControllerTest {
         session.setUserId(1L);
 
         when(appleWatchService.UploadAndPersist(request.getFileMap(), 1L)).thenReturn(mockedReturn);
-        when(fitbitService.UploadAndPersist(request.getFileMap(), 1L)).thenReturn(mockedReturn);
-
         when(httpSession.getAttribute("SESSION_DETAILS")).thenReturn(session);
 
         /**
@@ -104,12 +159,35 @@ public class WatchControllerTest {
 
         assertEquals(expectedStatus, resultStatus);
         assertEquals(mockedReturn, responseEntity.getBody());
+    }
 
-        /**
-         * fitbit
-         */
-        responseEntity = watchController.upload("fitbit", request);
-        resultStatus = responseEntity.getStatusCode();
+    /**
+     * T5.44
+     */
+    @Test
+    public void testUploadInvalidWatch() {
+        JSONObject mockedReturn = new JSONObject();
+        mockedReturn.put(BeapEngineConstants.SUCCESS_STR, false);
+        mockedReturn.put("message", "Invalid watch type in url");
+        mockedReturn.put("status_code", 400);
+
+        // mocking request and session details
+        byte[] bytes = { 1, 2, 3 };
+        MockMultipartFile file = new MockMultipartFile("123", bytes);
+
+        MockMultipartHttpServletRequest request = new MockMultipartHttpServletRequest();
+        request.setSession(httpSession);
+        request.addFile(file);
+
+        SessionDetails session = new SessionDetails();
+        session.setUserId(1L);
+
+        when(httpSession.getAttribute("SESSION_DETAILS")).thenReturn(session);
+
+        ResponseEntity<JSONObject> responseEntity = watchController.upload("jibberish", request);
+
+        HttpStatus expectedStatus = HttpStatus.valueOf(400);
+        HttpStatus resultStatus = responseEntity.getStatusCode();
 
         assertEquals(expectedStatus, resultStatus);
         assertEquals(mockedReturn, responseEntity.getBody());

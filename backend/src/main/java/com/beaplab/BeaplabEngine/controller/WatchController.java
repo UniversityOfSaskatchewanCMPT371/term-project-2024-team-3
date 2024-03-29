@@ -117,13 +117,6 @@ public class WatchController {
             case "fitbit":
                 result = fitbitService.UploadAndPersist(request.getFileMap(), sessionDetails.getUserId());
                 break;
-            default:
-                rollbar.error("Incorrect watch type selected: " + watchType);
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put(BeapEngineConstants.SUCCESS_STR, false);
-                jsonObject.put("message", "Invalid watch type in url " + watchType);
-                jsonObject.put("status_code", 400);
-                return new ResponseEntity<>(jsonObject, (HttpStatus.valueOf((int) jsonObject.get("status_code"))));
         }
 
         return new ResponseEntity<>(result, (HttpStatus.valueOf((int) result.get("status_code"))));
@@ -160,13 +153,6 @@ public class WatchController {
             case "fitbit":
                 result = fitbitService.processData(Long.parseLong(rawDataId));
                 break;
-            default:
-                rollbar.error("Incorrect watch type selected: " + watchType);
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put(BeapEngineConstants.SUCCESS_STR, false);
-                jsonObject.put("message", "Invalid watch type in url " + watchType);
-                jsonObject.put("status_code", 400);
-                return new ResponseEntity<>(jsonObject, (HttpStatus.valueOf((int) jsonObject.get("status_code"))));
         }
 
         return new ResponseEntity<>(result, (HttpStatus.valueOf((int) result.get("status_code"))));
@@ -205,13 +191,6 @@ public class WatchController {
             case "fitbit":
                 result = fitbitService.predictData(Long.parseLong(processedDataId), predictionModel);
                 break;
-            default:
-                rollbar.error("Incorrect watch type selected: " + watchType);
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put(BeapEngineConstants.SUCCESS_STR, false);
-                jsonObject.put("message", "Invalid watch type in url " + watchType);
-                jsonObject.put("status_code", 400);
-                return new ResponseEntity<>(jsonObject, (HttpStatus.valueOf((int) jsonObject.get("status_code"))));
         }
 
         return new ResponseEntity<>(result, (HttpStatus.valueOf((int) result.get("status_code"))));
@@ -248,12 +227,6 @@ public class WatchController {
             case "fitbit":
                 downloadedFile = fitbitService.download(id, type);
                 break;
-            default:
-                rollbar.error("Incorrect watch type selected: " + watchType);
-                jsonObject.put(BeapEngineConstants.SUCCESS_STR, false);
-                jsonObject.put("message", "Invalid watch type in url " + watchType);
-                jsonObject.put("status_code", 400);
-                return new ResponseEntity<>(jsonObject, (HttpStatus.valueOf((int) jsonObject.get("status_code"))));
         }
 
         if (downloadedFile != null) {
@@ -314,13 +287,6 @@ public class WatchController {
             case "fitbit":
                 result = fitbitService.list(sessionDetails.getUserId(), type);
                 break;
-            default:
-                rollbar.error("Incorrect watch type selected: " + watchType);
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put(BeapEngineConstants.SUCCESS_STR, false);
-                jsonObject.put("message", "Invalid watch type in url " + watchType);
-                jsonObject.put("status_code", 400);
-                return new ResponseEntity<>(jsonObject, (HttpStatus.valueOf((int) jsonObject.get("status_code"))));
         }
 
         return new ResponseEntity<>(result, (HttpStatus.valueOf((int) result.get("status_code"))));

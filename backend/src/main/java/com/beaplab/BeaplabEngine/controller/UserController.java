@@ -168,7 +168,7 @@ public class UserController {
      * @return ResponseEntity<UserDto>
      */
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
-    @RequestMapping(value = "/rest/beapengine/user/deleteProfile", method = RequestMethod.DELETE,  produces = "application/json")
+    @RequestMapping(value = "/delete-Profile", method = RequestMethod.DELETE)
     @ApiOperation(value = "Delete User profile by ID", notes = "Deleting current User's account and data", response = JSONObject.class)
     public ResponseEntity<JSONObject> deleteProfile( HttpServletRequest request) {
 
@@ -205,7 +205,7 @@ public class UserController {
         // UserDto userDto = userService.get(id);
 
         // if (userDto == null) {
-        //     return new ResponseEntity<UserDto>(HttpStatus.NOT_FOUND);
+        //     return new ResponseEntity<UserDto>(HttpStatus.NOT_FOUND);    
         // }
         // userService.delete(id);
 

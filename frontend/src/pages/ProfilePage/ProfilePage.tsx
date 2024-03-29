@@ -151,7 +151,7 @@ function ProfilePage(): React.ReactElement<typeof Container> {
                                 New Password
                             </label>
                             <input
-                                id="password"
+                                id="new-password"
                                 type="password"
                                 placeholder=""
                                 value={password}
@@ -164,7 +164,7 @@ function ProfilePage(): React.ReactElement<typeof Container> {
                                 Confirm Password
                             </label>
                             <input
-                                id="username"
+                                id="confirm-password"
                                 type="password"
                                 placeholder=""
                                 value={confirmPassword}

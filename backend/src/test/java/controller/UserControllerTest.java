@@ -148,4 +148,90 @@ public class UserControllerTest {
 
     }
 
+    @Test
+    public void testUpdateNull(){
+        UserDto userDto = null;
+
+        ResponseEntity<UserDto> responseEntity = userController.update(userDto);
+
+        HttpStatus expected = HttpStatus.BAD_REQUEST;
+        HttpStatus result = responseEntity.getStatusCode();
+        assertEquals(expected, result);
+
+    }
+
+    @Test
+    public void testGet(){
+
+        UserDto userDto = mockUserDto();
+
+        when(userService.get(Mockito.<String>anyObject())).thenReturn(userDto);
+
+        ResponseEntity<UserDto> responseEntity = userController.get("1");
+
+        HttpStatus expected = HttpStatus.OK;
+
+        HttpStatus result= responseEntity.getStatusCode();
+
+        assertEquals(expected,result);
+        assertEquals(userDto, responseEntity.getBody());
+
+    }
+
+    @Test
+    public void testGetNull(){
+        UserDto userDto = null;
+
+        when(userService.get(Mockito.<String>anyObject())).thenReturn(userDto);
+
+
+        ResponseEntity<UserDto> responseEntity = userController.get("1");
+
+        HttpStatus expected = HttpStatus.NOT_FOUND;
+
+        HttpStatus result= responseEntity.getStatusCode();
+
+        assertEquals(expected,result);
+
+        assertNull(responseEntity.getBody());
+
+    }
+
+    @Test
+    public void testDelete(){
+        UserDto userDto = mockUserDto();
+
+        when(userService.get(Mockito.<String>anyObject())).thenReturn(userDto);
+
+        ResponseEntity<UserDto> responseEntity = userController.delete("1");
+
+        verify(userService).delete(eq("1"));
+
+
+        HttpStatus expected = HttpStatus.NO_CONTENT;
+
+        HttpStatus result= responseEntity.getStatusCode();
+
+        assertEquals(expected,result);
+
+        assertNull(responseEntity.getBody());
+    }
+
+    @Test
+    public void testDeleteNull(){
+        UserDto userDto = null;
+
+        when(userService.get(Mockito.<String>anyObject())).thenReturn(userDto);
+
+        ResponseEntity<UserDto> responseEntity = userController.delete("1");
+
+
+        HttpStatus expected = HttpStatus.NOT_FOUND;
+
+        HttpStatus result= responseEntity.getStatusCode();
+
+        assertEquals(expected,result);
+
+        assertNull(responseEntity.getBody());
+    }
 }

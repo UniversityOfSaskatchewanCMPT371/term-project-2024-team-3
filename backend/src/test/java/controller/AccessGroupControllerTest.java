@@ -164,6 +164,8 @@ public class AccessGroupControllerTest {
         HttpStatus result = responseEntity.getStatusCode();
         assertEquals(expected,result );
 
+        assertEquals(accessGroupDto,responseEntity.getBody());
+
     }
 
     /**

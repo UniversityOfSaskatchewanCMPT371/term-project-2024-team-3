@@ -44,6 +44,9 @@ public class WatchController {
     @Autowired
     private FitbitService fitbitService;
 
+    private String appleWatch = "applewatch";
+    private String fitbit = "fitbit";
+
     // getUploadView
     @RequestMapping(value = "/{watchType}/uploadview", method = RequestMethod.GET)
     @ApiOperation(value = "WatchType view", notes = "Returns the watchType view page", response = ModelAndView.class)
@@ -53,16 +56,12 @@ public class WatchController {
                 watchType);
         // getting the appropriate viewName
         String viewName = "";
-        switch (watchType) {
-            case "applewatch":
-                viewName = "appleWatch";
-                break;
-            case "fitbit":
-                viewName = "fitbit";
-                break;
-            default:
-                rollbar.error("Incorrect watch type selected: " + watchType);
-                return null;
+        if (watchType.equals(appleWatch)) {
+            viewName = "appleWatch";
+        } else if (watchType.equals(fitbit)) {
+            viewName = "fitbit";
+        } else {
+            return null;
         }
 
         ModelAndView model = new ModelAndView(viewName + "FileUpload");
@@ -98,7 +97,7 @@ public class WatchController {
             return new ResponseEntity<>(jsonObject, (HttpStatus.valueOf((int) jsonObject.get("status_code"))));
         }
 
-        if (!watchType.equals("applewatch") && !watchType.equals("fitbit")) {
+        if (!watchType.equals(appleWatch) && !watchType.equals(fitbit)) {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put(BeapEngineConstants.SUCCESS_STR, false);
             jsonObject.put("message", "Invalid watch type in url");
@@ -109,14 +108,11 @@ public class WatchController {
         SessionDetails sessionDetails = (SessionDetails) session.getAttribute("SESSION_DETAILS");
 
         JSONObject result = new JSONObject();
-        switch (watchType) {
-            case "applewatch":
-                result = appleWatchService.UploadAndPersist(request.getFileMap(), sessionDetails.getUserId());
-                break;
 
-            case "fitbit":
-                result = fitbitService.UploadAndPersist(request.getFileMap(), sessionDetails.getUserId());
-                break;
+        if (watchType.equals(appleWatch)) {
+            result = appleWatchService.UploadAndPersist(request.getFileMap(), sessionDetails.getUserId());
+        } else if (watchType.equals(fitbit)) {
+            result = fitbitService.UploadAndPersist(request.getFileMap(), sessionDetails.getUserId());
         }
 
         return new ResponseEntity<>(result, (HttpStatus.valueOf((int) result.get("status_code"))));
@@ -135,7 +131,7 @@ public class WatchController {
 
         rollbar.info("in WatchController/processFiles");
 
-        if (!watchType.equals("applewatch") && !watchType.equals("fitbit")) {
+        if (!watchType.equals(appleWatch) && !watchType.equals(fitbit)) {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put(BeapEngineConstants.SUCCESS_STR, false);
             jsonObject.put("message", "Invalid watch type in url");
@@ -145,14 +141,10 @@ public class WatchController {
 
         JSONObject result = new JSONObject();
 
-        switch (watchType) {
-            case "applewatch":
-                result = appleWatchService.processData(Long.parseLong(rawDataId));
-                break;
-
-            case "fitbit":
-                result = fitbitService.processData(Long.parseLong(rawDataId));
-                break;
+        if (watchType.equals(appleWatch)) {
+            result = appleWatchService.processData(Long.parseLong(rawDataId));
+        } else if (watchType.equals(fitbit)) {
+            result = fitbitService.processData(Long.parseLong(rawDataId));
         }
 
         return new ResponseEntity<>(result, (HttpStatus.valueOf((int) result.get("status_code"))));
@@ -175,7 +167,7 @@ public class WatchController {
 
         JSONObject result = new JSONObject();
 
-        if (!watchType.equals("applewatch") && !watchType.equals("fitbit")) {
+        if (!watchType.equals(appleWatch) && !watchType.equals(fitbit)) {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put(BeapEngineConstants.SUCCESS_STR, false);
             jsonObject.put("message", "Invalid watch type in url");
@@ -183,14 +175,10 @@ public class WatchController {
             return new ResponseEntity<>(jsonObject, (HttpStatus.valueOf((int) jsonObject.get("status_code"))));
         }
 
-        switch (watchType) {
-            case "applewatch":
-                result = appleWatchService.predictData(Long.parseLong(processedDataId), predictionModel);
-                break;
-
-            case "fitbit":
-                result = fitbitService.predictData(Long.parseLong(processedDataId), predictionModel);
-                break;
+        if (watchType.equals(appleWatch)) {
+            result = appleWatchService.predictData(Long.parseLong(processedDataId), predictionModel);
+        } else if (watchType.equals(fitbit)) {
+            result = fitbitService.predictData(Long.parseLong(processedDataId), predictionModel);
         }
 
         return new ResponseEntity<>(result, (HttpStatus.valueOf((int) result.get("status_code"))));
@@ -212,21 +200,17 @@ public class WatchController {
         JSONObject jsonObject = new JSONObject();
         byte[] downloadedFile = null;
 
-        if (!watchType.equals("applewatch") && !watchType.equals("fitbit")) {
+        if (!watchType.equals(appleWatch) && !watchType.equals(fitbit)) {
             jsonObject.put(BeapEngineConstants.SUCCESS_STR, false);
             jsonObject.put("message", "Invalid watch type in url");
             jsonObject.put("status_code", 400);
             return new ResponseEntity<>(jsonObject, (HttpStatus.valueOf((int) jsonObject.get("status_code"))));
         }
 
-        switch (watchType) {
-            case "applewatch":
-                downloadedFile = appleWatchService.download(id, type);
-                break;
-
-            case "fitbit":
-                downloadedFile = fitbitService.download(id, type);
-                break;
+        if (watchType.equals(appleWatch)) {
+            downloadedFile = appleWatchService.download(id, type);
+        } else if (watchType.equals(fitbit)) {
+            downloadedFile = fitbitService.download(id, type);
         }
 
         if (downloadedFile != null) {
@@ -268,7 +252,7 @@ public class WatchController {
             return new ResponseEntity<>(jsonObject, (HttpStatus.valueOf((int) jsonObject.get("status_code"))));
         }
 
-        if (!watchType.equals("applewatch") && !watchType.equals("fitbit")) {
+        if (!watchType.equals(appleWatch) && !watchType.equals(fitbit)) {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put(BeapEngineConstants.SUCCESS_STR, false);
             jsonObject.put("message", "Invalid watch type in url");
@@ -280,13 +264,11 @@ public class WatchController {
         SessionDetails sessionDetails = (SessionDetails) session.getAttribute("SESSION_DETAILS");
 
         JSONObject result = new JSONObject();
-        switch (watchType) {
-            case "applewatch":
-                result = appleWatchService.list(sessionDetails.getUserId(), type);
-                break;
-            case "fitbit":
-                result = fitbitService.list(sessionDetails.getUserId(), type);
-                break;
+
+        if (watchType.equals(appleWatch)) {
+            result = appleWatchService.list(sessionDetails.getUserId(), type);
+        } else if (watchType.equals(fitbit)) {
+            result = fitbitService.list(sessionDetails.getUserId(), type);
         }
 
         return new ResponseEntity<>(result, (HttpStatus.valueOf((int) result.get("status_code"))));

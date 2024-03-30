@@ -58,6 +58,7 @@ public class RedisConfig extends AbstractHttpSessionApplicationInitializer {
         jedisConFactory.setHostName(environment.getProperty("redis.host"));
         jedisConFactory.setPort(Integer.parseInt(environment.getProperty("redis.port")));
         jedisConFactory.setTimeout(Integer.parseInt(environment.getProperty("redis.timeout")));
+        jedisConFactory.setPassword(environment.getProperty("redis.password"));
 
         return jedisConFactory;
     }

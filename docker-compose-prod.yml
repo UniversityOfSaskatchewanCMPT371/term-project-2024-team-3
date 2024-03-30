@@ -6,7 +6,9 @@ services:
     restart: always
     ports:
       - 6379:6379
-    command: [ "redis-server", "--protected-mode", "no" ]
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    command: [ "redis-server", "--protected-mode", "no", "--requirepass", "${REDIS_PASSWORD}" ]
     volumes: 
       - cache:/data
     networks:
@@ -18,6 +20,7 @@ services:
         - POSTGRESQL_URL=${POSTGRESQL_URL}
         - PG_CRYPTO_KEY=${PG_CRYPTO_KEY}
         - ROLLBAR_ACCESS_TOKEN=${ROLLBAR_ACCESS_TOKEN}
+        - REDIS_PASSWORD=${REDIS_PASSWORD}
     restart: always
     build:
       context: .

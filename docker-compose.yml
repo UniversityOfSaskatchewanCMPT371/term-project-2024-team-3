@@ -6,7 +6,9 @@ services:
     restart: always
     ports:
       - 6379:6379
-    command: ["redis-server", "--protected-mode", "no"]
+    environment:
+      - REDIS_PASSWORD=123
+    command: [ "redis-server", "--protected-mode", "no", "--requirepass", "123" ]
     volumes:
       - cache:/data
     networks:
@@ -42,6 +44,7 @@ services:
       - POSTGRESQL_URL=jdbc:postgresql://postgres-db:5432/beapengine?user=root&password=root
       - PG_CRYPTO_KEY=123
       - ROLLBAR_ACCESS_TOKEN=${ROLLBAR_ACCESS_TOKEN}
+      - REDIS_PASSWORD=123
     build:
       context: ./backend
     volumes:

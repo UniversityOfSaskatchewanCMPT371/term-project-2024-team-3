@@ -73,7 +73,7 @@ export const getUser = async (): Promise<UserData> => {
 
 export const deleteAccount = async (): Promise<void> => {
     try {
-        await api.delete("/user");
+        await api.delete("/delete-Profile");
     } catch (error) {
         throw new Error(error.response?.data?.message ?? "Delete Account Failed");
     }
@@ -81,7 +81,7 @@ export const deleteAccount = async (): Promise<void> => {
 
 export const deleteData = async (): Promise<void> => {
     try {
-        await api.delete("/data");
+        await api.delete("/delete-User-Data");
     } catch (error) {
         throw new Error(error.response?.data?.message ?? "Delete Data Failed");
     }
@@ -92,7 +92,7 @@ export const changePassword = async (password: string): Promise<void> => {
         password,
     };
     try {
-        await api.post("/change-password", requestBody);
+        await api.post("/password", requestBody);
     } catch (error) {
         throw new Error(error.response?.data?.message ?? "Change Password Failed");
     }

@@ -149,14 +149,14 @@ describe("API Tests", () => {
         });
 
         await deleteAccount();
-        expect(api.delete).toHaveBeenCalledWith("/user");
+        expect(api.delete).toHaveBeenCalledWith("/delete-Profile");
     });
 
     it("T5.?? should throw an error if deleting account fails", async () => {
         jest.spyOn(api, "delete").mockRejectedValueOnce(new AxiosError("Delete Account Failed"));
 
         await expect(deleteAccount()).rejects.toThrow("Delete Account Failed");
-        expect(api.delete).toHaveBeenCalledWith("/user");
+        expect(api.delete).toHaveBeenCalledWith("/delete-Profile");
     });
 
     it("T5.?? should delete data successfully", async () => {
@@ -165,14 +165,14 @@ describe("API Tests", () => {
         });
 
         await deleteData();
-        expect(api.delete).toHaveBeenCalledWith("/data");
+        expect(api.delete).toHaveBeenCalledWith("/delete-User-Data");
     });
 
     it("T5.?? should throw an error if deleting data fails", async () => {
         jest.spyOn(api, "delete").mockRejectedValueOnce(new AxiosError("Delete Data Failed"));
 
         await expect(deleteData()).rejects.toThrow("Delete Data Failed");
-        expect(api.delete).toHaveBeenCalledWith("/data");
+        expect(api.delete).toHaveBeenCalledWith("/delete-User-Data");
     });
 
     it("T5.?? should change password successfully", async () => {
@@ -182,7 +182,7 @@ describe("API Tests", () => {
         });
 
         await changePassword(password);
-        expect(api.post).toHaveBeenCalledWith("/change-password", { password });
+        expect(api.post).toHaveBeenCalledWith("/password", { password });
     });
 
     it("T5.?? should throw an error if change password fails", async () => {
@@ -190,6 +190,6 @@ describe("API Tests", () => {
         jest.spyOn(api, "post").mockRejectedValueOnce(new AxiosError("Change Password Failed"));
 
         await expect(changePassword(password)).rejects.toThrow("Change Password Failed");
-        expect(api.post).toHaveBeenCalledWith("/change-password", { password });
+        expect(api.post).toHaveBeenCalledWith("/password", { password });
     });
 });

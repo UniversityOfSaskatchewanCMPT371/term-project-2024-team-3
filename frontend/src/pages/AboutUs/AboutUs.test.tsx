@@ -1,16 +1,38 @@
 import React from "react";
 import { screen } from "@testing-library/react";
-import { BrowserRouter as Router } from "react-router-dom";
 import { renderWithProvider } from "shared/util/tests/render";
 import AboutUs from "./AboutUs";
 
+
+global.IntersectionObserver = class IntersectionObserver {
+    constructor(callback: IntersectionObserverCallback, options?: IntersectionObserverInit) {}
+
+    disconnect() {
+        return null;
+    }
+
+    observe(element: Element) {
+        return null;
+    }
+
+    takeRecords() {
+        return [];
+    }
+
+    unobserve(element: Element) {
+        return null;
+    }
+
+    root = null;
+    rootMargin = '';
+    thresholds = [0];
+};
+
+
+
 describe("AboutUs component", () => {
     beforeEach(() => {
-        renderWithProvider(
-            <Router>
-                <AboutUs />
-            </Router>
-        );
+        renderWithProvider(<AboutUs />);
     });
 
     describe("Logo", () => {

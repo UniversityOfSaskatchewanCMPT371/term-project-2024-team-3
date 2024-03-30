@@ -3,7 +3,6 @@ import { v4 as uuidv4 } from "uuid";
 import { motion } from "framer-motion";
 import { Fade } from "react-awesome-reveal";
 import { FaUserCircle } from "react-icons/fa";
-import { Link } from "react-router-dom";
 import { useRollbar } from "@rollbar/react";
 import styles from "./AboutUs.module.css";
 import beapLogo from "../../assets/beap_lab_hex_small.png";
@@ -109,13 +108,13 @@ function AboutUs(): ReactElement {
     return (
         <div className={styles.container}>
             <div className={styles.brand}>
-                <Link to="/">
+                <a href="/">
                     <img
                         src={beapLogo}
                         style={{ height: "120px", width: "auto", marginTop: "10px" }}
                         alt="Beap Logo"
                     />
-                </Link>
+                </a>
             </div>
             <h1 className={styles.title}>About Us</h1>
             <Section title="Our Mission">

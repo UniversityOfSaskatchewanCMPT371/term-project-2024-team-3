@@ -1,7 +1,6 @@
 import React, { ReactElement } from "react";
 import invariant from "invariant";
 import { useRollbar } from "@rollbar/react";
-import { Link } from "react-router-dom";
 import styles from "./PrivacyPolicy.module.css";
 import beapLogo from "../../assets/beap_lab_hex_small.png";
 
@@ -12,13 +11,13 @@ function PrivacyPolicy(): ReactElement {
     return (
         <div className={styles.container}>
             <div className={styles.brand}>
-                <Link to="/">
+                <a href="/">
                     <img
                         src={beapLogo}
                         style={{ height: "120px", width: "auto", marginTop: "10px" }}
                         alt="Beap Logo"
                     />
-                </Link>
+                </a>
             </div>
             <h1 className={styles.title}>Consent to Take Part in Research</h1>
             <h2 className={styles.subtitle}>BEAPEngine</h2>

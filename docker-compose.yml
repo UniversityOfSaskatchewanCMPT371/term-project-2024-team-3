@@ -4,8 +4,6 @@ services:
   cache:
     image: redis:6.2-alpine
     restart: always
-    ports:
-      - 6379:6379
     environment:
       - REDIS_PASSWORD=123
     command: [ "redis-server", "--protected-mode", "no", "--requirepass", "123" ]

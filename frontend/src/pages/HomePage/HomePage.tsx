@@ -79,9 +79,9 @@ function HomePage(): ReactElement {
                     <h1>How To Contribute Data</h1>
                     <div>
                         <Button
+                            className={style.appleWatchButton}
                             variant="contained"
                             color="primary"
-                            style={{ backgroundColor: "#333333", marginRight: "15px" }}
                             size="large"
                             href={AppleWatchPdf}
                             target="_blank"
@@ -90,9 +90,9 @@ function HomePage(): ReactElement {
                             Apple Watch Extraction Protocol
                         </Button>
                         <Button
+                            className={style.fitbitButton}
                             variant="contained"
                             color="primary"
-                            style={{ backgroundColor: "#333333" }}
                             size="large"
                             href={FitbitPdf}
                             target="_blank"
@@ -107,7 +107,7 @@ function HomePage(): ReactElement {
                             href="http://www.beaplab.com/home/"
                             target="_blank"
                             rel="noopener noreferrer"
-                            style={{ textDecoration: "underline", color: "#1D84EF" }}
+                            className={style.link}
                         >
                             Built Environment and Active Populations (BEAP) Lab
                         </a>
@@ -116,8 +116,8 @@ function HomePage(): ReactElement {
                         provide you with a CSV file of your data and give you detailed information
                         about sedentary behavior, and moderate to vigorous activity based on our
                         machine-learning methods. This project is approved by the Memorial
-                        University Interdisciplinary Committee on Ethics in Human Research (ICEHR #
-                        20210162-HK).
+                        University Interdisciplinary Committee on Ethics in Human Research ({" "}
+                        <strong>ICEHR # 20210162-HK</strong> ).
                     </span>
                 </div>
                 <div className={style.bottom}>

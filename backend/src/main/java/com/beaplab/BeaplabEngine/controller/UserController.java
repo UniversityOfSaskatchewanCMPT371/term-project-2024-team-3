@@ -200,7 +200,7 @@ public class UserController {
         //if found
         userService.deleteUserAccount(id);
 
-        return new ResponseEntity<JSONObject>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<JSONObject>(HttpStatus.OK);
     }
 
 
@@ -243,8 +243,7 @@ public class UserController {
         }
         //if found
         userService.deleteUserData(id);
-
-        return new ResponseEntity<JSONObject>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<JSONObject>(HttpStatus.OK);
     }
 
 

@@ -13,8 +13,10 @@ import com.beaplab.BeaplabEngine.util.Util;
 import com.beaplab.BeaplabEngine.util.objectMapper.PredictedDataMapper;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.hibernate.SQLQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
@@ -66,5 +68,37 @@ public class PredictedDataService {
         List<PredictedDataDto> predictedDataDtos = predictedDataMapper.model2Dto(predictedDataDao.list(userId, type), new ArrayList<PredictedDataDto>());
 
         return predictedDataDtos;
+    }
+
+/***
+ * a method to delete a piece of predicted data from the database using the predicted data DAO
+ * @param id where id is the id of the predicted data entry in the datbase
+ * @return a boolean indicating whether the delete operation succeeded.
+ */
+    public Boolean delete(Long id){
+        logger.info("in PredictedDataService: delete");
+
+        Boolean deleteSuccess = predictedDataDao.delete(id);
+        if(deleteSuccess)
+            return true;
+        return false;
+
+    }
+
+
+    /***
+     * a method to delete a list of predicted data from the database
+     * @param ids where ids is an array of the ids of the predicted data entries to be deleted from
+     * @return a boolean indicating whether the delete operation succeeded.
+     */
+    public Boolean groupDelete(Long[] ids ) {
+        logger.info("In PredictedDataService: groupDelete");
+        boolean totalSuccess= true;
+
+        for (long id : ids) {
+            // Perform deletion operation for each ID
+            totalSuccess= totalSuccess && delete(id);
+        }
+        return totalSuccess;
     }
 }

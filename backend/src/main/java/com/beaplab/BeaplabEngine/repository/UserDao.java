@@ -19,6 +19,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,6 +40,10 @@ public class UserDao implements BaseRepository<User> {
     @Autowired
     private SessionFactory sessionFactory;
 
+    @Autowired
+    RawDataDao rawDataDao;
+    @Autowired
+    ProcessedDataDao processedDataDao;
 
     /**
      * constructors
@@ -51,8 +57,8 @@ public class UserDao implements BaseRepository<User> {
 
 
     /**
-     * retrieving a list of Users
-     * @return List<User>
+     * retrieving a list of all Users in the system
+     * @return a list of user objects corresponding to all users found in the database
      */
     @Override
     @Transactional
@@ -68,8 +74,9 @@ public class UserDao implements BaseRepository<User> {
 
 
     /**
-     * creating an User
-     * @param user
+     * Saving a User object to the database effectively adding it to the system
+     * @param user : the user object to be saved to the database
+     * @return : the id of the saved user
      */
     @Override
     @Transactional
@@ -84,7 +91,7 @@ public class UserDao implements BaseRepository<User> {
 
     /**
      * updating an existing User
-     * @param user
+     * @param user: the user object of the user being updated
      */
     @Override
     @Transactional
@@ -96,9 +103,9 @@ public class UserDao implements BaseRepository<User> {
 
 
     /**
-     * retrieving a specific User by its id
-     * @param uuid
-     * @return
+     * retrieving a specific User object from the database using its id
+     * @param uuid: the id of the user object to be retrieved
+     * @return the retrieved user object ( if found) . If not, null is returned
      */
     @Override
     @Transactional
@@ -122,8 +129,8 @@ public class UserDao implements BaseRepository<User> {
 
 
     /**
-     * deleting a specific User by its id
-     * @param id
+     * deleting a specific User Object from the database by its id
+     * @param id : the id of the user who is to be deleted
      */
     @Override
     @Transactional
@@ -138,10 +145,10 @@ public class UserDao implements BaseRepository<User> {
 
 
     /**
-     * retrieving a user by its username and password
-     * @param username
-     * @param password
-     * @return
+     * retrieving a user Object by its username and password properties
+     * @param username : the username of the user to be found
+     * @param password : the password of the user to be found
+     * @return : the user ( if found), if not then null is returned
      */
     @Transactional
     public User findByUserPass(String username, String password){
@@ -165,8 +172,8 @@ public class UserDao implements BaseRepository<User> {
 
     /**
      * retrieving a specific User by its username
-     * @param username
-     * @return
+     * @param username : the username of the user to be found
+     * @return :  the user ( if found), if not then null is returned
      */
     @Transactional
     public User findByUsername(String username) {
@@ -187,4 +194,155 @@ public class UserDao implements BaseRepository<User> {
         return null;
     }
 
+
+    /***
+     * a method to delete a relational entry in the tbl_user_tbl_role table in the database
+     * @param id where id is the id of the user whose linkage is to be removed
+     * @return a boolean indicating whether the delete operation succeeded.
+     */
+    @Transactional
+    public Boolean deleteRelationToRole(Long id) {
+        logger.info("In UserDao: deleteRelationToRole");
+
+        SQLQuery query = (SQLQuery) sessionFactory.getCurrentSession().createSQLQuery("DELETE FROM tbl_user_tbl_role WHERE tbl_user_id = :user_id")
+                .setParameter("user_id", id);
+
+        int rowsAffected = query.executeUpdate();
+        if (rowsAffected > 0) {
+            logger.info("Deleted relation between user with id: " + id + " and its corresponding role");
+            return true;
+        } else {
+            logger.warn("No linkage to role found for user with id: " + id + " to delete");
+            return false;
+        }
+    }
+
+
+    /***
+     * a method to delete a relational entry in the tbl_user_tbl_access_group table in the database
+     * @param id where id is the id of the user whose linkage is to be removed
+     * @return a boolean indicating whether the delete operation succeeded.
+     */
+    @Transactional
+    public Boolean deleteRelationToAccessGroup(Long id) {
+        logger.info("In UserDao: deleteRelationToAccessGroup");
+
+        SQLQuery query = (SQLQuery) sessionFactory.getCurrentSession().createSQLQuery("DELETE FROM tbl_user_tbl_access_group WHERE tbl_user_id = :user_id")
+                .setParameter("user_id", id);
+
+        int rowsAffected = query.executeUpdate();
+        if (rowsAffected > 0) {
+            logger.info("Deleted relation between user with id: " + id + " and its corresponding access group");
+            return true;
+        } else {
+            logger.warn("No linkage to access group found for user with id: " + id + " to delete");
+            return false;
+        }
+    }
+
+    /***
+     * a method to delete a relational entry in the tbl_login_user table in the database
+     * @param id where id is the id of the user whose linkage is to be removed
+     * @return a boolean indicating whether the delete operation succeeded.
+     */
+    @Transactional
+    public Boolean deleteUserLoginHistory(Long id) {
+        logger.info("In UserDao: deleteUserLoginHistory");
+
+        SQLQuery query = (SQLQuery) sessionFactory.getCurrentSession().createSQLQuery("DELETE FROM tbl_login_user WHERE user_id = :passed_user_id")
+                .setParameter("passed_user_id", id);
+
+        int rowsAffected = query.executeUpdate();
+        if (rowsAffected > 0) {
+            logger.info("Deleted login history for user with id: " + id );
+            return true;
+        } else {
+            logger.warn("No login history found for user with id: " + id + " to delete");
+            return false;
+        }
+    }
+
+    /***
+     * a method to delete the users account including all information related to them or uploaded by them.
+     * @param id where id is the id of the user whose account is to be deleted
+     * @return a boolean indicating whether the delete operation succeeded.
+     */
+    @Transactional
+    public Boolean deleteUserAccount (Long id){
+        logger.info("In UserDao: deleteUserAccount");
+
+        //delete the user's raw, processed, and predicted data.
+        deleteUserData(id);
+
+        // delete related role, accessGroup, and loginHistory information
+        Boolean deleteRelationToRole = deleteRelationToRole(id);
+        Boolean deleteRelationToAccessGroup = deleteRelationToAccessGroup(id);
+        Boolean deleteUserLoginHistory = deleteUserLoginHistory(id);
+
+        // delete user himself
+        SQLQuery query = (SQLQuery) sessionFactory.getCurrentSession().createSQLQuery("DELETE FROM tbl_user WHERE id = :user_id")
+                .setParameter("user_id", id);
+
+        int rowsAffected = query.executeUpdate();
+        if (rowsAffected > 0) {
+            logger.info("Deleted user with id: " + id );
+            return true;
+        } else {
+            logger.warn("No user with id: " + id + " to delete");
+            return false;
+        }
+    }
+
+
+    /***
+     * a method to delete the user's uploaded raw, processed, and predicted data
+     * @param id where id is the id of the user whose data is to be deleted
+     */
+    @Transactional
+    public void deleteUserData (Long id){
+        logger.info("In UserDao: deleteUserData");
+        // find list of raw data ids
+        // use it to find list of processed data ids
+        // delete processed data using ids
+        // delete raw data using ids.
+
+        // first check if there is a linkage to any raw data
+        SQLQuery searchQueryForRawData = (SQLQuery) sessionFactory.getCurrentSession().createSQLQuery("SELECT rawdataids_id FROM tbl_user_tbl_raw_data WHERE tbl_user_id = :user_id")
+                .setParameter("user_id", id);
+        List<Object> listOfRawData = searchQueryForRawData.list();
+        List<Long> longListOfRawData= new ArrayList<Long>();
+
+        // if there is raw data linked, type cast into datatype Long.
+        if (listOfRawData != null && !listOfRawData.isEmpty()) {
+            logger.info("found raw Data linked to user of id: " + id);
+            for (Object rawDataId : listOfRawData) {
+                assert (rawDataId instanceof BigInteger);
+                Long linkedRawDataId = ((BigInteger) rawDataId).longValue(); // typecast
+                longListOfRawData.add(linkedRawDataId);
+            }
+            for (Long rawDataId : longListOfRawData) {
+                SQLQuery searchQueryForProcessedData = (SQLQuery) sessionFactory.getCurrentSession().createSQLQuery("SELECT processed_data_id FROM tbl_raw_data WHERE id = :raw_data_id")
+                        .setParameter("raw_data_id", rawDataId);
+
+                List<Object> listOfProcessedData = searchQueryForProcessedData.list();
+
+                // if there is processed data linked, type cast into datatype Long and delete by id.
+                if (listOfProcessedData != null && !listOfProcessedData.isEmpty()) {
+                    logger.info("found processed Data linked to raw data of id: " + rawDataId);
+                    for (Object processedDataId : listOfProcessedData) {
+                        assert (processedDataId instanceof BigInteger);
+                        Long linkedProcessedDataId = ((BigInteger) processedDataId).longValue(); // typecast
+                        processedDataDao.delete(linkedProcessedDataId);
+                    }
+                } else {
+                    // No data found
+                    logger.info("No processed Data found linked to raw data of id: " + rawDataId);
+                }
+                rawDataDao.delete(rawDataId);
+            }
+        } else {
+            // No data found
+            logger.info("No raw Data found linked to user of id: " + id);
+        }
+    }
 }

@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import springfox.documentation.annotations.ApiIgnore;
-import springfox.documentation.spring.web.json.Json;
+
 
 import java.util.List;
 
@@ -45,8 +45,8 @@ public class UserController {
 
 
     /**
-     * handles a POST request for creating an User
-     * @param userDto
+     * handles a POST request for creating a User
+     * @param userDto: a variable of type UserDTO which is a user data transfer object used to encapsulate and transfer data
      * @return ResponseEntity<UserDto>
      */
     @RequestMapping(value = "/user", method = RequestMethod.POST)
@@ -96,8 +96,8 @@ public class UserController {
 
 
     /**
-     * handles a PUT request for updating an User
-     * @param userDto
+     * handles a PUT request for updating a User
+     * @param userDto: the data transfer object of the user which enables update operations
      * @return ResponseEntity<UserDto>
      */
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
@@ -118,8 +118,8 @@ public class UserController {
 
 
     /**
-     * handles a GET request for retrieving an User by its id
-     * @param id
+     * handles a GET request for retrieving a User by its id
+     * @param id : the id of the user whose DTO is going to be retrieved using the request
      * @return ResponseEntity<UserDto>
      */
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -140,8 +140,8 @@ public class UserController {
 
 
     /**
-     * handles a DELETE request for deleting an User by its id
-     * @param id
+     * handles a DELETE request for deleting a User by its id
+     * @param id: the id of the user who is going to be deleted
      * @return ResponseEntity<UserDto>
      */
     @PreAuthorize("hasRole('ROLE_ADMIN') ")
@@ -164,7 +164,7 @@ public class UserController {
 
     /**
      * handles a user's request to DELETE their account including all of their information
-     * @param request
+     * @param request : a http request to perform delete user profile/account operation
      * @return ResponseEntity<UserDto>
      */
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
@@ -198,20 +198,54 @@ public class UserController {
             return new ResponseEntity<JSONObject>(HttpStatus.NOT_FOUND);
         }
         //if found
-        userService.delete(idAsString);
-        
-
-        // sessionDetails.getUserId();
-        // UserDto userDto = userService.get(id);
-
-        // if (userDto == null) {
-        //     return new ResponseEntity<UserDto>(HttpStatus.NOT_FOUND);    
-        // }
-        // userService.delete(id);
+        userService.deleteUserAccount(id);
 
         return new ResponseEntity<JSONObject>(HttpStatus.NO_CONTENT);
     }
 
+
+
+
+    /**
+     * handles a user's request to DELETE their uploaded, processed, and predicted data
+     * @param request : an http request to perform delete user data operation
+     * @return ResponseEntity<UserDto>
+     */
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+    @RequestMapping(value = "/delete-User-Data", method = RequestMethod.DELETE)
+    @ApiOperation(value = "Delete User data by ID", notes = "Deleting current User's data", response = JSONObject.class)
+    public ResponseEntity<JSONObject> deleteUserData( HttpServletRequest request) {
+
+        // log for debugging
+        logger.info("in UserController/user/deleteUserData method");
+
+        // confirm user session is valid
+        HttpSession session = request.getSession(false);
+        if(session == null || !request.isRequestedSessionIdValid()) { // invalid session
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put(BeapEngineConstants.SUCCESS_STR, false);
+            jsonObject.put("message", "Invalid session");
+            jsonObject.put("status_code", HttpStatus.NON_AUTHORITATIVE_INFORMATION.value());
+
+            return new ResponseEntity<JSONObject>(HttpStatus.NOT_FOUND);
+        }
+
+        // get current user's info from session. This is more secure as id is abstracted.
+        SessionDetails sessionDetails = (SessionDetails) session.getAttribute("SESSION_DETAILS");
+        Long id = sessionDetails.getUserId();
+        String idAsString = id.toString();
+        UserDto userDto = userService.get(idAsString);
+
+        // if user is not found
+        if (userDto == null)
+        {
+            return new ResponseEntity<JSONObject>(HttpStatus.NOT_FOUND);
+        }
+        //if found
+        userService.deleteUserData(id);
+
+        return new ResponseEntity<JSONObject>(HttpStatus.NO_CONTENT);
+    }
 
 
 }

@@ -57,7 +57,7 @@ public class UserService implements UserDetailsService {
 
     /**
      * creating a new User
-     * @param userDto
+     * @param userDto: the data transfer object allowing for information encapsulation and transfer
      */
     public JSONObject save(UserDto userDto)  throws UserAlreadyExistException {
         logger.info("in UserService: save");
@@ -86,8 +86,8 @@ public class UserService implements UserDetailsService {
 
     /**
      * check to see the username already exists
-     * @param username
-     * @return
+     * @param username : the name of the user being checked to see if the user already exists
+     * @return : a boolean indicating whether the username exists or not
      */
     private boolean usernameExist(String username) {
         User user = userDao.findByUsername(username);
@@ -98,7 +98,7 @@ public class UserService implements UserDetailsService {
 
     /**
      * updating an existing User
-     * @param userDto
+     * @param userDto: the data transfer object providing access to data transfer and encapsulation between system layers
      */
     public void update(UserDto userDto) {
         logger.info("in UserService: Update");
@@ -110,7 +110,7 @@ public class UserService implements UserDetailsService {
 
     /**
      * retrieving a specific User by its id
-     * @param id
+     * @param id : the id of the user that the method gets
      * @return UserDto
      */
     public UserDto get(String id) {
@@ -126,7 +126,7 @@ public class UserService implements UserDetailsService {
 
     /**
      * deleting a specific User by its id
-     * @param id
+     * @param id: the id of the user that the method deletes
      */
     public void delete(String id) {
         logger.info("in UserService: delete");
@@ -139,9 +139,9 @@ public class UserService implements UserDetailsService {
 
     /**
      * checking the validity of a pair of username and password
-     * @param username
-     * @param password
-     * @return
+     * @param username : the entered username of the user attempting to log in
+     * @param password : the entered password of the user attempting to log in
+     * @return : a json document containing a variety of possible fields such as the status code, a message to the user, user details, user DTO, or user Authorities
      */
     public JSONObject login(String username, String password){
 
@@ -279,9 +279,9 @@ public class UserService implements UserDetailsService {
 
     /**
      * loading UserDetails by its username
-     * @param username
-     * @return
-     * @throws UsernameNotFoundException
+     * @param username : the username of the user who is to be loaded
+     * @return : the details of the loaded user
+     * throws : UsernameNotFoundException
      */
     @Override
     public UserDetails loadUserByUsername(String username) /*throws UsernameNotFoundException*/ {
@@ -307,8 +307,8 @@ public class UserService implements UserDetailsService {
 
     /**
      * loading UserDetails for an input user
-     * @param userDto
-     * @return
+     * @param userDto : the data transfer object of the user whose details are to be loaded
+     * @return : the details of the user
      */
     public UserDetails loadUserDetails(UserDto userDto){
 
@@ -336,5 +336,31 @@ public class UserService implements UserDetailsService {
         }
         return authorities;
     }
+
+    /***
+     * a method to delete the users account including all information related to them or uploaded by them using the user DAO
+     * @param id where id is the id of the user whose account is to be deleted
+     * @return a boolean indicating whether the delete operation succeeded.
+     */
+    public Boolean deleteUserAccount(Long id){
+        logger.info("in UserService: deleteUserAccount");
+
+        Boolean deleteSuccess = userDao.deleteUserAccount(id);
+        return deleteSuccess;
+
+    }
+
+
+    /***
+     * a method to delete the user's uploaded raw, processed, and predicted data using User DAO
+     * @param id where id is the id of the user whose data is to be deleted
+     */
+    public void deleteUserData(Long id){
+        logger.info("in UserService: deleteUserData");
+        userDao.deleteUserData(id);
+
+    }
+
+
 
 }

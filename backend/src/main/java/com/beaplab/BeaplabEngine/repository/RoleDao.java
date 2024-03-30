@@ -50,8 +50,8 @@ public class RoleDao implements BaseRepository<Role> {
 
 
     /**
-     * retrieving a list of Roles
-     * @return List<Role>
+     * retrieving a list of all available Roles
+     * @return a list of objects of type Role corresponding to the available roles in the system
      */
     @Override
     @Transactional
@@ -67,8 +67,9 @@ public class RoleDao implements BaseRepository<Role> {
 
 
     /**
-     * creating an Role
-     * @param role
+     * Saving a Role object to the Database effectively adding it to the system
+     * @param role : the object representing the role to be saved into the database
+     * @return : the id of the new role entry that was added to the database
      */
     @Override
     @Transactional
@@ -83,7 +84,7 @@ public class RoleDao implements BaseRepository<Role> {
 
     /**
      * updating an existing Role
-     * @param role
+     * @param role : the role object corresponding to the role to be updated
      */
     @Override
     @Transactional
@@ -96,8 +97,8 @@ public class RoleDao implements BaseRepository<Role> {
 
     /**
      * retrieving a specific Role by its id
-     * @param uuid
-     * @return
+     * @param uuid : the id of the role object to be retrieved
+     * @return: the retrieved role object (if found), or null if nothing is found
      */
     @Override
     @Transactional
@@ -121,8 +122,8 @@ public class RoleDao implements BaseRepository<Role> {
 
 
     /**
-     * deleting a specific Role by its id
-     * @param id
+     * deleting a specific Role from the database by its id
+     * @param id: the id of the role entry to be deleted
      */
     @Override
     @Transactional

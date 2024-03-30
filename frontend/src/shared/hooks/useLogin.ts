@@ -31,6 +31,8 @@ const useLogin = (): UseLogin => {
 
             setCookie("SESSION", data.token, {
                 expires: expiresAt.toDate(),
+                sameSite: "none",
+                secure: true,
             });
             return data;
         } catch (error) {

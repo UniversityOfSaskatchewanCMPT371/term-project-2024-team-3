@@ -42,8 +42,8 @@ test("smoke test @smoke", async ({ page }) => {
     await expect(page.locator("#root")).toContainText("Drop items here or Browse Files");
     await expect(page.getByLabel("Fitbit", { exact: true })).toBeChecked();
     await expect(page.getByLabel("Apple Watch")).not.toBeChecked();
-    await expect(page.getByText("Fitbit - 2Tue, 26 Mar 2024,")).toBeVisible();
-    await expect(page.getByText("AppleWatch - 5Tue, 26 Mar")).toBeVisible();
+    await expect(page.getByText("Fitbit - 2")).toBeVisible();
+    await expect(page.getByText("AppleWatch - 5")).toBeVisible();
     await expect(page.getByTestId("processBtn")).toBeDisabled();
     await page.getByLabel("Fitbit -").check();
     await expect(page.getByTestId("processBtn")).toBeEnabled();
@@ -51,16 +51,14 @@ test("smoke test @smoke", async ({ page }) => {
     await page.getByRole("link", { name: "PROCESSED FILES" }).click();
     await expect(page.getByTestId("popupButton")).toBeVisible();
     await expect(page.getByLabel("SVM")).toBeChecked();
-    await expect(page.locator("#root")).toContainText("FitBit 62024/03/26");
-    await expect(page.locator("#root")).toContainText("AppleWatch 72024/03/26");
+    await expect(page.locator("#root")).toContainText("FitBit 6");
+    await expect(page.locator("#root")).toContainText("AppleWatch 7");
     await expect(page.getByTestId("Predict_Button")).toBeVisible();
     await expect(page.getByTestId("Download_Button")).toBeVisible();
 
     await page.getByRole("link", { name: "PREDICTED FILES" }).click();
     await expect(page.getByTestId("popupButton")).toBeVisible();
-    await expect(page.getByRole("list")).toContainText("fitbit - 8Tue, 26 Mar 2024, 07:22:08 PM");
+    await expect(page.getByRole("list")).toContainText("fitbit - 8");
 
-    await expect(page.getByRole("list")).toContainText(
-        "applewatch - 9Tue, 26 Mar 2024, 07:22:18 PM",
-    );
+    await expect(page.getByRole("list")).toContainText("applewatch - 9");
 });

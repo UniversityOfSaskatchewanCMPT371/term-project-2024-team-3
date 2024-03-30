@@ -258,6 +258,9 @@ public class UserControllerTest {
     /**
      * T5.75
      *
+     * Preconditions: UserDto is not null
+     * Post-conditions: Returns a Response Entity with a NO_CONTENT status,
+     * and User is deleted from database
      * */
     @Test
     public void testDelete(){

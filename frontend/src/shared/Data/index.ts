@@ -18,14 +18,14 @@ import axios from "axios";
  * @returns
  */
 export async function upload(form: FormData, year: string, watchType: WatchType): Promise<void> {
-    const response = await api.post(`/rest/beapengine/${watchType}/upload`, form, {
-        headers: {
-            "Content-Type": "multipart/form-data",
-        },
-    });
-
-    if (response.data?.success === false) {
-        throw new Error(response.data?.message);
+    try {
+        await api.post(`/rest/beapengine/${watchType}/upload`, form, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        });
+    } catch (error) {
+        throw new Error(error.response?.data?.message ?? "Upload Failed");
     }
 }
 
@@ -35,7 +35,11 @@ export async function upload(form: FormData, year: string, watchType: WatchType)
  * @param watchType the type of watch to be processed
  */
 export async function process(id: any, watchType: WatchType): Promise<void> {
-    await api.get(`/rest/beapengine/${watchType}/process/${id}`);
+    try {
+        await api.get(`/rest/beapengine/${watchType}/process/${id}`);
+    } catch (error) {
+        throw new Error(error.response?.data?.message ?? "Process File Failed");
+    }
 }
 
 /**
@@ -49,7 +53,11 @@ export async function predict(
     model: PredictionType,
     watchType: WatchType,
 ): Promise<void> {
-    await api.get(`/rest/beapengine/${watchType}/predict/${id}/${model}`);
+    try {
+        await api.get(`/rest/beapengine/${watchType}/predict/${id}/${model}`);
+    } catch (error) {
+        throw new Error(error.response?.data?.message ?? "Predict File Failed");
+    }
 }
 
 /**
@@ -64,8 +72,12 @@ export async function download(
     type: DownloadType,
     watchType: WatchType,
 ): Promise<DownloadData> {
-    const response = await api.get(`/rest/beapengine/${watchType}/download_file/${id}/${type}`);
-    return { file: response.data?.file };
+    try {
+        const response = await api.get(`/rest/beapengine/${watchType}/download_file/${id}/${type}`);
+        return { file: response.data?.file };
+    } catch (error) {
+        throw new Error(error.response?.data?.message ?? "Download File Failed");
+    }
 }
 
 /**
@@ -74,7 +86,11 @@ export async function download(
  * @param watchType the type of watch being predicted
  */
 export const deleteFile = async (id: string, watchType: WatchType): Promise<void> => {
-    await api.get(`/rest/beapengine/${watchType}/delete/${id}`);
+    try {
+        await api.get(`/rest/beapengine/${watchType}/delete/${id}`);
+    } catch (error) {
+        throw new Error(error.response?.data?.message ?? "Delete File Failed");
+    }
 };
 
 /**
@@ -90,7 +106,7 @@ export async function getUploadedFiles(watchType: WatchType): Promise<RawFilesDa
         if (axios.isAxiosError(error) && error.response?.data.message === "Raw data not found") {
             return { list: [] };
         }
-        throw error;
+        throw new Error(error.response?.data?.message ?? "Getting Uploaded Files Failed");
     }
 }
 
@@ -100,8 +116,18 @@ export async function getUploadedFiles(watchType: WatchType): Promise<RawFilesDa
  * @returns the list of predicted files
  */
 export async function getPredictedDataList(watchType: WatchType): Promise<PredictedFilesData> {
-    const response = await api.get(`/rest/beapengine/${watchType}/list/predicted`);
-    return { list: response.data.list ?? [] };
+    try {
+        const response = await api.get(`/rest/beapengine/${watchType}/list/predicted`);
+        return { list: response.data.list ?? [] };
+    } catch (error) {
+        if (
+            axios.isAxiosError(error) &&
+            error.response?.data.message === "Predicted data not found"
+        ) {
+            return { list: [] };
+        }
+        throw new Error(error.response?.data?.message ?? "Getting Predicted Files Failed");
+    }
 }
 
 /**
@@ -110,6 +136,16 @@ export async function getPredictedDataList(watchType: WatchType): Promise<Predic
  * @returns a list of files
  */
 export async function getProcessedDataList(watchType: WatchType): Promise<ProcessedFilesData> {
-    const response = await api.get(`/rest/beapengine/${watchType}/list/processed`);
-    return { list: response.data.list ?? [] };
+    try {
+        const response = await api.get(`/rest/beapengine/${watchType}/list/processed`);
+        return { list: response.data.list ?? [] };
+    } catch (error) {
+        if (
+            axios.isAxiosError(error) &&
+            error.response?.data.message === "Processed data not found"
+        ) {
+            return { list: [] };
+        }
+        throw new Error(error.response?.data?.message ?? "Getting Processed Files Failed");
+    }
 }

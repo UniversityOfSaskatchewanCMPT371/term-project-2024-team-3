@@ -27,7 +27,7 @@ import static org.mockito.Mockito.*;
 public class PredictedDataDaoTest {
 
     @InjectMocks
-    private UserDao userDao;
+    private PredictedDataDao predictedDataDao;
     @Mock
     private SessionFactory sessionFactory;
 
@@ -41,7 +41,7 @@ public class PredictedDataDaoTest {
     @Mock
     private ProcessedDataDao processedDataDao;
     @Mock
-    private PredictedDataDao predictedDataDao;
+    private UserDao userDao;
 
     @Before
     public void setUp() {
@@ -61,7 +61,7 @@ public class PredictedDataDaoTest {
 
 
     /**
-     * T5.??
+     * T??
      * A method that tests deleting raw data's relation to processed data.
      * Preconditions: Relation to processed data exists
      * Post-conditions: Relation is deleted
@@ -79,7 +79,7 @@ public class PredictedDataDaoTest {
 
 
     /**
-     * T5.??
+     * T??
      * A method that tests deleting raw data's relation to processed data.
      * Preconditions: Relation to processed data does not exist
      * Post-conditions: No relation is deleted
@@ -92,9 +92,42 @@ public class PredictedDataDaoTest {
 
         Boolean result = predictedDataDao.deleteRelationToProcessed(userId);
 
+        assertFalse(result);
+    }
+
+    /**
+     * T??
+     * A method that tests deleting raw data
+     * Preconditions: Raw data to be deleted exists
+     * Post-conditions: Raw data is deleted
+     */
+    @Test
+    public void testDeleteSucceeded() {
+        Long userId = 3L;
+
+        when(query.executeUpdate()).thenReturn(1);
+
+        Boolean result = predictedDataDao.delete(userId);
+
         assertTrue(result);
     }
 
+    /**
+     * T??
+     * A method that tests deleting raw data
+     * Preconditions: Raw data to be deleted does not exist
+     * Post-conditions: No raw data is deleted
+     */
+    @Test
+    public void testDeleteFailed() {
+        Long userId = 3L;
+
+        when(query.executeUpdate()).thenReturn(0);
+
+        Boolean result = predictedDataDao.delete(userId);
+
+        assertFalse(result);
+    }
 
 
 }

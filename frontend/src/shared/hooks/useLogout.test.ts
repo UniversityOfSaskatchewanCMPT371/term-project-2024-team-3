@@ -48,6 +48,6 @@ describe("useLogout", () => {
         expect(removeLocalStorageSpy).toHaveBeenCalled();
         expect(mockRemoveCookies).toHaveBeenCalled();
         expect(result.current.isLoading).toBe(false);
-        expect(result.current.error).toBe("Logout failed. Please try again.");
+        expect(result.current.error).toBe("Logout failed");
     });
 });

@@ -18,7 +18,7 @@ const useLogout = (): UseLogout => {
         try {
             await logout();
         } catch (error) {
-            setErrorState("Logout failed. Please try again.");
+            setErrorState(error.message);
         } finally {
             setIsLoading(false);
             localStorage.removeItem("expires_at");

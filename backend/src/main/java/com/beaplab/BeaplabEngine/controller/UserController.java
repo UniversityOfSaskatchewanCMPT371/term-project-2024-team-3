@@ -2,6 +2,7 @@ package com.beaplab.BeaplabEngine.controller;
 
 import com.beaplab.BeaplabEngine.authentication.SessionDetails;
 import com.beaplab.BeaplabEngine.constants.BeapEngineConstants;
+import com.beaplab.BeaplabEngine.metadata.UpdatePasswordObject;
 import com.beaplab.BeaplabEngine.metadata.UserDto;
 import com.beaplab.BeaplabEngine.service.UserService;
 import io.swagger.annotations.ApiOperation;
@@ -76,12 +77,12 @@ public class UserController {
      * @return ResponseEntity<UserDto>
      */
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
-    @RequestMapping(value = "/rest/beapengine/user/{password}", method = RequestMethod.POST)
+    @RequestMapping(value = "/password", method = RequestMethod.POST)
     @ApiOperation(value = "Update existing User", notes = "Updating an existing User and returning the updated User in an object of type UserDto", response = UserDto.class)
     public ResponseEntity<UserDto> updatePassword(HttpServletRequest request,
-            @PathVariable("password") String password) {
+            @RequestBody UpdatePasswordObject passwordRequest) {
 
-        logger.info("in /rest/beapengine/user/{ " + password + "} POST method");
+        logger.info("in /password{ " + passwordRequest.getPassword() + "} for user id POST method");
 
         HttpSession session = request.getSession(false);
 
@@ -93,12 +94,17 @@ public class UserController {
         SessionDetails sessionDetails = (SessionDetails) session.getAttribute("SESSION_DETAILS");
         UserDto userDto = userService.get(sessionDetails.getUserId().toString());
 
-        if (userDto == null) {
+        if (userDto == null) { // user not found
             return new ResponseEntity<UserDto>(HttpStatus.BAD_REQUEST);
         }
+        logger.info(
+                "in UserController: user found and attempting to update password to " + passwordRequest.getPassword());
+        userDto.setPassword(passwordRequest.getPassword());
+        Boolean success = userService.newUpdateUser(userDto);
 
-        userDto.setPassword(password);
-        userService.update(userDto);
+        if (!success) {
+            return new ResponseEntity<UserDto>(HttpStatus.valueOf(500));
+        }
 
         return new ResponseEntity<UserDto>(userDto, HttpStatus.OK);
     }

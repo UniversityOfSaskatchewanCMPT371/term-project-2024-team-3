@@ -24,11 +24,14 @@ import java.sql.Timestamp;
 import java.util.*;
 
 /**
- * The UserService service class which implements UserDetailsService interface. The UserDetailsService interface is used to retrieve user-related data. It has one method named loadUserByUsername() which finds a user entity based on the username and can be overridden to customize the process of finding the user.
+ * The UserService service class which implements UserDetailsService interface.
+ * The UserDetailsService interface is used to retrieve user-related data. It
+ * has one method named loadUserByUsername() which finds a user entity based on
+ * the username and can be overridden to customize the process of finding the
+ * user.
  */
 @Service("userService")
 public class UserService implements UserDetailsService {
-
 
     final static Logger logger = LogManager.getLogger(UserService.class.getName());
 
@@ -46,6 +49,7 @@ public class UserService implements UserDetailsService {
 
     /**
      * retrieving a list of type User
+     * 
      * @return List<UserDto>
      */
     public List<UserDto> list() {
@@ -54,12 +58,12 @@ public class UserService implements UserDetailsService {
         return userMapper.model2Dto(userDao.list(), new ArrayList<UserDto>());
     }
 
-
     /**
      * creating a new User
+     * 
      * @param userDto
      */
-    public JSONObject save(UserDto userDto)  throws UserAlreadyExistException {
+    public JSONObject save(UserDto userDto) throws UserAlreadyExistException {
         logger.info("in UserService: save");
 
         JSONObject jsonObject = new JSONObject();
@@ -82,10 +86,9 @@ public class UserService implements UserDetailsService {
         return jsonObject;
     }
 
-
-
     /**
      * check to see the username already exists
+     * 
      * @param username
      * @return
      */
@@ -94,10 +97,9 @@ public class UserService implements UserDetailsService {
         return user != null;
     }
 
-
-
     /**
      * updating an existing User
+     * 
      * @param userDto
      */
     public void update(UserDto userDto) {
@@ -107,9 +109,22 @@ public class UserService implements UserDetailsService {
         userDao.update(user);
     }
 
+    /**
+     * a new function that updates existing user developed by 371 students
+     * 
+     * @param userDto
+     * @return (Boolean) true if successful
+     */
+    public Boolean newUpdateUser(UserDto userDto) {
+        logger.info("in UserService: newUpdateUser");
+
+        User user = userMapper.dto2Model(userDto, new User());
+        return userDao.newUpdate(user);
+    }
 
     /**
      * retrieving a specific User by its id
+     * 
      * @param id
      * @return UserDto
      */
@@ -118,14 +133,14 @@ public class UserService implements UserDetailsService {
 
         Long uuid = Long.parseLong(id);
         User user = userDao.get(uuid);
-        if(user != null)
+        if (user != null)
             return userMapper.model2Dto(user, new UserDto());
         return null;
     }
 
-
     /**
      * deleting a specific User by its id
+     * 
      * @param id
      */
     public void delete(String id) {
@@ -135,15 +150,14 @@ public class UserService implements UserDetailsService {
         userDao.delete(uuid);
     }
 
-
-
     /**
      * checking the validity of a pair of username and password
+     * 
      * @param username
      * @param password
      * @return
      */
-    public JSONObject login(String username, String password){
+    public JSONObject login(String username, String password) {
 
         logger.info("in UserService: login");
 
@@ -164,8 +178,7 @@ public class UserService implements UserDetailsService {
                         incorrectLoginsDto.setIncorrectAttempts(0);
                         incorrectLoginsDto.setLockedDate(null);
                         incorrectLoginsService.update(incorrectLoginsDto);
-                    }
-                    else {
+                    } else {
                         jsonObject.put(BeapEngineConstants.SUCCESS_STR, false);
                         jsonObject.put("status_code", HttpStatus.LOCKED.value());
                         jsonObject.put("message", "Your account is locked for 24 hours.");
@@ -173,8 +186,6 @@ public class UserService implements UserDetailsService {
                     }
                 }
             }
-
-
 
             UserDetails userDetails = loadUserDetails(userDto);
 
@@ -185,8 +196,7 @@ public class UserService implements UserDetailsService {
             jsonObject.put("userDto", userDto);
 
             return jsonObject;
-        }
-        else {
+        } else {
             UserDto userDto = getUserByUsername(username);
 
             if (userDto != null) { // valid username, invalid password
@@ -201,8 +211,7 @@ public class UserService implements UserDetailsService {
                     jsonObject.put("status_code", HttpStatus.UNAUTHORIZED.value());
                     jsonObject.put("message", "invalid username or password");
                     return jsonObject;
-                }
-                else { // existing incorrect login attempts by invalid password
+                } else { // existing incorrect login attempts by invalid password
 
                     if (incorrectLoginsDto.getLocked()) { // account is locked
                         Date currentDate = new Date();
@@ -223,8 +232,7 @@ public class UserService implements UserDetailsService {
                             jsonObject.put("userDto", userDto);
 
                             return jsonObject;
-                        }
-                        else {
+                        } else {
                             jsonObject.put(BeapEngineConstants.SUCCESS_STR, false);
                             jsonObject.put("status_code", HttpStatus.LOCKED.value());
                             jsonObject.put("message", "Your account is locked for 24 hours.");
@@ -254,8 +262,7 @@ public class UserService implements UserDetailsService {
                         return jsonObject;
                     }
                 }
-            }
-            else {
+            } else {
                 jsonObject.put(BeapEngineConstants.SUCCESS_STR, false);
                 jsonObject.put("status_code", HttpStatus.UNAUTHORIZED.value());
                 jsonObject.put("message", "invalid username or password");
@@ -275,16 +282,15 @@ public class UserService implements UserDetailsService {
         return null;
     }
 
-
-
     /**
      * loading UserDetails by its username
+     * 
      * @param username
      * @return
      * @throws UsernameNotFoundException
      */
     @Override
-    public UserDetails loadUserByUsername(String username) /*throws UsernameNotFoundException*/ {
+    public UserDetails loadUserByUsername(String username) /* throws UsernameNotFoundException */ {
 
         logger.info("in UserService: loadUserByUsername");
 
@@ -297,20 +303,19 @@ public class UserService implements UserDetailsService {
         boolean accountNonExpired = true;
         boolean credentialsNonExpired = true;
         boolean accountNonLocked = true;
-        return  new org.springframework.security.core.userdetails.User
-                (user.getUsername(),
-                        user.getPassword().toLowerCase(), enabled, accountNonExpired,
-                        credentialsNonExpired, accountNonLocked,
-                        getAuthorities(user.getRoleIDs()));
+        return new org.springframework.security.core.userdetails.User(user.getUsername(),
+                user.getPassword().toLowerCase(), enabled, accountNonExpired,
+                credentialsNonExpired, accountNonLocked,
+                getAuthorities(user.getRoleIDs()));
     }
-
 
     /**
      * loading UserDetails for an input user
+     * 
      * @param userDto
      * @return
      */
-    public UserDetails loadUserDetails(UserDto userDto){
+    public UserDetails loadUserDetails(UserDto userDto) {
 
         logger.info("in UserService: loadUserDetails");
 
@@ -320,16 +325,13 @@ public class UserService implements UserDetailsService {
         boolean accountNonExpired = true;
         boolean credentialsNonExpired = true;
         boolean accountNonLocked = true;
-        return  new org.springframework.security.core.userdetails.User
-                (user.getUsername(),
-                        user.getPassword().toLowerCase(), enabled, accountNonExpired,
-                        credentialsNonExpired, accountNonLocked,
-                        getAuthorities(user.getRoleIDs()));
+        return new org.springframework.security.core.userdetails.User(user.getUsername(),
+                user.getPassword().toLowerCase(), enabled, accountNonExpired,
+                credentialsNonExpired, accountNonLocked,
+                getAuthorities(user.getRoleIDs()));
     }
 
-
-
-    private static List<GrantedAuthority> getAuthorities (Set<Role> roles) {
+    private static List<GrantedAuthority> getAuthorities(Set<Role> roles) {
         List<GrantedAuthority> authorities = new ArrayList<>();
         for (Role role : roles) {
             authorities.add(new SimpleGrantedAuthority(role.getRoleName()));

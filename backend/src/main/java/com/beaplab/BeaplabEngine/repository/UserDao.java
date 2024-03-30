@@ -14,6 +14,7 @@ import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.object.SqlQuery;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -22,22 +23,20 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**
- * The UserDao repository class which implements BaseRepository interface methods
+ * The UserDao repository class which implements BaseRepository interface
+ * methods
  */
 @Repository("userDao")
 @EnableTransactionManagement(proxyTargetClass = true)
 public class UserDao implements BaseRepository<User> {
 
-
     final static Logger logger = LogManager.getLogger(UserDao.class.getName());
-
 
     /**
      * injecting SessionFactory into this class
      */
     @Autowired
     private SessionFactory sessionFactory;
-
 
     /**
      * constructors
@@ -49,9 +48,9 @@ public class UserDao implements BaseRepository<User> {
         this.sessionFactory = sessionFactory;
     }
 
-
     /**
      * retrieving a list of Users
+     * 
      * @return List<User>
      */
     @Override
@@ -66,9 +65,9 @@ public class UserDao implements BaseRepository<User> {
         return list;
     }
 
-
     /**
      * creating an User
+     * 
      * @param user
      */
     @Override
@@ -76,14 +75,14 @@ public class UserDao implements BaseRepository<User> {
     public Long save(User user) {
         logger.info("in UserDao: save");
 
-         sessionFactory.getCurrentSession().save(user);
+        sessionFactory.getCurrentSession().save(user);
 
         return user.getId();
     }
 
-
     /**
      * updating an existing User
+     * 
      * @param user
      */
     @Override
@@ -94,9 +93,68 @@ public class UserDao implements BaseRepository<User> {
         sessionFactory.getCurrentSession().update(user);
     }
 
+    /**
+     * New user update method written by 371 students
+     * 
+     * @param user
+     * @return (boolean) user found and succefully updated
+     */
+    @Transactional
+    public Boolean newUpdate(User user) {
+        logger.info("in UserDao: newUpdate");
+
+        // find user with id to update
+
+        Boolean userUpdated = false;
+
+        long id = user.getId();
+        String firstName = user.getFirstName();
+        String lastName = user.getLastName();
+        String username = user.getUsername();
+        String password = user.getPassword();
+
+        SQLQuery searchQuery = (SQLQuery) sessionFactory.getCurrentSession()
+                .createSQLQuery("SELECT * FROM tbl_user WHERE id = :user_id")
+                .setParameter("user_id", id);
+
+        List<Object> searchResultList = searchQuery.list();
+
+        // if user exists
+        if (searchResultList != null && !searchResultList.isEmpty()) {
+            logger.info("in newUpdate: found user to update with id " + id);
+        } else {
+            logger.info("in newUpdate: User with id:  " + id + " not found and couldnt be updated");
+            return userUpdated;
+        }
+
+        // update user
+
+        SQLQuery updateQuery = (SQLQuery) sessionFactory.getCurrentSession().createSQLQuery(
+                "UPDATE tbl_user SET first_name= :new_first_name, last_name= :new_last_name,"
+                        + " password= :new_password, username= :new_username WHERE id = :user_id")
+                .setParameter("new_first_name", firstName)
+                .setParameter("new_last_name", lastName)
+                .setParameter("new_password", password)
+                .setParameter("new_username", username)
+                .setParameter("user_id", id);
+
+        int rowsAffected = updateQuery.executeUpdate();
+
+        if (rowsAffected > 0) {
+            logger.info("User with id: " + id + " was found and updated");
+            userUpdated = true;
+        } else {
+            logger.warn("User with id: " + id + " was found but could not be updated");
+            userUpdated = false;
+            return userUpdated;
+        }
+
+        return userUpdated;
+    }
 
     /**
      * retrieving a specific User by its id
+     * 
      * @param uuid
      * @return
      */
@@ -109,7 +167,6 @@ public class UserDao implements BaseRepository<User> {
         Query query = sessionFactory.getCurrentSession().createQuery(hql);
         query.setParameter("uuid", uuid);
 
-
         @SuppressWarnings("unchecked")
         List<User> listUser = (List<User>) query.list();
 
@@ -120,9 +177,9 @@ public class UserDao implements BaseRepository<User> {
         return null;
     }
 
-
     /**
      * deleting a specific User by its id
+     * 
      * @param id
      */
     @Override
@@ -135,19 +192,19 @@ public class UserDao implements BaseRepository<User> {
         sessionFactory.getCurrentSession().delete(userToDelete);
     }
 
-
-
     /**
      * retrieving a user by its username and password
+     * 
      * @param username
      * @param password
      * @return
      */
     @Transactional
-    public User findByUserPass(String username, String password){
+    public User findByUserPass(String username, String password) {
         logger.info("in UserDao: findByUserPass");
 
-        SQLQuery query = (SQLQuery) sessionFactory.getCurrentSession().createSQLQuery("SELECT * FROM login_user(:username, :password)")
+        SQLQuery query = (SQLQuery) sessionFactory.getCurrentSession()
+                .createSQLQuery("SELECT * FROM login_user(:username, :password)")
                 .addEntity(User.class)
                 .setParameter("username", username)
                 .setParameter("password", password);
@@ -162,9 +219,9 @@ public class UserDao implements BaseRepository<User> {
         return null;
     }
 
-
     /**
      * retrieving a specific User by its username
+     * 
      * @param username
      * @return
      */
@@ -175,7 +232,6 @@ public class UserDao implements BaseRepository<User> {
         String hql = "from User where username =:username";
         Query query = sessionFactory.getCurrentSession().createQuery(hql);
         query.setParameter("username", username);
-
 
         @SuppressWarnings("unchecked")
         List<User> listUser = (List<User>) query.list();

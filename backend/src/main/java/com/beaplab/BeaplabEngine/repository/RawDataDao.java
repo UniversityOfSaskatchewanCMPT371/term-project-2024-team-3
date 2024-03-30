@@ -64,6 +64,12 @@ public class RawDataDao {
     }
 
 
+    /**
+     * A function that saves raw data using the raw data object and the id of the user it corresponds to
+     * @param rawData : the raw data obeject of the raw data to be saved
+     * @param userId : the id of the user
+     * @return : the id of the saved raw data
+     */
     @Transactional
     public Long save(RawData rawData, Long userId) {
         logger.info("in RawDataDao: save");
@@ -85,6 +91,11 @@ public class RawDataDao {
     }
 
 
+    /**
+     * A function that retrieves raw data using its id
+     * @param id : the id of the raw data being retrieved
+     * @return : the raw data object (if found), or null if nothing is found
+     */
     @Transactional
     public RawData get(Long id) {
         logger.info("in RawDataDao: get");
@@ -105,6 +116,11 @@ public class RawDataDao {
         return null;
     }
 
+    /**
+     * A function that retrieves the id of the processed data corresponding to the raw data whose id is passed in
+     * @param id : the id of the raw data
+     * @return : the id of the corresponding processed data (if found), or -1 if nothing is found
+     */
     @Transactional
     public Long getProcessDataId(long id) {
         logger.info("in RawDataDao: getProcessDataId");
@@ -120,6 +136,12 @@ public class RawDataDao {
         return retId.longValue();
     }
 
+    /**
+     * A function that retrieves a specific user's list of raw data objects coming from a specific device type
+     * @param type : the type of device the raw data came from ( fitbit or Apple Watch)
+     * @param userId : the id of the user
+     * @return : the list of raw data objects
+     */
     @Transactional
     public List<RawData> list(Long userId, RawData.dataType type) {
         logger.info("in RawDataDao: list");
@@ -140,7 +162,55 @@ public class RawDataDao {
             rawDataList.add(rawDataIndex.toRawData());
 
         return rawDataList;
-
     }
 
+    /***
+     * a method to delete a piece of raw data from the database
+     * @param id where id is the id of the raw data entry in the database
+     * @return a boolean indicating whether the delete operation succeeded.
+     */
+    @Transactional
+    public Boolean delete(Long id) {
+        logger.info("In RawDataDao: delete");
+
+        Boolean relationdeleted=  deleteRelationToUser(id);
+//        if (!relationdeleted) {
+//            logger.info("linkage of raw data with id: " + id + "failed due to failure to delete linkage to user");
+//        }
+
+        SQLQuery query = (SQLQuery) sessionFactory.getCurrentSession().createSQLQuery("DELETE FROM tbl_raw_data WHERE id = :raw_data_id")
+                .setParameter("raw_data_id", id);
+
+        int rowsAffected = query.executeUpdate();
+        if (rowsAffected > 0) {
+            logger.info("Deleted raw data with id: " + id);
+            return true;
+        } else {
+            logger.warn("No raw data found with id: " + id + " to delete");
+            return false;
+        }
+    }
+
+
+    /***
+     * a method to delete a relational entry in the tbl_user_tbl_raw_data table in the database
+     * @param id where id is the id of the raw data entry in the database
+     * @return a boolean indicating whether the delete operation succeeded.
+     */
+    @Transactional
+    public Boolean deleteRelationToUser(Long id) {
+        logger.info("In PredictedDataDao: deleteRelationToUser");
+
+        SQLQuery query = (SQLQuery) sessionFactory.getCurrentSession().createSQLQuery("DELETE FROM tbl_user_tbl_raw_data WHERE rawdataids_id = :raw_data_id")
+                .setParameter("raw_data_id", id);
+
+        int rowsAffected = query.executeUpdate();
+        if (rowsAffected > 0) {
+            logger.info("Deleted relation between raw data with id: " + id + " and its corresponding user");
+            return true;
+        } else {
+            logger.warn("No linkage to user found for raw data with id: " + id + " to delete");
+            return false;
+        }
+    }
 }

@@ -2,7 +2,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh; /* This will cover the full viewport height */
   }
   
   @media (max-width: 600px) {

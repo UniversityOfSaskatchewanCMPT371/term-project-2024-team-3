@@ -69,6 +69,6 @@ describe("useLogin", () => {
         expect(mockSetStorage).not.toHaveBeenCalled();
         expect(mockSetCookies).not.toHaveBeenCalled();
         expect(result.current.isLoading).toBe(false);
-        expect(result.current.error).toBe("Login failed. Please try again.");
+        expect(result.current.error).toBe("Login failed");
     });
 });

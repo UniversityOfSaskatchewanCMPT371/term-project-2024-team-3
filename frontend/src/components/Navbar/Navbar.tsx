@@ -6,9 +6,12 @@ import { useAuth } from "../Authentication/useAuth";
 import styles from "./Navbar.module.css";
 import logoimage from "../../assets/beap_lab_hex_small.png";
 import profileimage from "../../assets/profile.jpg";
+import LoadingModal from "../LoadingModal/LoadingModal";
+import useLogout from "../../shared/hooks/useLogout";
 
 function Navbar(): React.ReactElement | null {
     const rollbar = useRollbar();
+    const { handleLogout, isLoading: logoutLoading } = useLogout();
     invariant(rollbar, "Rollbar context is not available");
     rollbar.info("Reached Navbar component");
     const { isAuthenticated } = useAuth();
@@ -21,6 +24,10 @@ function Navbar(): React.ReactElement | null {
         return null;
     }
 
+    const onLogout = async () => {
+        await handleLogout();
+    };
+
     const routes = [
         { path: "/FileUploadPage", name: "FILE UPLOAD" },
         { path: "/ProcessedDataPage", name: "PROCESSED FILES" },
@@ -29,6 +36,10 @@ function Navbar(): React.ReactElement | null {
 
     return (
         <div>
+            <LoadingModal
+                header="Please wait while we are logging you out!"
+                isVisible={logoutLoading}
+            />
             <nav className={styles.navbar}>
                 <Link to="/" className={styles["navbar-brand"]}>
                     <img src={logoimage} alt="beapLogo" className={styles["navbar-logo"]} />
@@ -47,14 +58,19 @@ function Navbar(): React.ReactElement | null {
                     ))}
                 </div>
 
-                <Link to="/Logout" className={styles["navbar-profile"]}>
+                <button
+                    onClick={onLogout}
+                    type="button"
+                    data-testid="logout-btn"
+                    className={styles["navbar-profile"]}
+                >
                     <img
                         src={profileimage}
                         alt="profileLogo"
                         data-testid="profile"
                         className={`${styles["navbar-logo"]} ${styles["navbar-logout"]}`}
                     />
-                </Link>
+                </button>
             </nav>
         </div>
     );

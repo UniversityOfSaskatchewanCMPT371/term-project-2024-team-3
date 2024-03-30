@@ -36,7 +36,7 @@ const useLogin = (): UseLogin => {
             });
             return data;
         } catch (error) {
-            setErrorState("Login failed. Please try again.");
+            setErrorState(error.message);
             return null;
         } finally {
             setIsLoading(false);

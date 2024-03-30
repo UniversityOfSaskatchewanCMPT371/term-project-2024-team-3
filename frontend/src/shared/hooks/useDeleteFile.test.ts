@@ -40,6 +40,6 @@ describe("useDeleteFile", () => {
 
         expect(deleteFileSpy).toHaveBeenCalledTimes(1);
         expect(result.current.isLoading).toBe(false);
-        expect(result.current.error).toEqual("Delete File failed");
+        expect(result.current.error).toEqual("Delete failed");
     });
 });

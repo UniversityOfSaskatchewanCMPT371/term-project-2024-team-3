@@ -9,7 +9,6 @@ import com.beaplab.BeaplabEngine.model.PredictedData;
 import com.beaplab.BeaplabEngine.model.PredictedDataIndex;
 import com.beaplab.BeaplabEngine.model.RawData;
 import com.beaplab.BeaplabEngine.repository.base.BaseRepository;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;

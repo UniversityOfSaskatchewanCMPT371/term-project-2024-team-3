@@ -75,7 +75,7 @@ public class UserController {
     /**
      * handles a POST request for updating a user's password
      * 
-     * @param userDto
+     * @param request
      * @return ResponseEntity<UserDto>
      */
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
@@ -175,7 +175,7 @@ public class UserController {
      * handles a GET request for retrieving username, first name, last
      * name from current session
      * 
-     * @param HttpServletRequest
+     * @param request
      * @return ResponseEntity<JSONObject>
      */
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")

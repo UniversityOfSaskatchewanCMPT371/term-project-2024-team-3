@@ -404,6 +404,8 @@ public class UserDao implements BaseRepository<User> {
         SQLQuery searchQueryForRawData = (SQLQuery) sessionFactory.getCurrentSession()
                 .createSQLQuery("SELECT rawdataids_id FROM tbl_user_tbl_raw_data WHERE tbl_user_id = :user_id")
                 .setParameter("user_id", id);
+
+        System.out.println(searchQueryForRawData);
         List<Object> listOfRawData = searchQueryForRawData.list();
         List<Long> longListOfRawData = new ArrayList<Long>();
 
@@ -419,6 +421,8 @@ public class UserDao implements BaseRepository<User> {
                 SQLQuery searchQueryForProcessedData = (SQLQuery) sessionFactory.getCurrentSession()
                         .createSQLQuery("SELECT processed_data_id FROM tbl_raw_data WHERE id = :raw_data_id")
                         .setParameter("raw_data_id", rawDataId);
+
+                System.out.println(searchQueryForProcessedData);
 
                 List<Object> listOfProcessedData = searchQueryForProcessedData.list();
 

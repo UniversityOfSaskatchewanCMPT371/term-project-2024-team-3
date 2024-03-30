@@ -92,6 +92,16 @@ function LoginPage() {
                 <div className={styles["left-section"]}>
                     <h1 className={styles["signin-text"]}>Sign In</h1>
                     <p className={styles["login-text"]}>
+                        <div className={styles["button-container"]}>
+                            <button
+                                data-testid="homeButton"
+                                type="button"
+                                className={`${styles.button} ${styles["go-home"]}`}
+                                onClick={() => navigate("/")}
+                            >
+                                Back To Homepage
+                            </button>
+                        </div>
                         Log into your existing BEAPENGINE account
                     </p>
                     <form onSubmit={handleSubmit} className={styles["form-box"]}>
@@ -134,23 +144,13 @@ function LoginPage() {
                         <div className={styles["button-container"]}>
                             <button
                                 data-testid="submitButton"
-                                type="button"
+                                type="submit"
                                 className={`${styles.button} ${styles["sign-in"]}`}
                             >
                                 Sign In
                             </button>
                         </div>
                     </form>
-                    <div className={styles["button-container"]}>
-                        <button
-                            data-testid="homeButton"
-                            type="button"
-                            className={`${styles.button} ${styles["go-home"]}`}
-                            onClick={() => navigate("/")}
-                        >
-                            Back To Homepage
-                        </button>
-                    </div>
                     <a href="/privacy-policy" target="_blank">
                         Privacy Policy
                     </a>

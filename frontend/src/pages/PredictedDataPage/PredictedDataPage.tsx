@@ -176,42 +176,43 @@ const PredictedDataPage = function () {
     getRendersOfFiles();
 
     return (
-        <Container sx={{ marginTop: 6 }}>
+        <>
             <ProgressBar
                 percentage={progressbar.percentage}
                 message={progressbar.message}
                 isVisible={progressbar.isVisible}
             />
+            <Container sx={{ marginTop: 6 }}>
+                <ErrorSnackbar error={useDownloadError} />
 
-            <ErrorSnackbar error={useDownloadError} />
-
-            <Container className={styles.containerDiv}>
-                <Alert severity="info" sx={{ marginBottom: 3 }} data-testid="page-info">
-                    On this page, you can download your new data files with both the raw Apple Watch
-                    or Fitbit data, the features we use for our machine learning models, and the
-                    predicted activity for each minute of your data. If you want to upload different
-                    files, go back to the file upload page. You can also click on individual steps
-                    to rerun a different machine learning model.
-                </Alert>
-                <div className={styles.columnDiv}>
-                    <div className={styles.listDiv}>
-                        <FormControl component="fieldset" className={styles.fileSelectorRad}>
-                            <RadioGroup>{renders}</RadioGroup>
-                        </FormControl>
+                <Container className={styles.containerDiv}>
+                    <Alert severity="info" sx={{ marginBottom: 3 }} data-testid="page-info">
+                        On this page, you can download your new data files with both the raw Apple
+                        Watch or Fitbit data, the features we use for our machine learning models,
+                        and the predicted activity for each minute of your data. If you want to
+                        upload different files, go back to the file upload page. You can also click
+                        on individual steps to rerun a different machine learning model.
+                    </Alert>
+                    <div className={styles.columnDiv}>
+                        <div className={styles.listDiv}>
+                            <FormControl component="fieldset" className={styles.fileSelectorRad}>
+                                <RadioGroup>{renders}</RadioGroup>
+                            </FormControl>
+                        </div>
+                        <div className={styles.buttonControl}>
+                            <Button
+                                variant="contained"
+                                className={styles.downloadBtn}
+                                onClick={downloadFile}
+                                data-testid="Download_Button"
+                            >
+                                Download File
+                            </Button>
+                        </div>
                     </div>
-                    <div className={styles.buttonControl}>
-                        <Button
-                            variant="contained"
-                            className={styles.downloadBtn}
-                            onClick={downloadFile}
-                            data-testid="Download_Button"
-                        >
-                            Download File
-                        </Button>
-                    </div>
-                </div>
+                </Container>
             </Container>
-        </Container>
+        </>
     );
 };
 export default PredictedDataPage;

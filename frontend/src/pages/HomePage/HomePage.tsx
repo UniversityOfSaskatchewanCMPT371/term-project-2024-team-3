@@ -112,10 +112,12 @@ function HomePage(): ReactElement {
                             Built Environment and Active Populations (BEAP) Lab
                         </a>
                         . The purpose of this study is to collect and analyze large volumes of Apple
-                        Watch and Fitbit data and develop methods to standardize across device. We
+                        Watch and Fitbit data and develop methods to standardize across devices. We
                         provide you with a CSV file of your data and give you detailed information
-                        about sedentary behaviour, and moderate to vigorous activity based on our
-                        machine learning methods. We hope you will participate in our study.
+                        about sedentary behavior, and moderate to vigorous activity based on our
+                        machine-learning methods. This project is approved by the Memorial
+                        University Interdisciplinary Committee on Ethics in Human Research (ICEHR #
+                        20210162-HK).
                     </span>
                 </div>
                 <div className={style.bottom}>
@@ -128,7 +130,7 @@ function HomePage(): ReactElement {
             </footer>
             <section className={style.extract_data}>
                 <span>
-                    <Icon>copyright</Icon>2020 BEAP Lab
+                    <Icon>copyright</Icon>2024 BEAP Lab
                 </span>
             </section>
         </div>

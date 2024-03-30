@@ -78,7 +78,6 @@ public class UserController {
      * @param request
      * @return ResponseEntity<UserDto>
      */
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     @RequestMapping(value = "/password", method = RequestMethod.POST)
     @ApiOperation(value = "Update existing User", notes = "Updating an existing User and returning the updated User in an object of type UserDto", response = UserDto.class)
     public ResponseEntity<UserDto> updatePassword(HttpServletRequest request,
@@ -178,7 +177,6 @@ public class UserController {
      * @param request
      * @return ResponseEntity<JSONObject>
      */
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     @RequestMapping(value = "/user", method = RequestMethod.GET, produces = "application/json")
     @ApiOperation(value = "Find User account name from current session", notes = "Finding a User account name, first name, and last name from current session", response = JSONObject.class)
     public ResponseEntity<JSONObject> getUsername(HttpServletRequest request) {
@@ -247,7 +245,6 @@ public class UserController {
      * @param request : a http request to perform delete user profile/account operation
      * @return ResponseEntity<UserDto>
      */
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     @RequestMapping(value = "/delete-Profile", method = RequestMethod.DELETE)
     @ApiOperation(value = "Delete User profile by ID", notes = "Deleting current User's account and data", response = JSONObject.class)
     public ResponseEntity<JSONObject> deleteProfile( HttpServletRequest request) {
@@ -291,7 +288,6 @@ public class UserController {
      * @param request : an http request to perform delete user data operation
      * @return ResponseEntity<UserDto>
      */
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     @RequestMapping(value = "/delete-User-Data", method = RequestMethod.DELETE)
     @ApiOperation(value = "Delete User data by ID", notes = "Deleting current User's data", response = JSONObject.class)
     public ResponseEntity<JSONObject> deleteUserData( HttpServletRequest request) {

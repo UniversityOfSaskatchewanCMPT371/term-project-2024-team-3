@@ -2,10 +2,10 @@ import React, { useState, FormEvent } from "react";
 import useLogin from "shared/hooks/useLogin";
 import { useNavigate } from "react-router-dom";
 import { useRollbar } from "@rollbar/react";
+import ErrorSnackbar from "components/ErrorSnackbar/ErrorSnackbar";
 import styles from "./LoginPage.module.css";
 import leftArrow from "../../assets/left-arrow.png";
 import rightArrow from "../../assets/right-arrow.png";
-import ErrorSnackbar from "components/ErrorSnackbar/ErrorSnackbar";
 
 const texts = [
     "Welcome to BEAPEngine, a research project founded by Dr. Daniel Fuller.",

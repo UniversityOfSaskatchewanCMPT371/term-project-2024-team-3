@@ -5,6 +5,7 @@ import { useRollbar } from "@rollbar/react";
 import styles from "./LoginPage.module.css";
 import leftArrow from "../../assets/left-arrow.png";
 import rightArrow from "../../assets/right-arrow.png";
+import ErrorSnackbar from "components/ErrorSnackbar/ErrorSnackbar";
 
 const texts = [
     "Welcome to BEAPEngine, a research project founded by Dr. Daniel Fuller.",
@@ -21,7 +22,8 @@ function LoginPage() {
     const [userType, setUserType] = useState("researcher");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const { handleLogin } = useLogin();
+    const { handleLogin, error: loginError } = useLogin();
+
     const navigate = useNavigate();
 
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -88,6 +90,7 @@ function LoginPage() {
 
     return (
         <div className={styles["login-page"]}>
+            <ErrorSnackbar error={loginError} />
             <div className={styles.container}>
                 <div className={styles["left-section"]}>
                     <h1 className={styles["signin-text"]}>Sign In</h1>

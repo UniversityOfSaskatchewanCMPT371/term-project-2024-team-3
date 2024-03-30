@@ -124,6 +124,17 @@ function SignUpPage() {
             <div className={styles.container}>
                 <div className={styles["left-section"]}>
                     <h1 className={styles["signup-text"]}>Sign Up</h1>
+                    <div className={styles["button-container"]}>
+                        <button
+                            data-testid="homeButton"
+                            type="button"
+                            className={`${styles.button} ${styles["go-home"]}`}
+                            onClick={() => navigate("/")}
+                        >
+                            Back To Homepage
+                        </button>
+                    </div>
+
                     <p className={styles["createaccount-text"]}>Create a free BEAPENGINE account</p>
                     <form onSubmit={handleSubmit} className={styles["form-box"]}>
                         <div className={styles.tabs}>

@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import { useCookies } from "react-cookie";
+import { useNavigate } from "react-router-dom";
 import { logout } from "../api";
 
 type UseLogout = {
@@ -12,6 +13,7 @@ const useLogout = (): UseLogout => {
     const [isLoading, setIsLoading] = useState(false);
     const [errorState, setErrorState] = useState<string | null>(null);
     const [, , removeCookie] = useCookies(["SESSION"]);
+    const navigate = useNavigate();
 
     const handleLogout = async (): Promise<void> => {
         setIsLoading(true);
@@ -26,6 +28,7 @@ const useLogout = (): UseLogout => {
             localStorage.removeItem("user_id");
             removeCookie("SESSION");
             window.location.reload();
+            navigate("/");
         }
     };
 

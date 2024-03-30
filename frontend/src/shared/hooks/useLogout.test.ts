@@ -1,4 +1,5 @@
 import { renderHook, act } from "@testing-library/react-hooks";
+import { useNavigate } from "react-router-dom";
 import useLogout from "./useLogout";
 import * as API from "../api";
 
@@ -8,11 +9,20 @@ jest.mock("../api");
 jest.mock("react-cookie", () => ({
     useCookies: () => ["", jest.fn(), mockRemoveCookies],
 }));
+jest.mock("react-router-dom", () => ({
+    ...jest.requireActual("react-router-dom"),
+    useNavigate: jest.fn(),
+}));
 
-const logoutSpy = jest.spyOn(API, "logout").mockImplementation(async () => {});
 const removeLocalStorageSpy = jest.spyOn(Storage.prototype, "removeItem");
 
 describe("useLogout", () => {
+    const mockNavigate = jest.fn();
+    let logoutSpy: jest.SpyInstance;
+    beforeEach(() => {
+        logoutSpy = jest.spyOn(API, "logout").mockImplementation(async () => {});
+        (useNavigate as jest.Mock).mockImplementation(() => mockNavigate);
+    });
     it("T3.12 should handle logout successfully", async () => {
         const { result, waitForNextUpdate } = renderHook(useLogout);
 
@@ -26,6 +36,7 @@ describe("useLogout", () => {
         expect(removeLocalStorageSpy).toHaveBeenNthCalledWith(1, "expires_at");
         expect(removeLocalStorageSpy).toHaveBeenNthCalledWith(2, "user_id");
         expect(mockRemoveCookies).toHaveBeenCalledWith("SESSION");
+        expect(mockNavigate).toHaveBeenCalledWith("/");
 
         expect(result.current.isLoading).toBe(false);
         expect(result.current.error).toBe(null);
@@ -47,6 +58,7 @@ describe("useLogout", () => {
         expect(logoutSpy).toHaveBeenCalledTimes(1);
         expect(removeLocalStorageSpy).toHaveBeenCalled();
         expect(mockRemoveCookies).toHaveBeenCalled();
+        expect(mockNavigate).toHaveBeenCalledWith("/");
         expect(result.current.isLoading).toBe(false);
         expect(result.current.error).toBe("Logout failed");
     });

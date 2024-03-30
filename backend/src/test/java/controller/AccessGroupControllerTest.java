@@ -74,8 +74,8 @@ public class AccessGroupControllerTest {
     /**
      *   T5.17
      *   Preconditions: Access Groups List is null
-     *   Post-conditions: Returns a Response Entity with a list of AccessGroupDto Objects and
-     *   an OK status
+     *   Post-conditions: Returns a Response Entity with null
+     *   and a  NOT_FOUND status
      */
     @Test
     public void testListControllerNull(){
@@ -163,6 +163,8 @@ public class AccessGroupControllerTest {
         HttpStatus expected = HttpStatus.CREATED;
         HttpStatus result = responseEntity.getStatusCode();
         assertEquals(expected,result );
+
+        assertEquals(accessGroupDto,responseEntity.getBody());
 
     }
 

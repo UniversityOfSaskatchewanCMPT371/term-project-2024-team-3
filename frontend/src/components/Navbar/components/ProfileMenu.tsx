@@ -6,7 +6,11 @@ import MenuItem from "@mui/material/MenuItem";
 import profileimage from "assets/profile.jpg";
 import styles from "../Navbar.module.css";
 
-export default function ProfileMenu() {
+type Props = {
+    onLogout: () => void;
+};
+
+export default function ProfileMenu({ onLogout }: Props) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const navigate = useNavigate();
 
@@ -51,7 +55,7 @@ export default function ProfileMenu() {
                 }}
             >
                 <MenuItem onClick={() => handleNavigate("/profile")}>My account</MenuItem>
-                <MenuItem onClick={() => handleNavigate("/logout")}>Logout</MenuItem>
+                <MenuItem onClick={onLogout}>Logout</MenuItem>
             </Menu>
         </div>
     );

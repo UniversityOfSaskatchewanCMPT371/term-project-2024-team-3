@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { RadioGroup, FormControl, FormControlLabel, Radio, Button, Container } from "@mui/material";
 import { DataType, PredictionType, ProcessedFileData, WatchType, DownloadType } from "shared/api";
 import { ProgressBarType, ProgressBar } from "components/ProgressBar/ProgressBar";
+import ErrorSnackbar from "components/ErrorSnackbar/ErrorSnackbar";
 import useGetProcessedDataList from "shared/hooks/useGetProcessedDataList";
 import moment from "moment";
 import usePredictFile from "shared/hooks/usePredictFile";
@@ -35,9 +36,13 @@ const ProcessedDataPage = function () {
     const { handlePredict, error: usePredictError } = usePredictFile();
     const { handleDownload, error: useDownloadError } = useDownload();
 
-    const { uploadedFiles: fitbitFiles } = useGetProcessedDataList(WatchType.FITBIT);
+    const { uploadedFiles: fitbitFiles, error: fitBitListError } = useGetProcessedDataList(
+        WatchType.FITBIT,
+    );
 
-    const { uploadedFiles: appleWatchFiles } = useGetProcessedDataList(WatchType.APPLE_WATCH);
+    const { uploadedFiles: appleWatchFiles, error: appleWatchFilesError } = useGetProcessedDataList(
+        WatchType.APPLE_WATCH,
+    );
 
     /**
      * handles progress bar change
@@ -126,7 +131,7 @@ const ProcessedDataPage = function () {
             let predictWatch = WatchType.FITBIT;
 
             onProgressChange(30, "Your file is being predicted.", true);
-            if (lowerCaseWatch === "applewatch") {
+            if (lowerCaseWatch === WatchType.APPLE_WATCH) {
                 predictWatch = WatchType.APPLE_WATCH;
             }
 
@@ -151,9 +156,9 @@ const ProcessedDataPage = function () {
             const { id, watch } = currentFile;
             const stringID = id.toString();
             let watchType;
-            if (watch === "AppleWatch") {
+            if (watch === DataType.APPLE_WATCH) {
                 watchType = WatchType.APPLE_WATCH;
-            } else if (watch === "Fitbit") {
+            } else if (watch === DataType.FITBIT) {
                 watchType = WatchType.FITBIT;
             }
 
@@ -225,6 +230,12 @@ const ProcessedDataPage = function () {
                 message={progressbar.message}
                 isVisible={progressbar.isVisible}
             />
+
+            <ErrorSnackbar error={usePredictError} />
+            <ErrorSnackbar error={useDownloadError} />
+            <ErrorSnackbar error={fitBitListError} />
+            <ErrorSnackbar error={appleWatchFilesError} />
+
             <Container className={styles.containerDiv}>
                 <div className={styles.action_bar}>
                     <FormControl component="fieldset">

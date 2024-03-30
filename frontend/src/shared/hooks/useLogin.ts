@@ -31,10 +31,12 @@ const useLogin = (): UseLogin => {
 
             setCookie("SESSION", data.token, {
                 expires: expiresAt.toDate(),
+                sameSite: "none",
+                secure: true,
             });
             return data;
         } catch (error) {
-            setErrorState("Login failed. Please try again.");
+            setErrorState(error.message);
             return null;
         } finally {
             setIsLoading(false);

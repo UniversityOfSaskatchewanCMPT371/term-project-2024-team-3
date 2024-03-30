@@ -1,17 +1,18 @@
 import React from "react";
 import invariant from "invariant"; // Import invariant
-import { useRollbar } from "@rollbar/react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../Authentication/useAuth";
 import styles from "./Navbar.module.css";
 import logoimage from "../../assets/beap_lab_hex_small.png";
+import LoadingModal from "../LoadingModal/LoadingModal";
+import useLogout from "../../shared/hooks/useLogout";
 import ProfileMenu from "./components/ProfileMenu";
 
 function Navbar(): React.ReactElement | null {
-    const rollbar = useRollbar();
-    invariant(rollbar, "Rollbar context is not available");
-    rollbar.info("Reached Navbar component");
+    const { handleLogout, isLoading: logoutLoading } = useLogout();
+
     const { isAuthenticated } = useAuth();
+
     // Use invariant to check the type of isAuthenticated
     invariant(typeof isAuthenticated === "boolean", "isAuthenticated must be a boolean");
 
@@ -21,6 +22,10 @@ function Navbar(): React.ReactElement | null {
         return null;
     }
 
+    const onLogout = async () => {
+        await handleLogout();
+    };
+
     const routes = [
         { path: "/file-upload", name: "FILE UPLOAD" },
         { path: "/processed-data", name: "PROCESSED FILES" },
@@ -29,6 +34,10 @@ function Navbar(): React.ReactElement | null {
 
     return (
         <div>
+            <LoadingModal
+                header="Please wait while we are logging you out!"
+                isVisible={logoutLoading}
+            />
             <nav className={styles.navbar}>
                 <Link to="/" className={styles["navbar-brand"]}>
                     <img src={logoimage} alt="beapLogo" className={styles["navbar-logo"]} />
@@ -47,7 +56,7 @@ function Navbar(): React.ReactElement | null {
                     ))}
                 </div>
 
-                <ProfileMenu />
+                <ProfileMenu onLogout={onLogout} />
             </nav>
         </div>
     );

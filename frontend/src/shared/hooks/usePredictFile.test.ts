@@ -1,6 +1,5 @@
 import { renderHook } from "@testing-library/react-hooks";
 import { PredictionType, WatchType } from "shared/api";
-import { waitFor } from "@testing-library/react";
 import usePredictFile from "./usePredictFile";
 import * as API from "../Data/index";
 
@@ -32,10 +31,8 @@ describe("usePredictFile", () => {
             mockData.watchType,
         );
 
-        waitFor(() => {
-            expect(result.current.isLoading).toBe(false);
-            expect(result.current.error).toBe(null);
-        });
+        expect(result.current.isLoading).toBe(false);
+        expect(result.current.error).toBe(null);
     });
 
     it("should handle predict when it errors", async () => {
@@ -47,9 +44,7 @@ describe("usePredictFile", () => {
         await result.current.handlePredict(mockData.id, mockData.model, mockData.watchType);
 
         expect(predictFileSpy).toHaveBeenCalledTimes(1);
-        waitFor(() => {
-            expect(result.current.isLoading).toBe(false);
-            expect(result.current.error).toEqual("Predict File failed");
-        });
+        expect(result.current.isLoading).toBe(false);
+        expect(result.current.error).toEqual("Prediction failed");
     });
 });

@@ -22,6 +22,16 @@ export enum WatchType {
     FITBIT = "fitbit",
 }
 
+export enum DataType {
+    APPLE_WATCH = "AppleWatch",
+    FITBIT = "FitBit",
+}
+
+export enum DownloadType {
+    PROCESS = "process",
+    PREDICT = "predict",
+}
+
 export enum PredictionType {
     SVM = "svm",
     RANDOM_FOREST = "randomForest",
@@ -50,16 +60,6 @@ export type ProcessedFileData = {
     predictedData: FileData | null;
     dateTime: Date | null;
 };
-
-export enum DataType {
-    APPLE_WATCH = "AppleWatch",
-    FITBIT = "FitBit",
-}
-
-export enum DownloadType {
-    PROCESS = "process",
-    PREDICT = "predict",
-}
 
 export type RawFileData = {
     id: Number;

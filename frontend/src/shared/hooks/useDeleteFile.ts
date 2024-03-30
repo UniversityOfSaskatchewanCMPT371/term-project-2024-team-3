@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { deleteFile } from "../Data/index";
+import { deleteFile } from "../Data";
 import { WatchType } from "../api";
 
 type UseDeleteFile = {
@@ -18,7 +18,7 @@ const useDeleteFile = (): UseDeleteFile => {
             await deleteFile(id, watchType);
             setErrorState(null);
         } catch (error) {
-            setErrorState("Delete File failed");
+            setErrorState(error.message);
         } finally {
             setIsLoading(false);
         }

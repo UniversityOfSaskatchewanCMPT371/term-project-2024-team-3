@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { predict } from "../Data/index";
+import { predict } from "../Data";
 import { PredictionType, WatchType } from "../api";
 
 type UsePredict = {
@@ -22,7 +22,7 @@ const usePredictFile = (): UsePredict => {
             await predict(id, model, watchType);
             setErrorState(null);
         } catch (error) {
-            setErrorState("Predict File failed");
+            setErrorState(error.message);
         } finally {
             setIsLoading(false);
         }

@@ -15,8 +15,10 @@ import com.beaplab.BeaplabEngine.util.Util;
 import com.beaplab.BeaplabEngine.util.objectMapper.ProcessedDataMapper;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.hibernate.SQLQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -76,4 +78,20 @@ public class ProcessedDataService {
 
         return processedDataDtoList;
     }
+
+    /***
+     * a method to delete a piece of processed data from the database using the processed data DAO
+     * @param id where id is the id of the processed data entry in the database
+     * @return a boolean indicating whether the delete operation succeeded.
+     */
+    public Boolean delete(Long id){
+        logger.info("in ProcessedDataService: delete");
+
+        Boolean deleteSuccess = processedDataDao.delete(id);
+        if(deleteSuccess)
+            return true;
+        return false;
+
+    }
+
 }

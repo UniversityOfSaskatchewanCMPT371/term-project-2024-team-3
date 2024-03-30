@@ -9,6 +9,7 @@ import com.beaplab.BeaplabEngine.model.PredictedData;
 import com.beaplab.BeaplabEngine.model.PredictedDataIndex;
 import com.beaplab.BeaplabEngine.model.RawData;
 import com.beaplab.BeaplabEngine.repository.base.BaseRepository;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
@@ -56,6 +57,12 @@ public class PredictedDataDao {
     }
 
 
+    /**
+     * A function that saves predicted data using the data object and the id of the corresponding processed data
+     * @param predictedData : the predicted data to be saved
+     * @param processedDataId : the id of the corresponding processed data
+     * @return :
+     */
     @Transactional
     public Long save(PredictedData predictedData, long processedDataId) {
         logger.info("in PredictedDataDao: save");
@@ -76,6 +83,11 @@ public class PredictedDataDao {
     }
 
 
+    /**
+     * A function that retrieves predicted data using its id
+     * @param id : the id of the predicted data to be retrieved
+     * @return : the predicted data object corresponding to the id ( if found), if not, null is returned
+     */
     @Transactional
     public PredictedData get(Long id) {
         logger.info("in PredictedDataDao: get");
@@ -96,6 +108,12 @@ public class PredictedDataDao {
         return null;
     }
 
+    /**
+     * A function that lists a user's predicted data of a specific type ( Apple Watch or fitbit)
+     * @param userId : the id of the user whose predicted data is to be retrieved
+     * @param type: the type of device the data belongs to
+     * @return : a list of predicted data objects (if found), if not then null is returned.
+     */
     @Transactional
     public List<PredictedData> list(Long userId, RawData.dataType type) {
         logger.info("in RawDataDao: list");
@@ -115,5 +133,55 @@ public class PredictedDataDao {
             predictedDataList.add(predictedDataIndex.toPredictedData());
 
         return predictedDataList;
+    }
+
+
+    /***
+     * a method to delete a piece of predicted data from the database
+     * @param id where id is the id of the predicted data entry in the database
+     * @return a boolean indicating whether the delete operation succeeded.
+     */
+    @Transactional
+    public Boolean delete(Long id) {
+        logger.info("In PredictedDataDao: delete");
+
+        Boolean relationdeleted=  deleteRelationToProcessed(id);
+//        if (!relationdeleted) {
+//            logger.warn("Deletion of PredictedData with id: " + id + "failed due to failure to delete linkage");
+//        }
+
+        SQLQuery query = (SQLQuery) sessionFactory.getCurrentSession().createSQLQuery("DELETE FROM tbl_predicted_data WHERE id = :predict_data_id")
+                .setParameter("predict_data_id", id);
+
+        int rowsAffected = query.executeUpdate();
+        if (rowsAffected > 0) {
+            logger.info("Deleted PredictedData with id: " + id);
+            return true;
+        } else {
+            logger.warn("No PredictedData found with id: " + id + " to delete");
+            return false;
+        }
+    }
+
+    /***
+     * a method to delete a relational entry in the tbl-processed-data-tbl-predicted-data table in the database
+     * @param id where id is the id of the predicted data entry in the database
+     * @return a boolean indicating whether the delete operation succeeded.
+     */
+    @Transactional
+    public Boolean deleteRelationToProcessed(Long id) {
+        logger.info("In PredictedDataDao: delete");
+
+        SQLQuery query = (SQLQuery) sessionFactory.getCurrentSession().createSQLQuery("DELETE FROM tbl_processed_data_tbl_predicted_data WHERE predicteddataids_id = :predict_data_id")
+                .setParameter("predict_data_id", id);
+
+        int rowsAffected = query.executeUpdate();
+        if (rowsAffected > 0) {
+            logger.info("Deleted relation between PredictedData with id: " + id + " and its corresponding processed data");
+            return true;
+        } else {
+            logger.warn("No linkage to processed data found for Predicted data with id: " + id + " to delete");
+            return false;
+        }
     }
 }

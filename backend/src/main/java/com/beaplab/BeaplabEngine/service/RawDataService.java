@@ -78,4 +78,19 @@ public class RawDataService {
         List<RawDataDto> rawDataDtos = rawDataMapper.model2Dto(rawDataList, new ArrayList<RawDataDto>());
         return rawDataDtos;
     }
+
+    /***
+     * a method to delete a piece of raw data from the database using the raw data DAO
+     * @param id where id is the id of the raw data entry in the database
+     * @return a boolean indicating whether the delete operation succeeded.
+     */
+    public Boolean delete(Long id){
+        logger.info("in PredictedDataService: delete");
+
+        Boolean deleteSuccess = rawDataDao.delete(id);
+        if(deleteSuccess)
+            return true;
+        return false;
+    }
+
 }

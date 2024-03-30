@@ -17,6 +17,7 @@ const useLogout = (): UseLogout => {
         setIsLoading(true);
         try {
             await logout();
+            setErrorState(null);
         } catch (error) {
             setErrorState(error.message);
         } finally {

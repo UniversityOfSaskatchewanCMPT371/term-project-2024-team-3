@@ -17,6 +17,7 @@ const useGetProcessedDataList = (watchType: WatchType): UseGetProcessedDataList 
         getProcessedDataList(watchType)
             .then((data: any) => {
                 setUploadedFiles(data.list);
+                setErrorState(null);
             })
             .catch((error: Error) => {
                 setErrorState(`An error occured while getting processed files: ${error.message}`);

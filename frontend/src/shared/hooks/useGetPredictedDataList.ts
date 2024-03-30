@@ -17,6 +17,7 @@ const useGetPredictedDataList = (watchType: WatchType): UseGetPredictedDataList 
         getPredictedDataList(watchType)
             .then((data: PredictedFilesData) => {
                 setUploadedFiles(data.list);
+                setErrorState(null);
             })
             .catch((error: Error) => {
                 setErrorState(`An error occured while getting predicted files: ${error.message}`);

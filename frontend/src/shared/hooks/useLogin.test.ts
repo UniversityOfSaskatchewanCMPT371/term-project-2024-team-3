@@ -46,6 +46,8 @@ describe("useLogin", () => {
         expect(mockSetStorage.mock.calls).toEqual([[123], ["2024-01-02T11:00:00Z"]]);
         expect(mockSetCookies).toHaveBeenCalledWith("SESSION", "mockToken", {
             expires: new Date("2024-01-02T11:00:00.000Z"),
+            sameSite: "none",
+            secure: true,
         });
 
         expect(result.current.isLoading).toBe(false);
@@ -67,6 +69,6 @@ describe("useLogin", () => {
         expect(mockSetStorage).not.toHaveBeenCalled();
         expect(mockSetCookies).not.toHaveBeenCalled();
         expect(result.current.isLoading).toBe(false);
-        expect(result.current.error).toBe("Login failed. Please try again.");
+        expect(result.current.error).toBe("Login failed");
     });
 });

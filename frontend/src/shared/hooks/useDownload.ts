@@ -1,7 +1,7 @@
-import { useState, useMemo } from "react";
+import { useMemo, useState } from "react";
 import { saveAs } from "file-saver";
-import { download } from "../Data/index";
-import { WatchType, DownloadType } from "../api";
+import { download } from "../Data";
+import { DownloadType, WatchType } from "../api";
 
 type UseDownload = {
     handleDownload: (id: string, type: DownloadType, watchType: WatchType) => Promise<void>;
@@ -22,9 +22,7 @@ const useDownload = (): UseDownload => {
      * @param sliceSize the size of the slice for the blob
      * @returns a blob for downloading
      */
-    const b64toBlob = function (b64Data: string, contentType: string, sliceSize: number) {
-        // contentType = contentType || "";
-        // sliceSize = sliceSize || 512; // sliceSize represent the bytes to be process in each batch(loop), 512 bytes seems to be the ideal slice size for the performance wise
+    const b64toBlob = function (b64Data: string, contentType: string, sliceSize: number): Blob {
         const byteCharacters = atob(b64Data);
         const byteArrays = [];
         for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
@@ -36,12 +34,10 @@ const useDownload = (): UseDownload => {
             const byteArray = new Uint8Array(byteNumbers);
             byteArrays.push(byteArray);
         }
-        const blob = new Blob(byteArrays, { type: contentType });
-        return blob;
+        return new Blob(byteArrays, { type: contentType });
     };
 
     /**
-     *
      * @param id the id of the file
      * @param type 'process', 'predict'
      * @param watchType The type of watch to be downloaded
@@ -53,15 +49,17 @@ const useDownload = (): UseDownload => {
     ): Promise<void> => {
         setIsLoading(true);
         try {
-            await download(id, type, watchType).then((response: any) => {
-                // response.data.file is an array of bytes
-                const blob = b64toBlob(response.data.file, "application/octet-stream", 512);
-                setIsDownloading(true);
-                saveAs(blob, `${watchType} ${id}.zip`);
-            });
+            const response = await download(id, type, watchType);
+            // response.file is an array of bytes
+            if (!response.file) {
+                return;
+            }
+            const fileBlob = b64toBlob(response.file, "application/octet-stream", 512);
+            setIsDownloading(true);
             setErrorState(null);
+            saveAs(fileBlob, `${watchType} ${id}.zip`);
         } catch (error) {
-            setErrorState(`An error has occured while downloading a file: ${error}`);
+            setErrorState(`An error has occured while downloading a file: ${error.message}`);
         } finally {
             setIsLoading(false);
             setIsDownloading(false);

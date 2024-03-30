@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { RadioGroup, FormControl, FormControlLabel, Radio, Button, Container } from "@mui/material";
 import { DataType, PredictionType, ProcessedFileData, WatchType, DownloadType } from "shared/api";
+import { ProgressBarType, ProgressBar } from "components/ProgressBar/ProgressBar";
+import ErrorSnackbar from "components/ErrorSnackbar/ErrorSnackbar";
 import useGetProcessedDataList from "shared/hooks/useGetProcessedDataList";
 import moment from "moment";
 import usePredictFile from "shared/hooks/usePredictFile";
@@ -8,26 +10,79 @@ import useDownload from "shared/hooks/useDownload";
 import { useRollbar } from "@rollbar/react";
 import styles from "./ProcessedDataPage.module.css";
 
+type ProcessedFile = ProcessedFileData & {
+    watch: string;
+};
+
 const ProcessedDataPage = function () {
     const rollbar = useRollbar();
-    rollbar.info("Reached Processed Data page");
 
-    const [currentFile, setCurrentFile] = useState<any>();
+    const [currentFile, setCurrentFile] = useState<ProcessedFile>();
     const [selectedModel, setSelectedModel] = useState<PredictionType>(PredictionType.SVM);
 
+    const [progressbar, setProgressbar] = useState<ProgressBarType>({
+        percentage: 0,
+        message: "N/A",
+        isVisible: false,
+    });
+
     // ensuring correct initialization of state.
-    console.assert(currentFile === undefined, "currentFile should be undefined initially");
-    console.assert(
-        selectedModel === PredictionType.SVM,
-        "selectedModel should be initialized to PredictionType.SVM",
-    );
+    // console.assert(currentFile === undefined, "currentFile should be undefined initially");
+    // console.assert(
+    //     selectedModel === PredictionType.SVM,
+    //     "selectedModel should be initialized to PredictionType.SVM",
+    // );
 
     const { handlePredict, error: usePredictError } = usePredictFile();
     const { handleDownload, error: useDownloadError } = useDownload();
 
-    const { uploadedFiles: fitbitFiles } = useGetProcessedDataList(WatchType.FITBIT);
+    const { uploadedFiles: fitbitFiles, error: fitBitListError } = useGetProcessedDataList(
+        WatchType.FITBIT,
+    );
 
-    const { uploadedFiles: appleWatchFiles } = useGetProcessedDataList(WatchType.APPLE_WATCH);
+    const { uploadedFiles: appleWatchFiles, error: appleWatchFilesError } = useGetProcessedDataList(
+        WatchType.APPLE_WATCH,
+    );
+
+    /**
+     * handles progress bar change
+     * @param percentage the percentage for progress bar
+     * @param message the message to display on the progress bar
+     * @param isVisible a boolean for whether the progress bar is visible or not
+     */
+    const onProgressChange = (percentage: number, message: string, isVisible: boolean) => {
+        if (percentage >= 100) {
+            setProgressbar({
+                percentage,
+                message,
+                isVisible: true,
+            });
+            setTimeout(() => {
+                setProgressbar({
+                    percentage,
+                    message,
+                    isVisible: false,
+                });
+            }, 2000);
+        } else {
+            setProgressbar({
+                percentage,
+                message,
+                isVisible,
+            });
+        }
+    };
+
+    useEffect(() => {
+        rollbar.info("Reached Processed Data page");
+
+        if (useDownloadError && progressbar.isVisible) {
+            onProgressChange(100, `An Error Occured! ${useDownloadError}`, true);
+        }
+        if (usePredictError && progressbar.isVisible) {
+            onProgressChange(100, `An Error Occured! ${usePredictError}`, true);
+        }
+    }, [useDownloadError, usePredictError, progressbar]);
 
     const handleModelChange = (model: PredictionType) => {
         // ensure that the selected model belongs to one of the acceptable types
@@ -73,7 +128,16 @@ const ProcessedDataPage = function () {
         if (currentFile) {
             const { id, watch } = currentFile;
             const lowerCaseWatch = watch.toLowerCase();
-            handlePredict(id, selectedModel, lowerCaseWatch);
+            let predictWatch = WatchType.FITBIT;
+
+            onProgressChange(30, "Your file is being predicted.", true);
+            if (lowerCaseWatch === WatchType.APPLE_WATCH) {
+                predictWatch = WatchType.APPLE_WATCH;
+            }
+
+            await handlePredict(id.toString(), selectedModel, predictWatch);
+            onProgressChange(100, "Your file has been predicted!", true);
+
             if (usePredictError) {
                 rollbar.error(usePredictError);
             }
@@ -84,16 +148,30 @@ const ProcessedDataPage = function () {
      * Pre-conditions: A file is selected
      * Post-conditions: Downloads the currently selected file to the users computer
      */
-    const downloadFile = (event: React.MouseEvent) => {
+    const downloadFile = async (event: React.MouseEvent) => {
         event.preventDefault();
         // make sure a file is selected before you attempt to download it
         console.assert(currentFile !== undefined, "A file should be selected before downloading");
         if (currentFile) {
             const { id, watch } = currentFile;
             const stringID = id.toString();
-            handleDownload(stringID, DownloadType.PROCESS, watch);
-            if (useDownloadError) {
-                rollbar.error(useDownloadError);
+            let watchType;
+            if (watch === DataType.APPLE_WATCH) {
+                watchType = WatchType.APPLE_WATCH;
+            } else if (watch === DataType.FITBIT) {
+                watchType = WatchType.FITBIT;
+            }
+
+            if (watchType === undefined) {
+                rollbar.error("Incorrect watch type for download");
+            } else {
+                onProgressChange(30, "Your file is being downloaded.", true);
+                await handleDownload(stringID, DownloadType.PROCESS, watchType);
+                onProgressChange(100, "Your file has been downloaded!", true);
+
+                if (useDownloadError) {
+                    rollbar.error(useDownloadError);
+                }
             }
         }
     };
@@ -105,9 +183,11 @@ const ProcessedDataPage = function () {
      */
     const getRendersOfFiles = () => {
         console.assert(files.length > 0, "Files array should contain data for rendering");
-        renders = files.map((file: ProcessedFileData) => {
+        renders = files.map((file: ProcessedFile) => {
             const date = moment(file.dateTime ?? "");
             let dateString;
+
+            const { id, watch } = file;
 
             if (date.isValid()) {
                 dateString = date.format("YYYY/MM/DD");
@@ -118,7 +198,7 @@ const ProcessedDataPage = function () {
             return (
                 <div className={styles.fileSelector}>
                     <FormControlLabel
-                        value={file.id}
+                        value={id}
                         onClick={() => setCurrentFile(file)}
                         control={
                             <Radio
@@ -130,7 +210,7 @@ const ProcessedDataPage = function () {
                                 }}
                             />
                         }
-                        label={file.id.toString()}
+                        label={`${watch} ${id.toString()}`}
                         labelPlacement="end"
                     />
                     <div className={styles.fileTextBox}>
@@ -145,6 +225,17 @@ const ProcessedDataPage = function () {
 
     return (
         <div>
+            <ProgressBar
+                percentage={progressbar.percentage}
+                message={progressbar.message}
+                isVisible={progressbar.isVisible}
+            />
+
+            <ErrorSnackbar error={usePredictError} />
+            <ErrorSnackbar error={useDownloadError} />
+            <ErrorSnackbar error={fitBitListError} />
+            <ErrorSnackbar error={appleWatchFilesError} />
+
             <Container className={styles.containerDiv}>
                 <div className={styles.action_bar}>
                     <FormControl component="fieldset">

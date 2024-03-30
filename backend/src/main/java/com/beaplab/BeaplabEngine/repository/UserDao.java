@@ -57,7 +57,9 @@ public class UserDao implements BaseRepository<User> {
 
     /**
      * retrieving a list of all Users in the system
-     * @return List<User>: a list of user objects corresponding to all users found in the database
+     * 
+     * @return List<User>: a list of user objects corresponding to all users found
+     *         in the database
      */
     @Override
     @Transactional
@@ -73,6 +75,7 @@ public class UserDao implements BaseRepository<User> {
 
     /**
      * Saving a User object to the database effectively adding it to the system
+     * 
      * @param user : the user object to be saved to the database
      * @return : the id of the saved user
      */
@@ -88,6 +91,7 @@ public class UserDao implements BaseRepository<User> {
 
     /**
      * updating an existing User
+     * 
      * @param user: the user object of the user being updated
      */
     @Override
@@ -136,7 +140,7 @@ public class UserDao implements BaseRepository<User> {
 
         SQLQuery updateQuery = (SQLQuery) sessionFactory.getCurrentSession().createSQLQuery(
                 "UPDATE tbl_user SET first_name= :new_first_name, last_name= :new_last_name,"
-                        + " password= :new_password, username= :new_username WHERE id = :user_id")
+                        + " password= crypt(:new_password, gen_salt ('md5')), username= :new_username WHERE id = :user_id")
                 .setParameter("new_first_name", firstName)
                 .setParameter("new_last_name", lastName)
                 .setParameter("new_password", password)
@@ -159,6 +163,7 @@ public class UserDao implements BaseRepository<User> {
 
     /**
      * retrieving a specific User object from the database using its id
+     * 
      * @param uuid: the id of the user object to be retrieved
      * @return the retrieved user object ( if found) . If not, null is returned
      */
@@ -183,6 +188,7 @@ public class UserDao implements BaseRepository<User> {
 
     /**
      * deleting a specific User Object from the database by its id
+     * 
      * @param id : the id of the user who is to be deleted
      */
     @Override
@@ -197,6 +203,7 @@ public class UserDao implements BaseRepository<User> {
 
     /**
      * retrieving a user Object by its username and password properties
+     * 
      * @param username : the username of the user to be found
      * @param password : the password of the user to be found
      * @return : the user ( if found), if not then null is returned
@@ -223,8 +230,9 @@ public class UserDao implements BaseRepository<User> {
 
     /**
      * retrieving a specific User by its username
+     * 
      * @param username : the username of the user to be found
-     * @return :  the user ( if found), if not then null is returned
+     * @return : the user ( if found), if not then null is returned
      */
     @Transactional
     public User findByUsername(String username) {
@@ -244,9 +252,10 @@ public class UserDao implements BaseRepository<User> {
         return null;
     }
 
-
     /***
-     * a method to delete a relational entry in the tbl_user_tbl_role table in the database
+     * a method to delete a relational entry in the tbl_user_tbl_role table in the
+     * database
+     * 
      * @param id where id is the id of the user whose linkage is to be removed
      * @return a boolean indicating whether the delete operation succeeded.
      */
@@ -254,7 +263,8 @@ public class UserDao implements BaseRepository<User> {
     public Boolean deleteRelationToRole(Long id) {
         logger.info("In UserDao: deleteRelationToRole");
 
-        SQLQuery query = (SQLQuery) sessionFactory.getCurrentSession().createSQLQuery("DELETE FROM tbl_user_tbl_role WHERE tbl_user_id = :user_id")
+        SQLQuery query = (SQLQuery) sessionFactory.getCurrentSession()
+                .createSQLQuery("DELETE FROM tbl_user_tbl_role WHERE tbl_user_id = :user_id")
                 .setParameter("user_id", id);
 
         int rowsAffected = query.executeUpdate();
@@ -267,9 +277,10 @@ public class UserDao implements BaseRepository<User> {
         }
     }
 
-
     /***
-     * a method to delete a relational entry in the tbl_user_tbl_access_group table in the database
+     * a method to delete a relational entry in the tbl_user_tbl_access_group table
+     * in the database
+     * 
      * @param id where id is the id of the user whose linkage is to be removed
      * @return a boolean indicating whether the delete operation succeeded.
      */
@@ -277,7 +288,8 @@ public class UserDao implements BaseRepository<User> {
     public Boolean deleteRelationToAccessGroup(Long id) {
         logger.info("In UserDao: deleteRelationToAccessGroup");
 
-        SQLQuery query = (SQLQuery) sessionFactory.getCurrentSession().createSQLQuery("DELETE FROM tbl_user_tbl_access_group WHERE tbl_user_id = :user_id")
+        SQLQuery query = (SQLQuery) sessionFactory.getCurrentSession()
+                .createSQLQuery("DELETE FROM tbl_user_tbl_access_group WHERE tbl_user_id = :user_id")
                 .setParameter("user_id", id);
 
         int rowsAffected = query.executeUpdate();
@@ -291,7 +303,9 @@ public class UserDao implements BaseRepository<User> {
     }
 
     /***
-     * a method to delete a relational entry in the tbl_login_user table in the database
+     * a method to delete a relational entry in the tbl_login_user table in the
+     * database
+     * 
      * @param id where id is the id of the user whose linkage is to be removed
      * @return a boolean indicating whether the delete operation succeeded.
      */
@@ -299,12 +313,13 @@ public class UserDao implements BaseRepository<User> {
     public Boolean deleteUserLoginHistory(Long id) {
         logger.info("In UserDao: deleteUserLoginHistory");
 
-        SQLQuery query = (SQLQuery) sessionFactory.getCurrentSession().createSQLQuery("DELETE FROM tbl_login_user WHERE user_id = :passed_user_id")
+        SQLQuery query = (SQLQuery) sessionFactory.getCurrentSession()
+                .createSQLQuery("DELETE FROM tbl_login_user WHERE user_id = :passed_user_id")
                 .setParameter("passed_user_id", id);
 
         int rowsAffected = query.executeUpdate();
         if (rowsAffected > 0) {
-            logger.info("Deleted login history for user with id: " + id );
+            logger.info("Deleted login history for user with id: " + id);
             return true;
         } else {
             logger.warn("No login history found for user with id: " + id + " to delete");
@@ -313,7 +328,9 @@ public class UserDao implements BaseRepository<User> {
     }
 
     /***
-     * a method to delete a relational entry in the tbl_incorrect_logins table in the database
+     * a method to delete a relational entry in the tbl_incorrect_logins table in
+     * the database
+     * 
      * @param id where id is the id of the user whose linkage is to be removed
      * @return a boolean indicating whether the delete operation succeeded.
      */
@@ -321,12 +338,13 @@ public class UserDao implements BaseRepository<User> {
     public Boolean deleteUserIncorrectLoginHistory(Long id) {
         logger.info("In UserDao: deleteUserIncorrectLoginHistory");
 
-        SQLQuery query = (SQLQuery) sessionFactory.getCurrentSession().createSQLQuery("DELETE FROM tbl_incorrect_logins WHERE user_id = :passed_user_id")
+        SQLQuery query = (SQLQuery) sessionFactory.getCurrentSession()
+                .createSQLQuery("DELETE FROM tbl_incorrect_logins WHERE user_id = :passed_user_id")
                 .setParameter("passed_user_id", id);
 
         int rowsAffected = query.executeUpdate();
         if (rowsAffected > 0) {
-            logger.info("Deleted incorrect login history for user with id: " + id );
+            logger.info("Deleted incorrect login history for user with id: " + id);
             return true;
         } else {
             logger.warn("No incorrect login history found for user with id: " + id + " to delete");
@@ -334,17 +352,18 @@ public class UserDao implements BaseRepository<User> {
         }
     }
 
-
     /***
-     * a method to delete the users account including all information related to them or uploaded by them.
+     * a method to delete the users account including all information related to
+     * them or uploaded by them.
+     * 
      * @param id where id is the id of the user whose account is to be deleted
      * @return a boolean indicating whether the delete operation succeeded.
      */
     @Transactional
-    public Boolean deleteUserAccount (Long id){
+    public Boolean deleteUserAccount(Long id) {
         logger.info("In UserDao: deleteUserAccount");
 
-        //delete the user's raw, processed, and predicted data.
+        // delete the user's raw, processed, and predicted data.
         deleteUserData(id);
 
         // delete related role, accessGroup, and loginHistory information
@@ -354,12 +373,13 @@ public class UserDao implements BaseRepository<User> {
         Boolean deleteUserIncorrectLoginHistory = deleteUserIncorrectLoginHistory(id);
 
         // delete user himself
-        SQLQuery query = (SQLQuery) sessionFactory.getCurrentSession().createSQLQuery("DELETE FROM tbl_user WHERE id = :user_id")
+        SQLQuery query = (SQLQuery) sessionFactory.getCurrentSession()
+                .createSQLQuery("DELETE FROM tbl_user WHERE id = :user_id")
                 .setParameter("user_id", id);
 
         int rowsAffected = query.executeUpdate();
         if (rowsAffected > 0) {
-            logger.info("Deleted user with id: " + id );
+            logger.info("Deleted user with id: " + id);
             return true;
         } else {
             logger.warn("No user with id: " + id + " to delete");
@@ -367,13 +387,13 @@ public class UserDao implements BaseRepository<User> {
         }
     }
 
-
     /***
      * a method to delete the user's uploaded raw, processed, and predicted data
+     * 
      * @param id where id is the id of the user whose data is to be deleted
      */
     @Transactional
-    public void deleteUserData (Long id){
+    public void deleteUserData(Long id) {
         logger.info("In UserDao: deleteUserData");
         // find list of raw data ids
         // use it to find list of processed data ids
@@ -381,10 +401,11 @@ public class UserDao implements BaseRepository<User> {
         // delete raw data using ids.
 
         // first check if there is a linkage to any raw data
-        SQLQuery searchQueryForRawData = (SQLQuery) sessionFactory.getCurrentSession().createSQLQuery("SELECT rawdataids_id FROM tbl_user_tbl_raw_data WHERE tbl_user_id = :user_id")
+        SQLQuery searchQueryForRawData = (SQLQuery) sessionFactory.getCurrentSession()
+                .createSQLQuery("SELECT rawdataids_id FROM tbl_user_tbl_raw_data WHERE tbl_user_id = :user_id")
                 .setParameter("user_id", id);
         List<Object> listOfRawData = searchQueryForRawData.list();
-        List<Long> longListOfRawData= new ArrayList<Long>();
+        List<Long> longListOfRawData = new ArrayList<Long>();
 
         // if there is raw data linked, type cast into datatype Long.
         if (listOfRawData != null && !listOfRawData.isEmpty()) {
@@ -395,12 +416,14 @@ public class UserDao implements BaseRepository<User> {
                 longListOfRawData.add(linkedRawDataId);
             }
             for (Long rawDataId : longListOfRawData) {
-                SQLQuery searchQueryForProcessedData = (SQLQuery) sessionFactory.getCurrentSession().createSQLQuery("SELECT processed_data_id FROM tbl_raw_data WHERE id = :raw_data_id")
+                SQLQuery searchQueryForProcessedData = (SQLQuery) sessionFactory.getCurrentSession()
+                        .createSQLQuery("SELECT processed_data_id FROM tbl_raw_data WHERE id = :raw_data_id")
                         .setParameter("raw_data_id", rawDataId);
 
                 List<Object> listOfProcessedData = searchQueryForProcessedData.list();
 
-                // if there is processed data linked, type cast into datatype Long and delete by id.
+                // if there is processed data linked, type cast into datatype Long and delete by
+                // id.
                 if (listOfProcessedData != null && !listOfProcessedData.isEmpty()) {
                     logger.info("found processed Data linked to raw data of id: " + rawDataId);
                     for (Object processedDataId : listOfProcessedData) {

@@ -1,3 +1,5 @@
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
 SET
     statement_timeout = 0;
 
@@ -191,7 +193,7 @@ CREATE FUNCTION public.login_user (
     password character varying
 ) LANGUAGE sql AS $$ 
 select id, first_name, last_name, username, password from tbl_user
-	where username = in_username and password = in_password
+	where username = in_username and password = crypt(in_password, password)
 $$;
 
 ALTER FUNCTION public.login_user (
@@ -620,7 +622,13 @@ VALUES
 INSERT INTO
     public.tbl_user (id, first_name, last_name, password, username)
 VALUES
-    (1, 'Test', 'Tester', '123', 'hello');
+    (
+        1,
+        'Test',
+        'Tester',
+        public.crypt ('123', public.gen_salt ('md5')),
+        'hello'
+    );
 
 INSERT INTO
     public.tbl_user_tbl_access_group (tbl_user_id, accessgroupids_id)

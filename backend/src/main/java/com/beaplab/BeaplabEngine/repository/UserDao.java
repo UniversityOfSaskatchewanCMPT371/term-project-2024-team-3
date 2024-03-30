@@ -263,6 +263,29 @@ public class UserDao implements BaseRepository<User> {
     }
 
     /***
+     * a method to delete a relational entry in the tbl_incorrect_logins table in the database
+     * @param id where id is the id of the user whose linkage is to be removed
+     * @return a boolean indicating whether the delete operation succeeded.
+     */
+    @Transactional
+    public Boolean deleteUserIncorrectLoginHistory(Long id) {
+        logger.info("In UserDao: deleteUserIncorrectLoginHistory");
+
+        SQLQuery query = (SQLQuery) sessionFactory.getCurrentSession().createSQLQuery("DELETE FROM tbl_incorrect_logins WHERE user_id = :passed_user_id")
+                .setParameter("passed_user_id", id);
+
+        int rowsAffected = query.executeUpdate();
+        if (rowsAffected > 0) {
+            logger.info("Deleted incorrect login history for user with id: " + id );
+            return true;
+        } else {
+            logger.warn("No incorrect login history found for user with id: " + id + " to delete");
+            return false;
+        }
+    }
+
+
+    /***
      * a method to delete the users account including all information related to them or uploaded by them.
      * @param id where id is the id of the user whose account is to be deleted
      * @return a boolean indicating whether the delete operation succeeded.
@@ -278,6 +301,7 @@ public class UserDao implements BaseRepository<User> {
         Boolean deleteRelationToRole = deleteRelationToRole(id);
         Boolean deleteRelationToAccessGroup = deleteRelationToAccessGroup(id);
         Boolean deleteUserLoginHistory = deleteUserLoginHistory(id);
+        Boolean deleteUserIncorrectLoginHistory = deleteUserIncorrectLoginHistory(id);
 
         // delete user himself
         SQLQuery query = (SQLQuery) sessionFactory.getCurrentSession().createSQLQuery("DELETE FROM tbl_user WHERE id = :user_id")

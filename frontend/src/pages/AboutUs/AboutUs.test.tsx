@@ -3,15 +3,12 @@ import { screen } from "@testing-library/react";
 import { renderWithProvider } from "shared/util/tests/render";
 import AboutUs from "./AboutUs";
 
-
 global.IntersectionObserver = class IntersectionObserver {
-    constructor(callback: IntersectionObserverCallback, options?: IntersectionObserverInit) {}
-
     disconnect() {
         return null;
     }
 
-    observe(element: Element) {
+    observe() {
         return null;
     }
 
@@ -19,16 +16,16 @@ global.IntersectionObserver = class IntersectionObserver {
         return [];
     }
 
-    unobserve(element: Element) {
+    unobserve() {
         return null;
     }
 
     root = null;
-    rootMargin = '';
+
+    rootMargin = "";
+
     thresholds = [0];
 };
-
-
 
 describe("AboutUs component", () => {
     beforeEach(() => {

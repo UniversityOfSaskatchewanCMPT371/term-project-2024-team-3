@@ -1,13 +1,10 @@
 import React, { useState, FormEvent } from "react";
-import { GoogleLogin } from "react-google-login";
 import useSignup from "shared/hooks/useSignup";
 import { useNavigate } from "react-router-dom";
 import { useRollbar } from "@rollbar/react";
 import styles from "./SignUpPage.module.css";
 import leftArrow from "../../assets/left-arrow.png";
 import rightArrow from "../../assets/right-arrow.png";
-
-const CLIENT_ID = "827529413912-celsdkun_YOUR_API_KEY_lsn28.apps.googleusercontent.com";
 
 const texts = [
     "Welcome to BEAPEngine, a research project founded by Dr. Daniel Fuller.",
@@ -80,29 +77,6 @@ function SignUpPage() {
     };
 
     /**
-     * Success handler for Google login response.
-     * Logs user information to the console.
-     * @param response - Response object containing user profile information
-     */
-    const responseGoogleSuccess = (response: any) => {
-        const userInfo = {
-            name: response.profileObj.name,
-            emailId: response.profileObj.email,
-        };
-        console.log(userInfo);
-    };
-
-    /**
-     * Error handler for Google login response.
-     * Logs the error response to the console and Rollbar.
-     * @param response - Error response object
-     */
-    const responseGoogleError = (response: any) => {
-        console.error(response);
-        rollbar.error(response);
-    };
-
-    /**
      * Handles form submission for user sign-up.
      * Validates form fields and submits the sign-up request if validation passes.
      * @param event - Form submission event
@@ -151,25 +125,6 @@ function SignUpPage() {
                 <div className={styles["left-section"]}>
                     <h1 className={styles["signup-text"]}>Sign Up</h1>
                     <p className={styles["createaccount-text"]}>Create a free BEAPENGINE account</p>
-                    <GoogleLogin
-                        clientId={CLIENT_ID}
-                        buttonText="Sign Up with Google"
-                        onSuccess={responseGoogleSuccess}
-                        onFailure={responseGoogleError}
-                        isSignedIn
-                        cookiePolicy="single_host_origin"
-                        render={(renderProps) => (
-                            <button
-                                type="button"
-                                onClick={renderProps.onClick}
-                                disabled={renderProps.disabled}
-                                className={styles["google-signup"]}
-                            >
-                                Sign Up with Google
-                            </button>
-                        )}
-                    />
-                    <p>OR</p>
                     <form onSubmit={handleSubmit} className={styles["form-box"]}>
                         <div className={styles.tabs}>
                             <button
@@ -260,7 +215,9 @@ function SignUpPage() {
                                 id="policyAgreement"
                                 htmlFor="policyCheck"
                             >
-                                I agree to the terms and privacy policy
+                                <a href="/privacy-policy" target="_blank">
+                                    I agree to the terms and privacy policy
+                                </a>
                             </label>
                             <input
                                 data-testid="policyAgreementCheck"
@@ -276,7 +233,6 @@ function SignUpPage() {
                             </p>
                         )}
                         <div className={styles["button-container"]}>
-                            <p className={styles["forgot-password"]}>Forgot password?</p>
                             <button
                                 data-testid="submitButton"
                                 type="submit"

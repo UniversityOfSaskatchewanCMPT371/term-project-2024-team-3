@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
-import { getUploadedFiles } from "../Data/index";
+import { getUploadedFiles } from "../Data";
 import { RawFileData, WatchType } from "../api";
 
 type UseGetUploadedFiles = {
@@ -17,6 +17,7 @@ const useGetUploadedFiles = (watchType: WatchType, refetch = false): UseGetUploa
         getUploadedFiles(watchType)
             .then((data) => {
                 setUploadedFiles(data.list);
+                setErrorState(null);
             })
             .catch((error: Error) => {
                 setErrorState(`An error occured while getting uploaded files: ${error.message}`);

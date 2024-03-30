@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { process } from "../Data/index";
+import { process } from "../Data";
 import { WatchType } from "../api";
 
 type UseProcessFile = {
@@ -18,9 +18,7 @@ const useProcessFile = (): UseProcessFile => {
             await process(id, watchType);
             setErrorState(null);
         } catch (error) {
-            if (error instanceof Error) {
-                setErrorState(`Processing ${watchType} file ${id} error: ${error.message}`);
-            }
+            setErrorState(`Processing ${watchType} file ${id} error: ${error.message}`);
         } finally {
             setIsLoading(false);
         }

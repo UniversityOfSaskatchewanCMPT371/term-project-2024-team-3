@@ -1,7 +1,7 @@
-import { useState, useMemo } from "react";
+import { useMemo, useState } from "react";
 import { saveAs } from "file-saver";
-import { download } from "../Data/index";
-import { WatchType, DownloadType } from "../api";
+import { download } from "../Data";
+import { DownloadType, WatchType } from "../api";
 
 type UseDownload = {
     handleDownload: (id: string, type: DownloadType, watchType: WatchType) => Promise<void>;
@@ -34,8 +34,7 @@ const useDownload = (): UseDownload => {
             const byteArray = new Uint8Array(byteNumbers);
             byteArrays.push(byteArray);
         }
-        const blob = new Blob(byteArrays, { type: contentType });
-        return blob;
+        return new Blob(byteArrays, { type: contentType });
     };
 
     /**
@@ -60,7 +59,7 @@ const useDownload = (): UseDownload => {
             setErrorState(null);
             saveAs(fileBlob, `${watchType} ${id}.zip`);
         } catch (error) {
-            setErrorState(`An error has occured while downloading a file: ${error}`);
+            setErrorState(`An error has occured while downloading a file: ${error.message}`);
         } finally {
             setIsLoading(false);
             setIsDownloading(false);

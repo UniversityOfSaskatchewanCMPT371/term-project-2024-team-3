@@ -7,11 +7,7 @@ Here are some quick links to our document deliverables!
 - [Incremental Deliverable 3 (ID3)](/documents/ID3)
 - [Incremental Deliverable 4 (ID4)](/documents/ID4)
 - [Incremental Deliverable 5 (ID5)](/documents/ID5)
-
-# Getting Started
-
-Access our [Wiki here](https://github.com/UniversityOfSaskatchewanCMPT371/term-project-2024-team-3/wiki)
-
+- [Build Deployment](/documents/build)
 ## Prerequisites
 
 Windows users: [Docker](https://docs.docker.com/desktop/install/windows-install/)

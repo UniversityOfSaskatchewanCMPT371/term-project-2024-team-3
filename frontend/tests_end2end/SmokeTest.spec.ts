@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 import { setupLogin } from "./utils";
 
 test("smoke test @smoke", async ({ page }) => {
-    //homepage
+    // homepage
     await page.goto("./");
     const Title = page.locator("#root");
     await expect(Title).toContainText("BEAP ENGINE");

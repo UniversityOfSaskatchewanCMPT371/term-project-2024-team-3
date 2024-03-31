@@ -1,8 +1,10 @@
 package controller;
+import com.beaplab.BeaplabEngine.authentication.SessionDetails;
 import com.beaplab.BeaplabEngine.constants.BeapEngineConstants;
 import com.beaplab.BeaplabEngine.controller.AccessGroupController;
 import com.beaplab.BeaplabEngine.controller.UserController;
 import com.beaplab.BeaplabEngine.metadata.AccessGroupDto;
+import com.beaplab.BeaplabEngine.metadata.UpdatePasswordObject;
 import com.beaplab.BeaplabEngine.metadata.UserDto;
 import com.beaplab.BeaplabEngine.model.AccessGroup;
 import com.beaplab.BeaplabEngine.model.User;
@@ -23,7 +25,10 @@ import org.mockito.*;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockHttpServletRequest;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,10 +45,21 @@ public class UserControllerTest {
 
     @Mock
     private UserService userService;
+    @Mock
+    private HttpSession httpSession;
+
+    private final MockHttpServletRequest request = new MockHttpServletRequest();
 
     @Before
     public void setUp() {
+
         MockitoAnnotations.initMocks(this);
+        // mocking request and session details
+
+        request.setSession(httpSession);
+        SessionDetails session = new SessionDetails();
+        session.setUserId(1L);
+        when(httpSession.getAttribute("SESSION_DETAILS")).thenReturn(session);
     }
 
     /**
@@ -304,5 +320,96 @@ public class UserControllerTest {
         assertEquals(expected,result);
 
         assertNull(responseEntity.getBody());
+    }
+
+    /**
+     * T5.??
+     * Preconditions: User exists
+     * Post-condition: Updates user password
+     * */
+    @Test
+    public void testUpdatePassword() {
+        UserDto userDto = mockUserDto();
+        UpdatePasswordObject passwordObject = new UpdatePasswordObject();
+        passwordObject.setPassword("123");
+        userDto.setPassword("123");
+        when(userService.get("1")).thenReturn(userDto);
+
+        when(userService.newUpdateUser(userDto)).thenReturn(true);
+
+        ResponseEntity<UserDto> responseEntity = userController.updatePassword(request, passwordObject);
+
+        HttpStatus expected = HttpStatus.OK;
+
+        HttpStatus result= responseEntity.getStatusCode();
+
+        assertEquals(expected, result);
+    }
+
+    /**
+     * T5.??
+     * Preconditions: User exists
+     * Post-condition: User is returned
+     * */
+    @Test
+    public void testGetUser() {
+        UserDto userDto = mockUserDto();
+
+        when(userService.get("1")).thenReturn(userDto);
+
+        when(userService.newUpdateUser(userDto)).thenReturn(true);
+
+        ResponseEntity<JSONObject> responseEntity = userController.getUsername(request);
+
+        HttpStatus expected = HttpStatus.OK;
+
+        HttpStatus result= responseEntity.getStatusCode();
+
+        assertEquals(expected, result);
+    }
+
+    /**
+     * T5.76
+     * A function that tests the case where the delete user data function is called but the DTO is null
+     * Preconditions: User exists
+     * Post-condition: User profile and data is deleted
+     * */
+    @Test
+    public void testDeleteUserProfile(){
+        UserDto userDto = mockUserDto();
+
+        when(userService.get("1")).thenReturn(userDto);
+
+        when(userService.deleteUserAccount(1L)).thenReturn(true);
+
+        ResponseEntity<JSONObject> responseEntity = userController.deleteProfile(request);
+
+        HttpStatus expected = HttpStatus.OK;
+
+        HttpStatus result= responseEntity.getStatusCode();
+
+        assertEquals(expected, result);
+    }
+
+    /**
+     * T5.??
+     * Preconditions: User exists
+     * Post-condition: User data is deleted
+     * */
+    @Test
+    public void testDeleteUserData(){
+        UserDto userDto = mockUserDto();
+
+        when(userService.get("1")).thenReturn(userDto);
+
+        ResponseEntity<JSONObject> responseEntity = userController.deleteUserData(request);
+
+        verify(userService).deleteUserData(1L);
+
+        HttpStatus expected = HttpStatus.OK;
+
+        HttpStatus result= responseEntity.getStatusCode();
+
+        assertEquals(expected, result);
     }
 }

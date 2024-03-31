@@ -18,8 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -183,6 +182,39 @@ public class RawDataServiceTest {
 
         assertNull(result);
     }
+
+    @Test
+    /*
+     * T.?
+     * Preconditions: Existing raw data in the database
+     * Post-conditions: raw data is deleted
+     */
+    public void testDeleteSucceeded() {
+        Long id = 1L;
+
+        when(rawDataDao.delete(id)).thenReturn(true);
+
+        Boolean result = rawDataService.delete(id);
+
+        assertTrue(result);
+    }
+
+    @Test
+    /*
+     * T.?
+     * Preconditions: No existing raw data in the database
+     * Post-conditions: No raw data is deleted
+     */
+    public void testDeleteFailed() {
+        Long id = 1L;
+
+        when(rawDataDao.delete(id)).thenReturn(false);
+
+        Boolean result = rawDataService.delete(id);
+
+        assertFalse(result);
+    }
+
 
 }
 

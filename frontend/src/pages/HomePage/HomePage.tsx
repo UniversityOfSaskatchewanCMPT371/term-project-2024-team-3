@@ -1,8 +1,9 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Icon } from "@mui/material";
 import { useRollbar } from "@rollbar/react";
 import invariant from "invariant";
+import { useAuth } from "components/Authentication/useAuth";
 import style from "./HomePage.module.css";
 import AppleWatchPdf from "../../assets/AppleWatch.pdf";
 import FitbitPdf from "../../assets/Fitbit.pdf";
@@ -11,8 +12,12 @@ import engineOverview from "../../assets/engine-overview.png";
 
 function HomePage(): ReactElement {
     const rollbar = useRollbar();
+    const { isAuthenticated } = useAuth();
     invariant(rollbar, "Rollbar context is not available");
-    rollbar.info("Reached Home page");
+
+    useEffect(() => {
+        rollbar.info("Reached Home page");
+    }, []);
 
     const navigate = useNavigate();
     invariant(navigate, "Navigation function is not available");
@@ -51,18 +56,24 @@ function HomePage(): ReactElement {
                         alt="Beap Logo"
                     />
                 </div>
-                <div className={style.auth_buttons}>
-                    <button type="button" onClick={handleLoginClick} className={style.login_button}>
-                        Login
-                    </button>
-                    <button
-                        type="button"
-                        onClick={handleSignUpClick}
-                        className={style.signup_button}
-                    >
-                        Sign Up
-                    </button>
-                </div>
+                {!isAuthenticated && (
+                    <div className={style.auth_buttons}>
+                        <button
+                            type="button"
+                            onClick={handleLoginClick}
+                            className={style.login_button}
+                        >
+                            Login
+                        </button>
+                        <button
+                            type="button"
+                            onClick={handleSignUpClick}
+                            className={style.signup_button}
+                        >
+                            Sign Up
+                        </button>
+                    </div>
+                )}
                 <div className={style.page_body}>
                     <h1>BEAP ENGINE</h1>
                     <h6 className={style.h6Glow}>Unleashing The Power Of Your Fitness Data</h6>

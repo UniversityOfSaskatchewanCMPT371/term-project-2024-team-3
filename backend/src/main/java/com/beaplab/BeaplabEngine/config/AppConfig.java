@@ -56,7 +56,7 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**").exposedHeaders("token");
+        registry.addMapping("/**").exposedHeaders("token").allowedMethods("*");
     }
 
 

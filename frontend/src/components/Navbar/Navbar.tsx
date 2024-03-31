@@ -1,20 +1,18 @@
 import React from "react";
 import invariant from "invariant"; // Import invariant
-import { useRollbar } from "@rollbar/react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../Authentication/useAuth";
 import styles from "./Navbar.module.css";
 import logoimage from "../../assets/beap_lab_hex_small.png";
-import profileimage from "../../assets/profile.jpg";
 import LoadingModal from "../LoadingModal/LoadingModal";
 import useLogout from "../../shared/hooks/useLogout";
+import ProfileMenu from "./components/ProfileMenu";
 
 function Navbar(): React.ReactElement | null {
-    const rollbar = useRollbar();
     const { handleLogout, isLoading: logoutLoading } = useLogout();
-    invariant(rollbar, "Rollbar context is not available");
-    rollbar.info("Reached Navbar component");
+
     const { isAuthenticated } = useAuth();
+
     // Use invariant to check the type of isAuthenticated
     invariant(typeof isAuthenticated === "boolean", "isAuthenticated must be a boolean");
 
@@ -29,9 +27,9 @@ function Navbar(): React.ReactElement | null {
     };
 
     const routes = [
-        { path: "/FileUploadPage", name: "FILE UPLOAD" },
-        { path: "/ProcessedDataPage", name: "PROCESSED FILES" },
-        { path: "/PredictedDataPage", name: "PREDICTED FILES" },
+        { path: "/file-upload", name: "FILE UPLOAD" },
+        { path: "/processed-data", name: "PROCESSED FILES" },
+        { path: "/predicted-data", name: "PREDICTED FILES" },
     ];
 
     return (
@@ -58,19 +56,7 @@ function Navbar(): React.ReactElement | null {
                     ))}
                 </div>
 
-                <button
-                    onClick={onLogout}
-                    type="button"
-                    data-testid="logout-btn"
-                    className={styles["navbar-profile"]}
-                >
-                    <img
-                        src={profileimage}
-                        alt="profileLogo"
-                        data-testid="profile"
-                        className={`${styles["navbar-logo"]} ${styles["navbar-logout"]}`}
-                    />
-                </button>
+                <ProfileMenu onLogout={onLogout} />
             </nav>
         </div>
     );

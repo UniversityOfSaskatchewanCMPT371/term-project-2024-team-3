@@ -3,7 +3,6 @@ import { renderWithProvider } from "shared/util/tests/render";
 import { BrowserRouter as Router } from "react-router-dom";
 import * as useAuth from "components/Authentication/useAuth";
 import * as useLogout from "shared/hooks/useLogout";
-import userEvent from "@testing-library/user-event";
 import Navbar from "./Navbar";
 
 // Define the type for the mock return value of useAuth
@@ -59,17 +58,6 @@ describe("Navbar", () => {
         );
 
         expect(container.firstChild).toBeNull();
-    });
-
-    it("should call logout on click", () => {
-        const { getByTestId } = renderWithProvider(
-            <Router>
-                <Navbar />
-            </Router>,
-        );
-
-        userEvent.click(getByTestId("logout-btn"));
-        expect(mockLogout).toHaveBeenCalledTimes(1);
     });
 
     it("should show modal while logout is loading", () => {

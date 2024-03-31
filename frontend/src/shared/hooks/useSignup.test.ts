@@ -23,7 +23,7 @@ describe("useSignup", () => {
 
     it("T3.15 should handle signup when it errors", async () => {
         signupSpy.mockImplementation(async () => {
-            throw new Error("Login failed");
+            throw new Error("Signup failed");
         });
 
         const { result } = renderHook(useSignup);
@@ -31,6 +31,6 @@ describe("useSignup", () => {
 
         expect(signupSpy).toHaveBeenCalledWith(username, password, firstName, lastName);
         expect(result.current.isLoading).toBe(false);
-        expect(result.current.error).toBe("Signup failed. Please try again.");
+        expect(result.current.error).toBe("Signup failed");
     });
 });

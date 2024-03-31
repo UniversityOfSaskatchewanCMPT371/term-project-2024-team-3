@@ -1,7 +1,9 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { renderWithProvider } from "shared/util/tests/render";
 import { BrowserRouter as Router } from "react-router-dom";
 import * as useAuth from "components/Authentication/useAuth";
+import * as useLogout from "shared/hooks/useLogout";
+import userEvent from "@testing-library/user-event";
 import Navbar from "./Navbar";
 
 // Define the type for the mock return value of useAuth
@@ -9,49 +11,79 @@ type AuthReturnValue = {
     isAuthenticated: boolean;
 };
 
-const authSpy = jest.spyOn(useAuth, "useAuth");
+describe("Navbar", () => {
+    let authSpy: jest.SpyInstance;
+    let logoutSpy: jest.SpyInstance;
+    const mockLogout = jest.fn();
 
-afterEach(() => {
-    authSpy.mockClear();
-});
+    beforeEach(() => {
+        authSpy = jest
+            .spyOn(useAuth, "useAuth")
+            .mockReturnValue({ isAuthenticated: true } as AuthReturnValue);
+        logoutSpy = jest.spyOn(useLogout, "default").mockReturnValue({
+            handleLogout: mockLogout,
+            isLoading: false,
+            error: null,
+        });
+    });
 
-test("renders all links when user is authenticated", () => {
-    authSpy.mockReturnValue({ isAuthenticated: true } as AuthReturnValue);
-    render(
-        <Router>
-            <Navbar />
-        </Router>,
-    );
+    it("renders all links when user is authenticated", () => {
+        const { getByText, getByAltText } = renderWithProvider(
+            <Router>
+                <Navbar />
+            </Router>,
+        );
 
-    const homeLink = screen.getByText(/HOME/i);
-    expect(homeLink).toBeInTheDocument();
+        const fileUploadLink = getByText(/FILE UPLOAD/i);
+        expect(fileUploadLink).toBeInTheDocument();
 
-    const fileUploadLink = screen.getByText(/FILE UPLOAD/i);
-    expect(fileUploadLink).toBeInTheDocument();
+        const processedFilesLink = getByText(/PROCESSED FILES/i);
+        expect(processedFilesLink).toBeInTheDocument();
 
-    const processedFilesLink = screen.getByText(/PROCESSED FILES/i);
-    expect(processedFilesLink).toBeInTheDocument();
+        const predictedFilesLink = getByText(/PREDICTED FILES/i);
+        expect(predictedFilesLink).toBeInTheDocument();
 
-    const predictedFilesLink = screen.getByText(/PREDICTED FILES/i);
-    expect(predictedFilesLink).toBeInTheDocument();
+        const beapLogoImage = getByAltText(/beapLogo/i);
+        expect(beapLogoImage).toBeInTheDocument();
 
-    // const logohomelink = screen.getByText(/LOGOUT/i);
-    // expect(logoutLink).toBeInTheDocument();
+        const profileLogoImage = getByAltText(/profileLogo/i);
+        expect(profileLogoImage).toBeInTheDocument();
+    });
 
-    const beapLogoImage = screen.getByAltText(/beapLogo/i);
-    expect(beapLogoImage).toBeInTheDocument();
+    it("does not render when user is not authenticated", () => {
+        authSpy.mockReturnValue({ isAuthenticated: false } as AuthReturnValue);
+        const { container } = renderWithProvider(
+            <Router>
+                <Navbar />
+            </Router>,
+        );
 
-    const profileLogoImage = screen.getByAltText(/profileLogo/i);
-    expect(profileLogoImage).toBeInTheDocument();
-});
+        expect(container.firstChild).toBeNull();
+    });
 
-test("does not render when user is not authenticated", () => {
-    authSpy.mockReturnValue({ isAuthenticated: false } as AuthReturnValue);
-    const { container } = render(
-        <Router>
-            <Navbar />
-        </Router>,
-    );
+    it("should call logout on click", () => {
+        const { getByTestId } = renderWithProvider(
+            <Router>
+                <Navbar />
+            </Router>,
+        );
 
-    expect(container.firstChild).toBeNull();
+        userEvent.click(getByTestId("logout-btn"));
+        expect(mockLogout).toHaveBeenCalledTimes(1);
+    });
+
+    it("should show modal while logout is loading", () => {
+        logoutSpy.mockReturnValue({
+            handleLogout: mockLogout,
+            isLoading: true,
+            error: null,
+        });
+        const { getByText } = renderWithProvider(
+            <Router>
+                <Navbar />
+            </Router>,
+        );
+
+        getByText("Please wait while we are logging you out!");
+    });
 });

@@ -1,3 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Mulins&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lora&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Titillium+Web&display=swap');
+
+
 .home {
   width: 100%;
   height: 100%;
@@ -38,7 +45,7 @@
 .signup_button {
   padding: 10px;
   font-weight: 600;
-  background-color: transparent; /* Green */
+  background-color: transparent;
   border: 1px solid silver;
   color: black;
   text-align: center;
@@ -80,7 +87,7 @@
 }
 
 .page_body {
-  background: url(https://media.giphy.com/media/5xtDarqiAfN6mqPwdyw/giphy.gif) no-repeat top;
+  background: url(../../assets/beap-square-logo.gif) no-repeat top;
   flex-grow: 1;
   display: flex;
   flex-direction: column;
@@ -94,6 +101,7 @@
   margin-bottom: 0px;
   text-align: center;
   animation: fadeDown 2s linear forwards;
+  font-family: "Poppins", sans-serif;
 }
 
 .page_body > h6 {
@@ -141,15 +149,16 @@ a {
 }
 
 .top {
-  background: #F2F6F9;
+  background: whitesmoke;
   padding: 150px 30px;
   display: flex;
   flex-direction: column;
 }
 
 .top > h1 {
-  color: #5B6582;
+  color: #01959C;
   font-size: 60px;
+  font-family: "Poppins", sans-serif;
   margin-bottom: 0px;
   margin-top: 0px;
   text-align: center;
@@ -157,9 +166,9 @@ a {
 
 .top > span {
   font-size: 25px;
-  font-family: 'Lato', sans-serif;
+  font-family: "Open Sans", sans-serif;
   line-height: 1.5em;
-  max-width: 800px;
+  max-width: 850px;
 }
 
 .top > div {
@@ -193,7 +202,8 @@ a {
 
 .extract_data {
   background-color: #333333;
-  color: #FFFFFF;
+  color: #FF7572;
+  font-family: "Poppins", sans-serif;
   width: 100%;
   flex:  1 0 auto;
   display: flex;
@@ -253,6 +263,7 @@ a {
   width: 100%;
   background-color: #333;
   color: white;
+  font-family: "Poppins", sans-serif;
   text-align: center;
   padding: 10px 0;
 }
@@ -277,9 +288,47 @@ a {
 
 
 .h6Glow {
+  font-family: "Titillium Web", sans-serif;
+  font-weight: 600;
   animation: focus-in-expand 1.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
 }
 
+.link {
+  color: #FF7572;
+  font-family: "Lora", sans-serif;
+  font-weight: 600;
+}
+
+.appleWatchButton {
+  font-family: "Mulins", sans-serif !important;
+  color: white !important;
+  font-weight: 600 !important;
+  margin-right: 12px !important;
+  background-color: black !important;
+  padding: 5px 10px !important;
+  transition: background-color 0.3s ease !important;
+}
+
+.appleWatchButton:hover {
+  background-color: white !important;
+  color: #C48300 !important;
+  font-weight: 600 !important;
+}
+
+.fitbitButton {
+  font-family: "Mulins", sans-serif !important;
+  background-color: black !important;
+  color: white  !important;
+  font-weight: 600 !important;
+  padding: 5px 10px !important;
+  transition: background-color 0.3s ease !important;
+}
+
+.fitbitButton:hover {
+  background-color: white !important;
+  color: #C48300 !important;
+  font-weight: 600 !important;
+}
 
 
 

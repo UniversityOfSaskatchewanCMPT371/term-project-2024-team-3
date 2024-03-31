@@ -2,6 +2,7 @@ import React, { useState, FormEvent } from "react";
 import useLogin from "shared/hooks/useLogin";
 import { useNavigate } from "react-router-dom";
 import { useRollbar } from "@rollbar/react";
+import ErrorSnackbar from "components/ErrorSnackbar/ErrorSnackbar";
 import styles from "./LoginPage.module.css";
 import leftArrow from "../../assets/left-arrow.png";
 import rightArrow from "../../assets/right-arrow.png";
@@ -21,7 +22,8 @@ function LoginPage() {
     const [userType, setUserType] = useState("researcher");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const { handleLogin } = useLogin();
+    const { handleLogin, error: loginError } = useLogin();
+
     const navigate = useNavigate();
 
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -88,10 +90,21 @@ function LoginPage() {
 
     return (
         <div className={styles["login-page"]}>
+            <ErrorSnackbar error={loginError} />
             <div className={styles.container}>
                 <div className={styles["left-section"]}>
                     <h1 className={styles["signin-text"]}>Sign In</h1>
                     <p className={styles["login-text"]}>
+                        <div className={styles["button-container"]}>
+                            <button
+                                data-testid="homeButton"
+                                type="button"
+                                className={`${styles.button} ${styles["go-home"]}`}
+                                onClick={() => navigate("/")}
+                            >
+                                Back To Homepage
+                            </button>
+                        </div>
                         Log into your existing BEAPENGINE account
                     </p>
                     <form onSubmit={handleSubmit} className={styles["form-box"]}>
@@ -134,23 +147,13 @@ function LoginPage() {
                         <div className={styles["button-container"]}>
                             <button
                                 data-testid="submitButton"
-                                type="button"
+                                type="submit"
                                 className={`${styles.button} ${styles["sign-in"]}`}
                             >
                                 Sign In
                             </button>
                         </div>
                     </form>
-                    <div className={styles["button-container"]}>
-                        <button
-                            data-testid="homeButton"
-                            type="button"
-                            className={`${styles.button} ${styles["go-home"]}`}
-                            onClick={() => navigate("/")}
-                        >
-                            Back To Homepage
-                        </button>
-                    </div>
                     <a href="/privacy-policy" target="_blank">
                         Privacy Policy
                     </a>

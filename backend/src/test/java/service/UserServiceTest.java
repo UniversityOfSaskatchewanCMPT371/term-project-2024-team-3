@@ -591,4 +591,28 @@ public class UserServiceTest {
 
         verify(userDao).deleteUserData(id);
     }
+
+
+
+    @Test
+    /*
+     * T.?
+     * Preconditions: Existing user data in the database
+     * Post-conditions: user data is updated
+     */
+    public void testNewUpdateUserSucceeded() {
+        // mock the dto and the user the useMapper call
+        UserDto userDto = mockUserDto();
+        User user = mockUser();
+        Boolean expected = true;
+
+        when(userMapper.dto2Model(eq(userDto), any(User.class))).thenReturn(user);
+        when(userDao.newUpdate(user)).thenReturn(true);
+
+        //find the result of newUpdateUser method on the mocked DTO and compare it with expected.
+        Boolean result = userService.newUpdateUser(userDto);
+        assertEquals(expected, result);
+    }
+
+
 }

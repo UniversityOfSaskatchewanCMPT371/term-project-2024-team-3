@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { useLocalStorage } from "usehooks-ts";
 import { useCookies } from "react-cookie";
 import moment from "moment";
+import { useNavigate } from "react-router-dom";
 import { LoginResponseData, login } from "../api";
 
 type UseLogin = {
@@ -16,6 +17,7 @@ const useLogin = (): UseLogin => {
     const [, setExpiresAt] = useLocalStorage("expires_at", "");
     const [, setUserId] = useLocalStorage("user_id", -1);
     const [, setCookie] = useCookies(["SESSION"]);
+    const navigate = useNavigate();
 
     const handleLogin = async (
         username: string,
@@ -34,6 +36,7 @@ const useLogin = (): UseLogin => {
                 sameSite: "none",
                 secure: true,
             });
+            navigate("/file-upload");
             return data;
         } catch (error) {
             setErrorState(error.message);

@@ -1,5 +1,6 @@
 import { renderHook } from "@testing-library/react-hooks";
 import moment from "moment";
+import { useNavigate } from "react-router-dom";
 import useLogin from "./useLogin";
 import * as API from "../api";
 
@@ -21,11 +22,18 @@ jest.mock("react-cookie", () => ({
     useCookies: () => ["", mockSetCookies],
 }));
 
+jest.mock("react-router-dom", () => ({
+    ...jest.requireActual("react-router-dom"),
+    useNavigate: jest.fn(),
+}));
+
 const loginSpy = jest.spyOn(API, "login").mockImplementation(async () => mockLoginData);
 
 describe("useLogin", () => {
+    const mockNavigate = jest.fn();
     beforeEach(() => {
         jest.spyOn(moment, "now").mockImplementation(() => currentTime);
+        (useNavigate as jest.Mock).mockImplementation(() => mockNavigate);
     });
     it("T3.10 should handle login successfully", async () => {
         const { result } = renderHook(useLogin);
@@ -49,6 +57,7 @@ describe("useLogin", () => {
             sameSite: "none",
             secure: true,
         });
+        expect(mockNavigate).toHaveBeenCalledWith("/file-upload");
 
         expect(result.current.isLoading).toBe(false);
         expect(result.current.error).toBe(null);

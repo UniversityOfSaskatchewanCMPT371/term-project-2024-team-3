@@ -8,15 +8,13 @@ package com.beaplab.BeaplabEngine.controller;
 import com.beaplab.BeaplabEngine.constants.BeapEngineConstants;
 import com.beaplab.BeaplabEngine.metadata.RoleDto;
 import com.beaplab.BeaplabEngine.service.RoleService;
+import com.rollbar.notifier.Rollbar;
 import io.swagger.annotations.ApiOperation;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,7 +33,9 @@ import java.util.UUID;
 public class RoleController {
 
 
-    final static Logger logger = LogManager.getLogger(RoleController.class.getName());
+
+    @Autowired
+    private Rollbar rollbar;
 
     /**
      * injecting RoleService into this class
@@ -52,7 +52,7 @@ public class RoleController {
     @ApiOperation(value = "List all Roles", notes = "Returns a list of type RoleDto", response = RoleDto.class)
     public ResponseEntity<List<RoleDto>> list() {
 
-        logger.info("in RoleController/role GET method");
+        rollbar.info("in RoleController/role GET method");
 
         List<RoleDto> roleDtos = roleService.list();
 
@@ -73,7 +73,7 @@ public class RoleController {
     @ApiOperation(value = "Add a new Role", notes = "Saving an Role and returning the saved Role in an object of type RoleDto", response = RoleDto.class)
     public ResponseEntity<RoleDto> save(@RequestBody RoleDto roleDto) {
 
-        logger.info("in RoleController/role POST method");
+        rollbar.info("in RoleController/role POST method");
 
         if (roleDto == null) {
             return new ResponseEntity<RoleDto>(HttpStatus.BAD_REQUEST);
@@ -96,7 +96,7 @@ public class RoleController {
     @ApiOperation(value = "Update existing Role", notes = "Updating an existing Role and returning the updated Role in an object of type RoleDto", response = RoleDto.class)
     public ResponseEntity<RoleDto> update(@RequestBody RoleDto roleDto) {
 
-        logger.info("in RoleController/role PUT method");
+        rollbar.info("in RoleController/role PUT method");
 
         if (roleDto == null) {
             return new ResponseEntity<RoleDto>(HttpStatus.BAD_REQUEST);
@@ -117,7 +117,7 @@ public class RoleController {
     @ApiOperation(value = "Find Role by ID", notes = "Finding an Role by input id and returning the result in an object of type RoleDto", response = RoleDto.class)
     public ResponseEntity<RoleDto> get(@PathVariable("id") String id) {
 
-        logger.info("in RoleController/role/{" + id + "} GET method");
+        rollbar.info("in RoleController/role/{" + id + "} GET method");
 
         RoleDto roleDto = roleService.get(id);
 
@@ -138,7 +138,7 @@ public class RoleController {
     @ApiOperation(value = "Delete Role by ID", notes = "Deleting an Role with ID = id", response = RoleDto.class)
     public ResponseEntity<RoleDto> delete(@PathVariable("id") String id) {
 
-        logger.info("in RoleController/role/{" + id + "} DELETE method");
+        rollbar.info("in RoleController/role/{" + id + "} DELETE method");
 
         RoleDto roleDto = roleService.get(id);
 

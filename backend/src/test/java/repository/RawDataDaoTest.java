@@ -24,10 +24,11 @@ import static utils.MockFactory.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class PredictedDataDaoTest {
+public class RawDataDaoTest {
+
 
     @InjectMocks
-    private PredictedDataDao predictedDataDao;
+    private RawDataDao rawDataDao;
     @Mock
     private SessionFactory sessionFactory;
 
@@ -36,7 +37,7 @@ public class PredictedDataDaoTest {
     private final SQLQuery query = Mockito.mock(SQLQuery.class);
 
     @Mock
-    private RawDataDao rawDataDao;
+    private PredictedDataDao predictedDataDao;
 
     @Mock
     private ProcessedDataDao processedDataDao;
@@ -62,35 +63,34 @@ public class PredictedDataDaoTest {
 
     /**
      * T??
-     * A method that tests deleting raw data's relation to processed data.
-     * Preconditions: Relation to processed data exists
+     * A method that tests deleting raw data's relation to a user
+     * Preconditions: Relation to user exists
      * Post-conditions: Relation is deleted
      */
     @Test
-    public void testDeleteRelationToProcessedExists() {
+    public void testDeleteRelationToUserExists() {
         Long userId = 3L;
 
         when(query.executeUpdate()).thenReturn(1);
 
-        Boolean result = predictedDataDao.deleteRelationToProcessed(userId);
+        Boolean result = rawDataDao.deleteRelationToUser(userId);
 
         assertTrue(result);
     }
 
-
     /**
      * T??
-     * A method that tests deleting raw data's relation to processed data.
-     * Preconditions: Relation to processed data does not exist
-     * Post-conditions: No relation is deleted
+     * A method that tests deleting raw data's relation to a user
+     * Preconditions: Relation to user does not exist
+     * Post-conditions: Relation is not deleted
      */
     @Test
-    public void testDeleteRelationToProcessedDoesNotExists() {
+    public void testDeleteRelationToUserDoesNotExist() {
         Long userId = 3L;
 
         when(query.executeUpdate()).thenReturn(0);
 
-        Boolean result = predictedDataDao.deleteRelationToProcessed(userId);
+        Boolean result = rawDataDao.deleteRelationToUser(userId);
 
         assertFalse(result);
     }
@@ -98,8 +98,8 @@ public class PredictedDataDaoTest {
     /**
      * T??
      * A method that tests deleting raw data
-     * Preconditions: Predicted data to be deleted exists
-     * Post-conditions: Predicted data is deleted
+     * Preconditions: Raw data to be deleted exists
+     * Post-conditions: Raw data is deleted
      */
     @Test
     public void testDeleteSucceeded() {
@@ -107,7 +107,7 @@ public class PredictedDataDaoTest {
 
         when(query.executeUpdate()).thenReturn(1);
 
-        Boolean result = predictedDataDao.delete(userId);
+        Boolean result = rawDataDao.delete(userId);
 
         assertTrue(result);
     }
@@ -115,8 +115,8 @@ public class PredictedDataDaoTest {
     /**
      * T??
      * A method that tests deleting raw data
-     * Preconditions: Predicted data to be deleted does not exist
-     * Post-conditions: No Predicted data is deleted
+     * Preconditions: Raw data to be deleted exists
+     * Post-conditions: Raw data is deleted
      */
     @Test
     public void testDeleteFailed() {
@@ -124,10 +124,12 @@ public class PredictedDataDaoTest {
 
         when(query.executeUpdate()).thenReturn(0);
 
-        Boolean result = predictedDataDao.delete(userId);
+        Boolean result = rawDataDao.delete(userId);
 
         assertFalse(result);
     }
+
+
 
 
 }

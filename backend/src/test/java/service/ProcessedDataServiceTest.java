@@ -140,6 +140,38 @@ public class ProcessedDataServiceTest {
         assertNull(result);
     }
 
+    @Test
+    /*
+     * T.?
+     * Preconditions: Existing processed data in the database
+     * Post-conditions: Processed data is deleted
+     */
+    public void testDeleteSucceeded() {
+        Long id = 1L;
+
+        when(processedDataDao.delete(id)).thenReturn(true);
+
+        Boolean result = processedDataService.delete(id);
+
+        assertTrue(result);
+    }
+
+    @Test
+    /*
+     * T.?
+     * Preconditions: No existing processed data in the database
+     * Post-conditions: No processed data is deleted
+     */
+    public void testDeleteFailed() {
+        Long id = 1L;
+
+        when(processedDataDao.delete(id)).thenReturn(false);
+
+        Boolean result = processedDataService.delete(id);
+
+        assertFalse(result);
+    }
+
 
 
 }

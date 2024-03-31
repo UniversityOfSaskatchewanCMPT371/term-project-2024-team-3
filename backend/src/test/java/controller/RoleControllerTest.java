@@ -35,7 +35,7 @@ public class RoleControllerTest {
 
 
     /**
-     * T5.43
+     * T5.77
      *
      */
     @Test
@@ -54,6 +54,10 @@ public class RoleControllerTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * T5.78
+     *
+     */
     @Test
     public void testListNull(){
         when(roleService.list()).thenReturn(null);
@@ -65,7 +69,10 @@ public class RoleControllerTest {
         assertEquals(expected, result);
     }
 
-
+    /**
+     * T5.79
+     *
+     */
     @Test
     public void testSave(){
         RoleDto roleDto = mockRoleDto();
@@ -83,6 +90,10 @@ public class RoleControllerTest {
 
     }
 
+    /**
+     * T5.80
+     *
+     */
     @Test
     public void testSaveNull(){
         ResponseEntity<RoleDto> expected = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -91,7 +102,10 @@ public class RoleControllerTest {
         assertEquals(expected, result);
     }
 
-
+    /**
+     * T5.81
+     *
+     */
     @Test
     public void testUpdate(){
         RoleDto roleDto = mockRoleDto();
@@ -102,6 +116,10 @@ public class RoleControllerTest {
         assertEquals(expected, result);
     }
 
+    /**
+     * T5.82
+     *
+     */
     @Test
     public void testUpdateNull(){
         ResponseEntity<RoleDto> expected = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -109,7 +127,10 @@ public class RoleControllerTest {
         assertEquals(expected, result);
     }
 
-
+    /**
+     * T5.83
+     *
+     */
     @Test
     public void testGet(){
 
@@ -123,6 +144,10 @@ public class RoleControllerTest {
 
     }
 
+    /**
+     * T5.84
+     *
+     */
     @Test
     public void testGetNull(){
 
@@ -134,7 +159,10 @@ public class RoleControllerTest {
 
     }
 
-
+    /**
+     * T5.85
+     *
+     */
     @Test
     public void testDelete(){
         RoleDto roleDto = mockRoleDto();
@@ -148,6 +176,10 @@ public class RoleControllerTest {
 
     }
 
+    /**
+     * T5.86
+     *
+     */
     @Test
     public void testDeleteNull(){
 

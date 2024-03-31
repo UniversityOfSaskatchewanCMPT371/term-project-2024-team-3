@@ -38,13 +38,7 @@ public class ProcessedDataDaoTest {
     private final SQLQuery query = Mockito.mock(SQLQuery.class);
 
     @Mock
-    private RawDataDao rawDataDao;
-
-    @Mock
     private PredictedDataDao predictedDataDao;
-
-    @Mock
-    private UserDao userDao;
 
     @Before
     public void setUp() {
@@ -61,9 +55,6 @@ public class ProcessedDataDaoTest {
                         .setParameter(anyString(), any())
         ).thenReturn(query);
     }
-
-
-
 
     /**
      * T??
@@ -83,6 +74,7 @@ public class ProcessedDataDaoTest {
         predictedDataLinked.add(BigInteger.valueOf(1L));
 
         SQLQuery searchQueryForPredictedDataLinked = Mockito.mock(SQLQuery.class);
+        SQLQuery deleteQuery = Mockito.mock(SQLQuery.class);
 
         // Predicted Data Mocks
         when(
@@ -91,16 +83,23 @@ public class ProcessedDataDaoTest {
         ).thenReturn(searchQueryForPredictedDataLinked);
         when(
                 searchQueryForPredictedDataLinked
-                        .setParameter(eq("processed_data_id"), any())
+                        .setParameter(eq("processed_data_id"), anyLong())
         ).thenReturn(searchQueryForPredictedDataLinked);
 
         when(searchQueryForPredictedDataLinked.list()).thenReturn(predictedDataLinked);
-        verify(predictedDataDao).delete(1L);
+
+        when(session2.createSQLQuery(eq("DELETE FROM tbl_processed_data WHERE id = :processed_data_id")))
+                .thenReturn(deleteQuery);
+        when(deleteQuery.setParameter(eq("processed_data_id"), anyLong()))
+                .thenReturn(deleteQuery);
+        when(deleteQuery.executeUpdate()).thenReturn(1);
+
 
         // verify that the delete processed data method was called with
         Long userId = 3L;
         when(query.executeUpdate()).thenReturn(1);
         Boolean result = processedDataDao.delete(userId);
+        verify(predictedDataDao).delete(1L);
         assertTrue(result);
 
     }
@@ -122,6 +121,7 @@ public class ProcessedDataDaoTest {
         List<Object> predictedDataLinked = new ArrayList<>();
 
         SQLQuery searchQueryForPredictedDataLinked = Mockito.mock(SQLQuery.class);
+        SQLQuery deleteQuery = Mockito.mock(SQLQuery.class);
 
         // Predicted Data Mocks
         when(
@@ -133,15 +133,19 @@ public class ProcessedDataDaoTest {
                         .setParameter(eq("processed_data_id"), any())
         ).thenReturn(searchQueryForPredictedDataLinked);
 
+        when(session2.createSQLQuery(eq("DELETE FROM tbl_processed_data WHERE id = :processed_data_id")))
+                .thenReturn(deleteQuery);
+        when(deleteQuery.setParameter(eq("processed_data_id"), anyLong()))
+                .thenReturn(deleteQuery);
+        when(deleteQuery.executeUpdate()).thenReturn(0);
+
         when(searchQueryForPredictedDataLinked.list()).thenReturn(predictedDataLinked);
         verify(predictedDataDao, never()).delete(anyLong());
 
         // verify that the delete processed data method was called with
         Long userId = 3L;
-        when(query.executeUpdate()).thenReturn(0);
         Boolean result = processedDataDao.delete(userId);
         assertFalse(result);
-
     }
 
     /**
@@ -161,6 +165,7 @@ public class ProcessedDataDaoTest {
         List<Object> predictedDataLinked = new ArrayList<>();
 
         SQLQuery searchQueryForPredictedDataLinked = Mockito.mock(SQLQuery.class);
+        SQLQuery deleteQuery = Mockito.mock(SQLQuery.class);
 
         // Predicted Data Mocks
         when(
@@ -171,6 +176,12 @@ public class ProcessedDataDaoTest {
                 searchQueryForPredictedDataLinked
                         .setParameter(eq("processed_data_id"), any())
         ).thenReturn(searchQueryForPredictedDataLinked);
+
+        when(session2.createSQLQuery(eq("DELETE FROM tbl_processed_data WHERE id = :processed_data_id")))
+                .thenReturn(deleteQuery);
+        when(deleteQuery.setParameter(eq("processed_data_id"), anyLong()))
+                .thenReturn(deleteQuery);
+        when(deleteQuery.executeUpdate()).thenReturn(1);
 
         when(searchQueryForPredictedDataLinked.list()).thenReturn(predictedDataLinked);
         verify(predictedDataDao, never()).delete(anyLong());

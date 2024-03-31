@@ -85,7 +85,6 @@ function LoginPage() {
         }
 
         await handleLogin(username, password);
-        navigate("/FileUploadPage");
     };
 
     return (

@@ -36,7 +36,8 @@ public class RoleControllerTest {
 
     /**
      * T5.77
-     *
+     * pre: List<RoleDto> has a RoleDto in it
+     * result: list of RoleDto and OK status
      */
     @Test
     public void testList(){
@@ -56,7 +57,8 @@ public class RoleControllerTest {
 
     /**
      * T5.78
-     *
+     * pre: the list doesn't exist
+     * result: NOT_FOUND status
      */
     @Test
     public void testListNull(){
@@ -71,7 +73,8 @@ public class RoleControllerTest {
 
     /**
      * T5.79
-     *
+     * pre: RoleDto exits
+     * result: RoleDto and CREATED status
      */
     @Test
     public void testSave(){
@@ -79,9 +82,6 @@ public class RoleControllerTest {
         Serializable id = 4;
 
         when(roleService.save(eq(roleDto))).thenReturn(id);
-
-
-
 
         ResponseEntity<RoleDto> expected = new ResponseEntity<>(roleDto, HttpStatus.CREATED);
         ResponseEntity<RoleDto> result = roleController.save(roleDto);
@@ -92,7 +92,8 @@ public class RoleControllerTest {
 
     /**
      * T5.80
-     *
+     * pre: no role exits
+     * result: BAD_REQUEST status
      */
     @Test
     public void testSaveNull(){
@@ -104,7 +105,8 @@ public class RoleControllerTest {
 
     /**
      * T5.81
-     *
+     * pre: roleDto exits
+     * result: the RoleDto and a CREATED status
      */
     @Test
     public void testUpdate(){
@@ -118,7 +120,8 @@ public class RoleControllerTest {
 
     /**
      * T5.82
-     *
+     * pre: roleDto is null
+     * result: BAD_REQUEST status
      */
     @Test
     public void testUpdateNull(){
@@ -129,7 +132,8 @@ public class RoleControllerTest {
 
     /**
      * T5.83
-     *
+     * pre: ID has matching RoleDto
+     * result: the matching RoleDto and OK status
      */
     @Test
     public void testGet(){
@@ -146,7 +150,8 @@ public class RoleControllerTest {
 
     /**
      * T5.84
-     *
+     * pre: ID doesn't have a match
+     * result: NOT_FOUND status
      */
     @Test
     public void testGetNull(){
@@ -161,7 +166,8 @@ public class RoleControllerTest {
 
     /**
      * T5.85
-     *
+     * pre: ID has a matching RoleDto
+     * result: RoleDto is deleted and receive NO_CONTENT status
      */
     @Test
     public void testDelete(){
@@ -178,7 +184,8 @@ public class RoleControllerTest {
 
     /**
      * T5.86
-     *
+     * pre: ID doesn't have a match
+     * result: NOT_FOUND status
      */
     @Test
     public void testDeleteNull(){

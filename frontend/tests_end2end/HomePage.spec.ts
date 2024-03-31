@@ -10,7 +10,7 @@ test("Home Page Test", async ({ page }) => {
 
     await expect(page.locator("#root")).toContainText("BEAP ENGINE");
 
-    await expect(page.locator("h6")).toContainText("Accurately Process Your Fitness Data");
+    await expect(page.locator("h6")).toContainText("Unleashing The Power Of Your Fitness Data");
 
     await expect(page.getByText("Login", { exact: true })).toBeVisible();
 
@@ -27,7 +27,7 @@ test("Home Page Test", async ({ page }) => {
     ).toBeVisible();
 
     await expect(page.locator("#desc")).toContainText(
-        "BEAP Engine is a research project developed by Dr. Daniel Fuller and the Built Environment and Active Populations (BEAP) Lab. The purpose of this study is to collect and analyze large volumes of Apple Watch and Fitbit data and develop methods to standardize across device. We provide you with a CSV file of your data and give you detailed information about sedentary behaviour, and moderate to vigorous activity based on our machine learning methods. We hope you will participate in our study.",
+        "BEAP Engine is a research project developed by Dr. Daniel Fuller and the Built Environment and Active Populations (BEAP) Lab. The purpose of this study is to collect and analyze large volumes of Apple Watch and Fitbit data and develop methods to standardize across devices. We provide you with a CSV file of your data and give you detailed information about sedentary behaviour, and moderate to vigorous activity based on our machine-learning methods. This project is approved by the Memorial University Interdisciplinary Committee on Ethics in Human Research (ICEHR # 20210162-HK).",
     );
 
     await expect(page.getByRole("img", { name: "Beap engine overview" })).toBeVisible();

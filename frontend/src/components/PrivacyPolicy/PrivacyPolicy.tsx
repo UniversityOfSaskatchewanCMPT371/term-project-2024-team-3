@@ -11,22 +11,24 @@ function PrivacyPolicy(): ReactElement {
     return (
         <div className={styles.container}>
             <div className={styles.brand}>
-                <img
-                    src={beapLogo}
-                    style={{ height: "120px", width: "auto", marginTop: "10px" }}
-                    alt="Beap Logo"
-                />
+                <a href="/">
+                    <img
+                        src={beapLogo}
+                        style={{ height: "120px", width: "auto", marginTop: "10px" }}
+                        alt="Beap Logo"
+                    />
+                </a>
             </div>
             <h1 className={styles.title}>Consent to Take Part in Research</h1>
             <h2 className={styles.subtitle}>BEAPEngine</h2>
             <p className={styles.text}>
                 Researcher(s): Dr. Daniel Fuller (
-                <a href="mailto:dfuller@mun.ca" className={styles.link}>
-                    dfuller@mun.ca
+                <a href="mailto:daniel.fuller@usask.ca" className={styles.link}>
+                    daniel.fuller@usask.ca
                 </a>
                 ;
-                <a href="tel:7098647270" className={styles.link}>
-                    (709) 864-7270
+                <a href="tel:306-966-8018" className={styles.link}>
+                    (306) 966-8018
                 </a>
                 )
             </p>
@@ -195,8 +197,8 @@ function PrivacyPolicy(): ReactElement {
                 <p className={styles.text}>
                     If you have any questions about taking part in this study, you can contact the
                     researcher who is in charge of this study. Daniel Fuller can be reached at{" "}
-                    <a href="tel:7098647270" className={styles.link}>
-                        (709) 864-7270
+                    <a href="tel:3069668018" className={styles.link}>
+                        (306) 966-8018
                     </a>
                     . The proposal for this research has been reviewed by the Interdisciplinary
                     Committee on Ethics in Human Research and found to be in compliance with

@@ -84,7 +84,7 @@ describe("Profile Page", () => {
         expect(queryByText("Delete My Data")).not.toBeInTheDocument();
     });
 
-    it("T5.?? should delete data when delete data is clicked and confirmed", () => {
+    it("T5.?? should delete data when delete data is clicked and confirmed", async () => {
         const { getByText } = renderWithProvider(<ProfilePage />);
         const dataBtn = getByText("Delete My Data");
         act(() => {
@@ -97,7 +97,7 @@ describe("Profile Page", () => {
         expect(mockDataDelete).toHaveBeenCalledTimes(1);
     });
 
-    it("T5.?? should delete data when delete account is clicked and confirmed", () => {
+    it("T5.?? should delete data when delete account is clicked and confirmed", async () => {
         const { getByText } = renderWithProvider(<ProfilePage />);
         const dataBtn = getByText("Delete My Account");
         act(() => {
@@ -110,7 +110,7 @@ describe("Profile Page", () => {
         expect(mockAccountDelete).toHaveBeenCalledTimes(1);
     });
 
-    it("T5.?? should change password successfully and show confirm password error state when necessary", () => {
+    it("T5.?? should change password successfully and show confirm password error state when necessary", async () => {
         const { getByLabelText, queryByText, getByText } = renderWithProvider(<ProfilePage />);
         act(() => {
             userEvent.click(getByText("Change My Password"));

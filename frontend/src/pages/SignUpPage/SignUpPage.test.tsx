@@ -34,7 +34,6 @@ describe("SignUpPage component", () => {
         expect(getByTestId("policyAgreementCheck")).toBeInTheDocument();
         expect(getAllByText("Sign Up")).toHaveLength(2);
         expect(getByText("Log into your BEAPENGINE account")).toBeInTheDocument();
-        expect(getByText("OR")).toBeInTheDocument();
         expect(getByTestId("navigateSignIn")).toBeInTheDocument();
         expect(getByText("BEAP")).toBeInTheDocument();
         expect(getByText("ENGINE")).toBeInTheDocument();

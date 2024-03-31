@@ -27,7 +27,7 @@ const useSignup = (): UseSignup => {
             await signUp(username, password, firstname, lastname);
             setErrorState(null);
         } catch (error) {
-            setErrorState("Signup failed. Please try again.");
+            setErrorState(error.message);
         } finally {
             setIsLoading(false);
         }

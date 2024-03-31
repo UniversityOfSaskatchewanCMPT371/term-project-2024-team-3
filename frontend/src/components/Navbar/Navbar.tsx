@@ -1,52 +1,62 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import invariant from "invariant"; // Import invariant
+import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../Authentication/useAuth";
-import "../../styles/navbar.css";
-import logoimage from "../../assets/beap_lab_hex_small.jpg";
-import profileimage from "../../assets/profile.jpg";
+import styles from "./Navbar.module.css";
+import logoimage from "../../assets/beap_lab_hex_small.png";
+import LoadingModal from "../LoadingModal/LoadingModal";
+import useLogout from "../../shared/hooks/useLogout";
+import ProfileMenu from "./components/ProfileMenu";
 
 function Navbar(): React.ReactElement | null {
-    const { isAuthenticated } = useAuth(); // use the useAuth hook to get the current user
-    // If the user is not logged in, don't render the navbar
+    const { handleLogout, isLoading: logoutLoading } = useLogout();
+
+    const { isAuthenticated } = useAuth();
+
+    // Use invariant to check the type of isAuthenticated
+    invariant(typeof isAuthenticated === "boolean", "isAuthenticated must be a boolean");
+
+    const location = useLocation();
+
     if (!isAuthenticated) {
         return null;
     }
-    /* Add your routes and their names here and edit as needed. These were made with test data to make sure it was functioning */
+
+    const onLogout = async () => {
+        await handleLogout();
+    };
 
     const routes = [
-        { path: "/", name: "HOME" },
-        { path: "/FileUploadPage", name: "FILE UPLOAD" },
-        { path: "/ProcessedDataPage", name: "PROCESSED FILES" },
-        { path: "/PredictedDataPage", name: "PREDICTED FILES" },
-        //    { path: "/Logout", name: "LOGOUT", className: "logout-link" },
+        { path: "/file-upload", name: "FILE UPLOAD" },
+        { path: "/processed-data", name: "PROCESSED FILES" },
+        { path: "/predicted-data", name: "PREDICTED FILES" },
     ];
 
     return (
         <div>
-            <nav className="navbar">
-                <div className="navbar-nav">
-                    {/* Logo on the far left */}
-                    <Link to="/" className="navbar-brand">
-                        <img src={logoimage} alt="beapLogo" className="navbar-logo" />
-                    </Link>
+            <LoadingModal
+                header="Please wait while we are logging you out!"
+                isVisible={logoutLoading}
+            />
+            <nav className={styles.navbar}>
+                <Link to="/" className={styles["navbar-brand"]}>
+                    <img src={logoimage} alt="beapLogo" className={styles["navbar-logo"]} />
+                </Link>
 
+                <div className={styles["navbar-nav"]}>
                     {routes.map((route) => (
                         <div className="mr-4" key={route.path}>
-                            <Link to={route.path} className="nav-link">
+                            <Link
+                                to={route.path}
+                                className={`${styles["nav-link"]} ${location.pathname === route.path ? styles.active : ""}`}
+                            >
                                 {route.name}
                             </Link>
                         </div>
                     ))}
-
-                    <Link to="/Logout" className="navbar-profile">
-                        <img
-                            src={profileimage}
-                            alt="profileLogo"
-                            data-testid="profile"
-                            className="navbar-logo navbar-logout"
-                        />
-                    </Link>
                 </div>
+
+                <ProfileMenu onLogout={onLogout} />
             </nav>
         </div>
     );

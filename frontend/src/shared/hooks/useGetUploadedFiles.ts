@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
-import { getUploadedFiles } from "../Data/index";
+import { getUploadedFiles } from "../Data";
 import { RawFileData, WatchType } from "../api";
 
 type UseGetUploadedFiles = {
@@ -8,7 +8,7 @@ type UseGetUploadedFiles = {
     error: string | null;
 };
 
-const useGetUploadedFiles = (watchType: WatchType): UseGetUploadedFiles => {
+const useGetUploadedFiles = (watchType: WatchType, refetch = false): UseGetUploadedFiles => {
     const [isLoading, setIsLoading] = useState(true);
     const [errorState, setErrorState] = useState<string | null>(null);
     const [uploadedFiles, setUploadedFiles] = useState<Array<RawFileData>>([]);
@@ -17,14 +17,15 @@ const useGetUploadedFiles = (watchType: WatchType): UseGetUploadedFiles => {
         getUploadedFiles(watchType)
             .then((data) => {
                 setUploadedFiles(data.list);
+                setErrorState(null);
             })
             .catch((error: Error) => {
-                setErrorState(`An error occured while getting uploaded files: ${error.toString}`);
+                setErrorState(`An error occured while getting uploaded files: ${error.message}`);
             })
             .finally(() => {
                 setIsLoading(false);
             });
-    }, []);
+    }, [refetch]);
 
     return useMemo(
         () => ({
@@ -32,7 +33,7 @@ const useGetUploadedFiles = (watchType: WatchType): UseGetUploadedFiles => {
             isLoading,
             error: errorState,
         }),
-        [isLoading, errorState],
+        [uploadedFiles, isLoading, errorState],
     );
 };
 

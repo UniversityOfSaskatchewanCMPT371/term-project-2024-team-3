@@ -607,10 +607,11 @@ public class UserServiceTest {
         Boolean expected = true;
 
         when(userMapper.dto2Model(eq(userDto), any(User.class))).thenReturn(user);
+        when(userDao.newUpdate(user)).thenReturn(true);
 
         //find the result of newUpdateUser method on the mocked DTO and compare it with expected.
         Boolean result = userService.newUpdateUser(userDto);
-        assertEquals(result, expected);
+        assertEquals(expected, result);
     }
 
 

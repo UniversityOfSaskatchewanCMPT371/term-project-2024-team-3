@@ -199,7 +199,7 @@ public class RawDataDao {
      */
     @Transactional
     public Boolean deleteRelationToUser(Long id) {
-        logger.info("In PredictedDataDao: deleteRelationToUser");
+        logger.info("In RawDataDao: deleteRelationToUser");
 
         SQLQuery query = (SQLQuery) sessionFactory.getCurrentSession().createSQLQuery("DELETE FROM tbl_user_tbl_raw_data WHERE rawdataids_id = :raw_data_id")
                 .setParameter("raw_data_id", id);

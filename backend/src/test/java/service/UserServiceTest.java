@@ -542,4 +542,69 @@ public class UserServiceTest {
         UserDetails result = userService.loadUserDetails(userDto);
         assertEquals(result, expected);
     }
+
+    @Test
+    /*
+     * T.?
+     * Preconditions: Existing user  in the database
+     * Post-conditions: user is deleted
+     */
+    public void testDeleteUserAccountSucceeded() {
+        Long id = 1L;
+
+        when(userDao.deleteUserAccount(id)).thenReturn(true);
+
+        Boolean result = userService.deleteUserAccount(id);
+
+        assertTrue(result);
+    }
+
+
+    @Test
+    /*
+     * T.?
+     * Preconditions: No existing user in the database
+     * Post-conditions: No user is deleted
+     */
+    public void testDeleteUserAccountFailed() {
+        Long id = 1L;
+
+        when(userDao.deleteUserAccount(id)).thenReturn(false);
+
+        Boolean result = userService.deleteUserAccount(id);
+
+        assertFalse(result);
+    }
+
+
+
+    @Test
+    /*
+     * T.?
+     * Preconditions: Existing user data in the database
+     * Post-conditions: user data is deleted
+     */
+    public void testDeleteUserDataSucceeded() {
+        Long id = 1L;
+
+        userService.deleteUserAccount(id);
+
+        verify(userDao).deleteUserData(id);
+    }
+
+
+    @Test
+    /*
+     * T.?
+     * Preconditions: Existing user data in the database
+     * Post-conditions: No data is deleted
+     */
+    public void testDeleteUserDataFailed() {
+        Long id = 1L;
+
+        userService.deleteUserAccount(id);
+
+        verify(userDao, never()).deleteUserData(id);
+    }
+
 }

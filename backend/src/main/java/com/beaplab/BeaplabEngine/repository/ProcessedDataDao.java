@@ -208,6 +208,8 @@ public class ProcessedDataDao {
                 .setParameter("processed_data_id", id);
         List<Object> resultList = searchQuery.list();
 
+        System.out.println(resultList);
+
         // if there is go through them and delete all the corresponding predicted data and all the linkages.
         if (resultList != null && !resultList.isEmpty()) {
             logger.info("found predicted Data linked to processed data of id: " + id);
@@ -221,7 +223,8 @@ public class ProcessedDataDao {
             logger.info("No predicted Data found linked to processed data of id: " + id);
         }
 
-        SQLQuery deleteQuery = (SQLQuery) sessionFactory.getCurrentSession().createSQLQuery("DELETE FROM tbl_processed_data WHERE id = :processed_data_id")
+        SQLQuery deleteQuery = (SQLQuery) sessionFactory.getCurrentSession()
+                .createSQLQuery("DELETE FROM tbl_processed_data WHERE id = :processed_data_id")
                 .setParameter("processed_data_id", id);
 
         int rowsAffected = deleteQuery.executeUpdate();

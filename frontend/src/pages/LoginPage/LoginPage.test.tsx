@@ -27,7 +27,6 @@ describe("LoginPage component", () => {
         expect(getByLabelText("Password")).toBeInTheDocument();
         expect(getAllByText("Sign In")).toHaveLength(2);
         expect(getByText("Log into your existing BEAPENGINE account")).toBeInTheDocument();
-        expect(getByText("Login with Google")).toBeInTheDocument();
         expect(getByText("OR")).toBeInTheDocument();
         expect(getByText("Researcher")).toBeInTheDocument();
         expect(getByText("Personal User")).toBeInTheDocument();

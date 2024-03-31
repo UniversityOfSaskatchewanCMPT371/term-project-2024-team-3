@@ -78,11 +78,7 @@ public class PredictedDataService {
     public Boolean delete(Long id){
         logger.info("in PredictedDataService: delete");
 
-        Boolean deleteSuccess = predictedDataDao.delete(id);
-        if(deleteSuccess)
-            return true;
-        return false;
-
+        return predictedDataDao.delete(id);
     }
 
 

@@ -154,6 +154,35 @@ public class PredictedDataServiceTest {
         assertEquals(expectedDtoList, resultDtoList);
     }
 
+    @Test
+    /*
+     * T.?
+     * Preconditions: Existing predicted data in the database
+     * Post-conditions: Predicted data is deleted
+     */
+    public void testDelete() {
+        Long id = 1L;
 
+        when(predictedDataDao.delete(id)).thenReturn(true);
 
+        Boolean result = predictedDataService.delete(id);
+
+        assertTrue(result);
+    }
+
+    @Test
+    /*
+     * T.?
+     * Preconditions: No existing predicted data in the database
+     * Post-conditions: Predicted data is not deleted
+     */
+    public void testDeleteFails() {
+        Long id = 1L;
+
+        when(predictedDataDao.delete(id)).thenReturn(false);
+
+        Boolean result = predictedDataService.delete(id);
+
+        assertFalse(result);
+    }
 }

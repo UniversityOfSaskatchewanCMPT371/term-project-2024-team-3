@@ -87,7 +87,9 @@ describe("Profile Page", () => {
     it("T5.?? should delete data when delete data is clicked and confirmed", () => {
         const { getByText } = renderWithProvider(<ProfilePage />);
         const dataBtn = getByText("Delete My Data");
-        userEvent.click(dataBtn);
+        act(() => {
+            userEvent.click(dataBtn);
+        });
         act(() => {
             userEvent.click(getByText("Confirm"));
         });
@@ -98,7 +100,9 @@ describe("Profile Page", () => {
     it("T5.?? should delete data when delete account is clicked and confirmed", () => {
         const { getByText } = renderWithProvider(<ProfilePage />);
         const dataBtn = getByText("Delete My Account");
-        userEvent.click(dataBtn);
+        act(() => {
+            userEvent.click(dataBtn);
+        });
         act(() => {
             userEvent.click(getByText("Confirm"));
         });
@@ -111,9 +115,12 @@ describe("Profile Page", () => {
         act(() => {
             userEvent.click(getByText("Change My Password"));
         });
-
-        userEvent.type(getByLabelText("New Password"), "test");
-        userEvent.type(getByLabelText("Confirm Password"), "tes");
+        act(() => {
+            userEvent.type(getByLabelText("New Password"), "test");
+        });
+        act(() => {
+            userEvent.type(getByLabelText("Confirm Password"), "tes");
+        });
 
         getByText("Passwords do not match.");
 
@@ -121,8 +128,10 @@ describe("Profile Page", () => {
             userEvent.click(getByText("Update My Password"));
         });
 
-        userEvent.type(getByLabelText("Confirm Password"), "t");
-        userEvent.tab(); // Trigger blur
+        act(() => {
+            userEvent.type(getByLabelText("Confirm Password"), "t");
+            userEvent.tab(); // Trigger blur
+        });
 
         expect(queryByText("Passwords do not match.")).not.toBeInTheDocument();
 

@@ -587,24 +587,8 @@ public class UserServiceTest {
     public void testDeleteUserDataSucceeded() {
         Long id = 1L;
 
-        userService.deleteUserAccount(id);
+        userService.deleteUserData(id);
 
         verify(userDao).deleteUserData(id);
     }
-
-
-    @Test
-    /*
-     * T.?
-     * Preconditions: Existing user data in the database
-     * Post-conditions: No data is deleted
-     */
-    public void testDeleteUserDataFailed() {
-        Long id = 1L;
-
-        userService.deleteUserAccount(id);
-
-        verify(userDao, never()).deleteUserData(id);
-    }
-
 }

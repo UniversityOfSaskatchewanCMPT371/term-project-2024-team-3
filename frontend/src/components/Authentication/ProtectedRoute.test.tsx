@@ -31,7 +31,7 @@ describe("ProtectedRoute Component", () => {
         getByText("Protected");
     });
 
-    it("T4.35: redirects to login when user is not authenticated", () => {
+    it("T4.35: redirects to Landing Page when user is not authenticated", () => {
         authSpy.mockReturnValue({ isAuthenticated: false });
         const { queryByText } = render(
             <MemoryRouter initialEntries={["/protected"]}>

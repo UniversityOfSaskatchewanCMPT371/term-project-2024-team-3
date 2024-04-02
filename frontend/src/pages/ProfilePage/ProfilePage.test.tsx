@@ -85,7 +85,7 @@ describe("Profile Page", () => {
     });
 
     // Failing on CI due to issues with server mem/cpu, but this runs perfect locally
-    it.skip("T5.?? should delete data when delete data is clicked and confirmed", async () => {
+    it("T5.?? should delete data when delete data is clicked and confirmed", async () => {
         const { getByText } = renderWithProvider(<ProfilePage />);
         const dataBtn = getByText("Delete My Data");
         act(() => {
@@ -99,7 +99,7 @@ describe("Profile Page", () => {
     });
 
     // Failing on CI due to issues with server mem/cpu, but this runs perfect locally
-    it.skip("T5.?? should delete data when delete account is clicked and confirmed", async () => {
+    it("T5.?? should delete data when delete account is clicked and confirmed", async () => {
         const { getByText } = renderWithProvider(<ProfilePage />);
         const dataBtn = getByText("Delete My Account");
         act(() => {
@@ -113,7 +113,7 @@ describe("Profile Page", () => {
     });
 
     // Failing on CI due to issues with server mem/cpu, but this runs perfect locally
-    it.skip("T5.?? should change password successfully and show confirm password error state when necessary", async () => {
+    it("T5.?? should change password successfully and show confirm password error state when necessary", async () => {
         const { getByLabelText, queryByText, getByText } = renderWithProvider(<ProfilePage />);
         act(() => {
             userEvent.click(getByText("Change My Password"));
@@ -133,6 +133,9 @@ describe("Profile Page", () => {
 
         act(() => {
             userEvent.type(getByLabelText("Confirm Password"), "t");
+        });
+
+        act(() => {
             userEvent.tab(); // Trigger blur
         });
 

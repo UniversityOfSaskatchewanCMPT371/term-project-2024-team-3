@@ -1,6 +1,7 @@
 import React from "react";
 import { useRollbar } from "@rollbar/react";
 // import assert from "shared/util/assert";
+import { equal } from "assert";
 import { useAuth } from "../Authentication/useAuth";
 import styles from "./HelpPopup.module.css";
 
@@ -37,13 +38,15 @@ function HelpPopup(): React.ReactElement | null {
                     button.innerHTML = "^";
                     paragraph.setAttribute("values", "opened");
 
-                    // assert(button.innerHTML === "^", null, rollbar);
-                    // assert(paragraph.getAttribute("values") === "opened", null, rollbar);
+                    expect(equal(button.innerHTML, "^"));
+                    expect(equal(paragraph.getAttribute("values"), "opened"));
                 } else if (paragraph.getAttribute("values") === "opened") {
                     paragraph.style.display = "none";
                     button.innerHTML = "v";
                     paragraph.setAttribute("values", "closed");
 
+                    expect(equal(button.innerHTML, "v"));
+                    expect(equal(paragraph.getAttribute("values"), "closed"));
                     // assert(button.innerHTML === "v", null, rollbar);
                     // assert(paragraph.getAttribute("values") === "closed", null, rollbar);
                 }

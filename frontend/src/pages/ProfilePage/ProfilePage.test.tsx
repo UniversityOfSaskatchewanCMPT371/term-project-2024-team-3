@@ -18,7 +18,7 @@ describe("Profile Page", () => {
             user: {
                 firstName: "hello",
                 lastName: "world",
-                userName: "myUsername",
+                username: "myUsername",
             },
             isLoading: false,
             error: null,

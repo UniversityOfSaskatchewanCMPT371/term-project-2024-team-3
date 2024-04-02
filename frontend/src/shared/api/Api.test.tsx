@@ -124,7 +124,7 @@ describe("API Tests", () => {
         const expected = {
             firstName: "hello",
             lastName: "test",
-            userName: "hellotest",
+            username: "hellotest",
         };
         jest.spyOn(api, "get").mockResolvedValueOnce({
             data: expected,

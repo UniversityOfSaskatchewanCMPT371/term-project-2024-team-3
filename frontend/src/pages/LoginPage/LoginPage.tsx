@@ -3,6 +3,7 @@ import useLogin from "shared/hooks/useLogin";
 import { useNavigate } from "react-router-dom";
 import { useRollbar } from "@rollbar/react";
 import ErrorSnackbar from "components/ErrorSnackbar/ErrorSnackbar";
+import assert from "shared/util/assert";
 import styles from "./LoginPage.module.css";
 import leftArrow from "../../assets/left-arrow.png";
 import rightArrow from "../../assets/right-arrow.png";
@@ -44,7 +45,7 @@ function LoginPage() {
      */
     const handleNext = () => {
         // Ensure texts array is not empty
-        console.assert(texts.length > 0, "texts array should not be empty");
+        assert(texts.length > 0, "texts array should not be empty", rollbar);
         if (!(texts.length > 0)) {
             rollbar.error("Assertion failed: text display array is empty");
         }
@@ -59,7 +60,7 @@ function LoginPage() {
      */
     const handlePrevious = () => {
         // Ensure texts array is not empty
-        console.assert(texts.length > 0, "texts array should not be empty");
+        assert(texts.length > 0, "texts array should not be empty", rollbar);
         if (!(texts.length > 0)) {
             rollbar.error("Assertion failed: text display array is empty");
         }
@@ -68,13 +69,15 @@ function LoginPage() {
 
     const handleSubmit = async (event: FormEvent) => {
         event.preventDefault();
-        console.assert(
+        assert(
             typeof username === "string" && username !== "",
             "username should be a non-null string",
+            rollbar,
         );
-        console.assert(
+        assert(
             typeof password === "string" && password !== "",
             "password should be a non-null string",
+            rollbar,
         );
         // Log to Rollbar if the assertion fails
         if (typeof username !== "string" || username === "") {

@@ -268,7 +268,7 @@ const ProcessedDataPage = function () {
                             <FormControlLabel
                                 value="decissionTree"
                                 onClick={() => handleModelChange(PredictionType.DECISSION_TREE)}
-                                label="Decission Tree"
+                                label="Decision Tree"
                                 labelPlacement="end"
                                 control={
                                     <Radio

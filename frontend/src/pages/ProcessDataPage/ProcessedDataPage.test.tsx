@@ -67,7 +67,7 @@ describe("Processed Data Page", () => {
         // radials rendering and verifying that 1 can be checked at a time
         const SVMRad = getByLabelText("SVM");
         const RandomRad = getByLabelText("Random Forest");
-        const DecissionRad = getByLabelText("Decission Tree");
+        const DecissionRad = getByLabelText("Decision Tree");
         getByText("SVM");
 
         userEvent.click(SVMRad);

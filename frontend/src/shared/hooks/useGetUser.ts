@@ -18,7 +18,7 @@ const useGetUser = (): UseGetUser => {
                 setUser({
                     firstName: data.firstName,
                     lastName: data.lastName,
-                    userName: data.userName,
+                    username: data.username,
                 });
                 setErrorState(null);
             })

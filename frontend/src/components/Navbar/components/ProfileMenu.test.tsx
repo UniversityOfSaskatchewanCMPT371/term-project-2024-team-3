@@ -1,5 +1,5 @@
 import React from "react";
-import { render } from "@testing-library/react";
+import { act, render } from "@testing-library/react";
 import { useNavigate } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
 import ProfileMenu from "./ProfileMenu";
@@ -25,21 +25,28 @@ describe("Profile Menu", () => {
         expect(queryByText("Logout")).not.toBeInTheDocument();
     });
 
-    // Failing on CI due to issues with server mem/cpu, but this runs perfect locally
-    it.skip("T5.?? should render profile and dropdown while clicked", () => {
+    it("T5.?? should render profile and dropdown while clicked", () => {
         const { getByText, getByTestId } = render(<ProfileMenu onLogout={logoutMock} />);
-        userEvent.click(getByTestId("profile"));
+        act(() => {
+            userEvent.click(getByTestId("profile"));
+        });
         getByText("My account");
         getByText("Logout");
     });
 
-    it.skip("T5.?? should call logout and my account nav links when clicked", () => {
+    it("T5.?? should call logout and my account nav links when clicked", () => {
         const { getByText, getByTestId } = render(<ProfileMenu onLogout={logoutMock} />);
-        userEvent.click(getByTestId("profile"));
-        userEvent.click(getByText("My account"));
+        act(() => {
+            userEvent.click(getByTestId("profile"));
+        });
+        act(() => {
+            userEvent.click(getByText("My account"));
+        });
         expect(mockNavigate).toHaveBeenCalledWith("/profile");
 
-        userEvent.click(getByText("Logout"));
+        act(() => {
+            userEvent.click(getByText("Logout"));
+        });
         expect(logoutMock).toHaveBeenCalledTimes(1);
     });
 });

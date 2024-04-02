@@ -46,19 +46,19 @@ function ProfilePage(): React.ReactElement<typeof Container> {
 
     const onAccountDeletionConfirm = async () => {
         await handleAccountDelete();
-        rollbar.info(`${user?.userName} user has been deleted`);
+        rollbar.info(`${user?.username} user has been deleted`);
         setIsDeleteAccountModalOpen(false);
     };
 
     const onDataDeletionConfirm = async () => {
         await handleDataDelete();
-        rollbar.info(`${user?.userName} user data has been deleted`);
+        rollbar.info(`${user?.username} user data has been deleted`);
         setIsDeleteDataModalOpen(false);
     };
 
     const onPasswordChangeConfirm = async () => {
         await handleChangePassword(confirmPassword);
-        rollbar.info(`${user?.userName} user changed their password`);
+        rollbar.info(`${user?.username} user changed their password`);
         setIsPasswordChangeModalOpen(false);
     };
 
@@ -140,7 +140,7 @@ function ProfilePage(): React.ReactElement<typeof Container> {
                 <hr />
                 <Stack direction="row" spacing={1}>
                     <span className="label">Username:</span>
-                    <span>{user?.userName}</span>
+                    <span>{user?.username}</span>
                 </Stack>
             </Box>
             <Box marginTop={1}>

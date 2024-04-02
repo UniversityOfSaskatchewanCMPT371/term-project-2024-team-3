@@ -80,5 +80,5 @@ export type DownloadData = {
 export type UserData = {
     firstName: string | null;
     lastName: string | null;
-    userName: string | null;
+    username: string | null;
 };

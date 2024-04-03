@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 
-test("Home Page Test", async ({ page }) => {
+test("T2.7 Home Page Test", async ({ page }) => {
     // go to home page
     await page.goto("./");
 

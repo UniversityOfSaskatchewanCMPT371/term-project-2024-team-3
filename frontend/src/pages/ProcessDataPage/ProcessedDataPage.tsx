@@ -7,6 +7,7 @@ import useGetProcessedDataList from "shared/hooks/useGetProcessedDataList";
 import moment from "moment";
 import usePredictFile from "shared/hooks/usePredictFile";
 import useDownload from "shared/hooks/useDownload";
+import assert from "shared/util/assert";
 import { useRollbar } from "@rollbar/react";
 import styles from "./ProcessedDataPage.module.css";
 
@@ -25,13 +26,6 @@ const ProcessedDataPage = function () {
         message: "N/A",
         isVisible: false,
     });
-
-    // ensuring correct initialization of state.
-    // console.assert(currentFile === undefined, "currentFile should be undefined initially");
-    // console.assert(
-    //     selectedModel === PredictionType.SVM,
-    //     "selectedModel should be initialized to PredictionType.SVM",
-    // );
 
     const { handlePredict, error: usePredictError } = usePredictFile();
     const { handleDownload, error: useDownloadError } = useDownload();
@@ -86,11 +80,12 @@ const ProcessedDataPage = function () {
 
     const handleModelChange = (model: PredictionType) => {
         // ensure that the selected model belongs to one of the acceptable types
-        console.assert(
+        assert(
             model === PredictionType.SVM ||
                 model === PredictionType.RANDOM_FOREST ||
                 model === PredictionType.DECISSION_TREE,
             "Invalid prediction model selected",
+            rollbar,
         );
         setSelectedModel(model);
     };
@@ -123,8 +118,6 @@ const ProcessedDataPage = function () {
      */
     const predictFile = async (event: React.MouseEvent) => {
         event.preventDefault();
-        // make sure a file is selected before you attempt to predict it
-        console.assert(currentFile !== undefined, "A file should be selected before predicting");
         if (currentFile) {
             const { id, watch } = currentFile;
             const lowerCaseWatch = watch.toLowerCase();
@@ -150,8 +143,7 @@ const ProcessedDataPage = function () {
      */
     const downloadFile = async (event: React.MouseEvent) => {
         event.preventDefault();
-        // make sure a file is selected before you attempt to download it
-        console.assert(currentFile !== undefined, "A file should be selected before downloading");
+        assert(currentFile, "a file is not selected", rollbar);
         if (currentFile) {
             const { id, watch } = currentFile;
             const stringID = id.toString();
@@ -182,7 +174,6 @@ const ProcessedDataPage = function () {
      *  Post-conditions: returns a list of formatted html components
      */
     const getRendersOfFiles = () => {
-        console.assert(files.length > 0, "Files array should contain data for rendering");
         renders = files.map((file: ProcessedFile) => {
             const date = moment(file.dateTime ?? "");
             let dateString;
@@ -277,7 +268,7 @@ const ProcessedDataPage = function () {
                             <FormControlLabel
                                 value="decissionTree"
                                 onClick={() => handleModelChange(PredictionType.DECISSION_TREE)}
-                                label="Decission Tree"
+                                label="Decision Tree"
                                 labelPlacement="end"
                                 control={
                                     <Radio

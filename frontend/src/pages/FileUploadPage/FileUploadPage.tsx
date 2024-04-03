@@ -4,6 +4,7 @@ import { useRollbar } from "@rollbar/react";
 import { WatchType } from "shared/api/types";
 import useUpload from "shared/hooks/useUpload";
 import { ProgressBar, ProgressBarType } from "components/ProgressBar/ProgressBar";
+import assert from "shared/util/assert";
 import FileDropZone from "./components/FileDropzone";
 import UploadedFiles from "./components/UploadedFiles";
 import FileDropZoneControls from "./components/FileDropzoneControls";
@@ -51,7 +52,7 @@ function FileUploadPage(): ReactElement {
     }, [uploadError, progressBar]);
 
     const onChange = (event: ChangeEvent, value: string) => {
-        console.assert(value === "fitbit" || value === "apple", "unexpected type: ".concat(value));
+        assert(value === "fitbit" || value === "apple", "unexpected type: ".concat(value), rollbar);
 
         if (value === "fitbit") {
             setFileType(WatchType.FITBIT);

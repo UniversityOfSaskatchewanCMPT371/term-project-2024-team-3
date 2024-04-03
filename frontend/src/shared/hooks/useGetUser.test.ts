@@ -8,7 +8,7 @@ jest.mock("../api");
 const mockData = {
     firstName: "hello",
     lastName: "hellothere",
-    userName: "hellousername",
+    username: "hellousername",
 };
 
 const getUserSpy = jest.spyOn(API, "getUser").mockImplementation(async () => mockData);

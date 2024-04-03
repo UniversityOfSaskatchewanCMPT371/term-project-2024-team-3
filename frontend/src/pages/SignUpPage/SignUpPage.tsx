@@ -2,6 +2,7 @@ import React, { useState, useEffect, FormEvent } from "react";
 import useSignup from "shared/hooks/useSignup";
 import { useNavigate } from "react-router-dom";
 import { useRollbar } from "@rollbar/react";
+import assert from "shared/util/assert";
 import styles from "./SignUpPage.module.css";
 import leftArrow from "../../assets/left-arrow.png";
 import rightArrow from "../../assets/right-arrow.png";
@@ -63,7 +64,7 @@ function SignUpPage() {
      */
     const handleNext = () => {
         // Ensure texts array is not empty
-        assert(texts.length > 0, "texts array should not be empty");
+        assert(texts.length > 0, "texts array should not be empty", rollbar);
         if (!(texts.length > 0)) {
             rollbar.error("Assertion failed: text display array is empty");
         }
@@ -78,7 +79,7 @@ function SignUpPage() {
      */
     const handlePrevious = () => {
         // Ensure texts array is not empty
-        assert(texts.length > 0, "texts array should not be empty");
+        assert(texts.length > 0, "texts array should not be empty", rollbar);
         if (!(texts.length > 0)) {
             rollbar.error("Assertion failed: text display array is empty");
         }
@@ -93,10 +94,10 @@ function SignUpPage() {
     const handleSubmit = async (event: FormEvent) => {
         event.preventDefault();
         setFormSubmitAttempted(true);
-        assert(typeof username === "string", "username should be a non-null string");
-        assert(typeof firstName === "string", "first name should be a non-null string");
-        assert(typeof lastName === "string", "last name should be a non-null string");
-        assert(typeof password === "string", "password should be a non-null string");
+        assert(typeof username === "string", "username should be a non-null string", rollbar);
+        assert(typeof firstName === "string", "first name should be a non-null string", rollbar);
+        assert(typeof lastName === "string", "last name should be a non-null string", rollbar);
+        assert(typeof password === "string", "password should be a non-null string", rollbar);
         // Log to Rollbar if any of the assertion fails
         if (typeof username !== "string") {
             rollbar.error("Assertion failed: username should be a non-null string");

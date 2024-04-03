@@ -1,4 +1,4 @@
-import React, { useState, FormEvent } from "react";
+import React, { useState, useEffect, FormEvent } from "react";
 import useLogin from "shared/hooks/useLogin";
 import { useNavigate } from "react-router-dom";
 import { useRollbar } from "@rollbar/react";
@@ -10,10 +10,9 @@ import rightArrow from "../../assets/right-arrow.png";
 
 const texts = [
     "Welcome to BEAPEngine, a research project founded by Dr. Daniel Fuller.",
-    "Help us in our mission to improve the lives of people with disabilities.",
     "Join our community of researchers and developers to make a difference.",
+    "Using technology, help us in our mission to improve the health of millions of people.",
     "We are looking for volunteers to help us with our research project.",
-    // Add more texts here...
 ];
 
 function LoginPage() {
@@ -36,6 +35,14 @@ function LoginPage() {
     const handleSignUpClick = () => {
         navigate("/signup");
     };
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentIndex((currentIndex + 1) % texts.length);
+        }, 4000); // Change text every 4 seconds
+
+        return () => clearInterval(interval); // Clean up on component unmount
+    }, [currentIndex]);
 
     /**
      * Handles the click event to navigate to the next text.
@@ -95,18 +102,18 @@ function LoginPage() {
             <ErrorSnackbar error={loginError} />
             <div className={styles.container}>
                 <div className={styles["left-section"]}>
+                    <div className={styles["button-container"]}>
+                        <button
+                            data-testid="homeButton"
+                            type="button"
+                            className={`${styles.button} ${styles["go-home"]}`}
+                            onClick={() => navigate("/")}
+                        >
+                            Back To Homepage
+                        </button>
+                    </div>
                     <h1 className={styles["signin-text"]}>Sign In</h1>
                     <p className={styles["login-text"]}>
-                        <div className={styles["button-container"]}>
-                            <button
-                                data-testid="homeButton"
-                                type="button"
-                                className={`${styles.button} ${styles["go-home"]}`}
-                                onClick={() => navigate("/")}
-                            >
-                                Back To Homepage
-                            </button>
-                        </div>
                         Log into your existing BEAPENGINE account
                     </p>
                     <form onSubmit={handleSubmit} className={styles["form-box"]}>

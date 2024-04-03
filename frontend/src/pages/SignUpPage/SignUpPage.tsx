@@ -1,7 +1,8 @@
-import React, { useState, FormEvent } from "react";
+import React, { useState, useEffect, FormEvent } from "react";
 import useSignup from "shared/hooks/useSignup";
 import { useNavigate } from "react-router-dom";
 import { useRollbar } from "@rollbar/react";
+import ErrorSnackbar from "components/ErrorSnackbar/ErrorSnackbar";
 import assert from "shared/util/assert";
 import styles from "./SignUpPage.module.css";
 import leftArrow from "../../assets/left-arrow.png";
@@ -9,10 +10,9 @@ import rightArrow from "../../assets/right-arrow.png";
 
 const texts = [
     "Welcome to BEAPEngine, a research project founded by Dr. Daniel Fuller.",
-    "Help us in our mission to improve the lives of people with disabilities.",
     "Join our community of researchers and developers to make a difference.",
+    "Using technology, help us in our mission to improve the health of millions of people.",
     "We are looking for volunteers to help us with our research project.",
-    // Add more texts here...
 ];
 
 function SignUpPage() {
@@ -25,7 +25,7 @@ function SignUpPage() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [passwordConfirmation, setPasswordConfirmation] = useState("");
-    const { handleSignup } = useSignup();
+    const { handleSignup, error: signUpError } = useSignup();
     const navigate = useNavigate();
     const [policyChecked, setPolicyChecked] = useState(false);
     const [formSubmitAttempted, setFormSubmitAttempted] = useState(false);
@@ -46,6 +46,14 @@ function SignUpPage() {
     const handleLogInClick = () => {
         navigate("/login");
     };
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentIndex((currentIndex + 1) % texts.length);
+        }, 4000); // Change text every 4 seconds
+
+        return () => clearInterval(interval); // Clean up on component unmount
+    }, [currentIndex]);
 
     /**
      * Handles the click event to navigate to the next text.
@@ -122,9 +130,9 @@ function SignUpPage() {
 
     return (
         <div className={styles["signup-page"]}>
+            <ErrorSnackbar error={signUpError} />
             <div className={styles.container}>
                 <div className={styles["left-section"]}>
-                    <h1 className={styles["signup-text"]}>Sign Up</h1>
                     <div className={styles["button-container"]}>
                         <button
                             data-testid="homeButton"
@@ -135,7 +143,7 @@ function SignUpPage() {
                             Back To Homepage
                         </button>
                     </div>
-
+                    <h1 className={styles["signup-text"]}>Sign Up</h1>
                     <p className={styles["createaccount-text"]}>Create a free BEAPENGINE account</p>
                     <form onSubmit={handleSubmit} className={styles["form-box"]}>
                         <div className={styles.tabs}>

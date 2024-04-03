@@ -18,14 +18,14 @@ describe("Profile Menu", () => {
         (useNavigate as jest.Mock).mockImplementation(() => mockNavigate);
     });
 
-    it("T5.?? should render profile while not clicked", () => {
+    it("T5.112 should render profile while not clicked", () => {
         const { queryByText, getByTestId } = render(<ProfileMenu onLogout={logoutMock} />);
         getByTestId("profile");
         expect(queryByText("My account")).not.toBeInTheDocument();
         expect(queryByText("Logout")).not.toBeInTheDocument();
     });
 
-    it("T5.?? should render profile and dropdown while clicked", () => {
+    it("T5.113 should render profile and dropdown while clicked", () => {
         const { getByText, getByTestId } = render(<ProfileMenu onLogout={logoutMock} />);
         act(() => {
             userEvent.click(getByTestId("profile"));
@@ -34,7 +34,7 @@ describe("Profile Menu", () => {
         getByText("Logout");
     });
 
-    it("T5.?? should call logout and my account nav links when clicked", () => {
+    it("T5.114 should call logout and my account nav links when clicked", () => {
         const { getByText, getByTestId } = render(<ProfileMenu onLogout={logoutMock} />);
         act(() => {
             userEvent.click(getByTestId("profile"));

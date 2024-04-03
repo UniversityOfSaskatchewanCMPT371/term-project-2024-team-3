@@ -13,8 +13,8 @@ const mockData = {
 
 const getUserSpy = jest.spyOn(API, "getUser").mockImplementation(async () => mockData);
 
-describe("useGetUploadedFiles", () => {
-    it("T5.?? should get users successfully", async () => {
+describe("useGetUser", () => {
+    it("T5.105 should get users successfully", async () => {
         getUserSpy.mockResolvedValue(mockData);
 
         const { result } = renderHook(useGetUser);
@@ -28,7 +28,7 @@ describe("useGetUploadedFiles", () => {
         });
     });
 
-    it("T5.?? should handle get user when it errors", async () => {
+    it("T5.106 should handle get user when it errors", async () => {
         const { result } = renderHook(useGetUser);
 
         getUserSpy.mockImplementation(async () => {

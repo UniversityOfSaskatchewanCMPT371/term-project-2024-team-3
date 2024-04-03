@@ -1,4 +1,4 @@
-import React, { useState, FormEvent } from "react";
+import React, { useState, useEffect, FormEvent } from "react";
 import useSignup from "shared/hooks/useSignup";
 import { useNavigate } from "react-router-dom";
 import { useRollbar } from "@rollbar/react";
@@ -13,6 +13,12 @@ const texts = [
     "We are looking for volunteers to help us with our research project.",
     // Add more texts here...
 ];
+
+function assert(condition: any, msg?: string): asserts condition {
+    if (!condition) {
+        throw new Error(msg);
+    }
+}
 
 function SignUpPage() {
     const rollbar = useRollbar();
@@ -43,8 +49,17 @@ function SignUpPage() {
      * Navigates to the log-in page.
      */
     const handleLogInClick = () => {
+        assert(typeof navigate === "function", "navigate should be a function");
         navigate("/login");
     };
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentIndex((currentIndex + 1) % texts.length);
+        }, 3000); // Change text every 3 seconds
+
+        return () => clearInterval(interval); // Clean up on component unmount
+    }, [currentIndex]);
 
     /**
      * Handles the click event to navigate to the next text.
@@ -54,7 +69,7 @@ function SignUpPage() {
      */
     const handleNext = () => {
         // Ensure texts array is not empty
-        console.assert(texts.length > 0, "texts array should not be empty");
+        assert(texts.length > 0, "texts array should not be empty");
         if (!(texts.length > 0)) {
             rollbar.error("Assertion failed: text display array is empty");
         }
@@ -69,7 +84,7 @@ function SignUpPage() {
      */
     const handlePrevious = () => {
         // Ensure texts array is not empty
-        console.assert(texts.length > 0, "texts array should not be empty");
+        assert(texts.length > 0, "texts array should not be empty");
         if (!(texts.length > 0)) {
             rollbar.error("Assertion failed: text display array is empty");
         }
@@ -84,10 +99,10 @@ function SignUpPage() {
     const handleSubmit = async (event: FormEvent) => {
         event.preventDefault();
         setFormSubmitAttempted(true);
-        console.assert(typeof username === "string", "username should be a non-null string");
-        console.assert(typeof firstName === "string", "first name should be a non-null string");
-        console.assert(typeof lastName === "string", "last name should be a non-null string");
-        console.assert(typeof password === "string", "password should be a non-null string");
+        assert(typeof username === "string", "username should be a non-null string");
+        assert(typeof firstName === "string", "first name should be a non-null string");
+        assert(typeof lastName === "string", "last name should be a non-null string");
+        assert(typeof password === "string", "password should be a non-null string");
         // Log to Rollbar if any of the assertion fails
         if (typeof username !== "string") {
             rollbar.error("Assertion failed: username should be a non-null string");
@@ -123,7 +138,6 @@ function SignUpPage() {
         <div className={styles["signup-page"]}>
             <div className={styles.container}>
                 <div className={styles["left-section"]}>
-                    <h1 className={styles["signup-text"]}>Sign Up</h1>
                     <div className={styles["button-container"]}>
                         <button
                             data-testid="homeButton"
@@ -134,7 +148,7 @@ function SignUpPage() {
                             Back To Homepage
                         </button>
                     </div>
-
+                    <h1 className={styles["signup-text"]}>Sign Up</h1>
                     <p className={styles["createaccount-text"]}>Create a free BEAPENGINE account</p>
                     <form onSubmit={handleSubmit} className={styles["form-box"]}>
                         <div className={styles.tabs}>

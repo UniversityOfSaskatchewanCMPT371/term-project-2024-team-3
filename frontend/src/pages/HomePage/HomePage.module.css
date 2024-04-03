@@ -139,7 +139,7 @@ a {
 
 .expand_icon {
   cursor: pointer;
-  font-size: 60px !important;
+  font-size: 100px !important;
   animation: updown 2s ease infinite;
 }
 

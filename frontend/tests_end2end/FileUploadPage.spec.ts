@@ -33,6 +33,7 @@ test("T2.8 File Upload Page Test", async ({ page }) => {
 });
 
 test("T4.8 Test Uploading Fitbit Files", async ({ page }) => {
+    test.slow();
     await setupLogin(page);
 
     // go to File Upload Page
@@ -92,7 +93,8 @@ test("T4.8 Test Uploading Fitbit Files", async ({ page }) => {
     // Upload Files
     await expect(page.locator(".dzu-submitButton")).toBeVisible();
     await page.waitForTimeout(5000);
-    await page.locator(".dzu-submitButton").click();
+    await page.getByRole("button", { name: "Upload" }).click();
+    await page.waitForTimeout(5000);
 
     // Should be gone after upload
     await expect(page.getByText("wat.json, 15bytes")).not.toBeVisible();
@@ -105,6 +107,7 @@ test("T4.8 Test Uploading Fitbit Files", async ({ page }) => {
 });
 
 test("T4.9 Test Uploading Applewatch Files", async ({ page }) => {
+    test.slow();
     await setupLogin(page);
 
     // go to File Upload Page
@@ -163,7 +166,8 @@ test("T4.9 Test Uploading Applewatch Files", async ({ page }) => {
     // Upload Files
     await expect(page.locator(".dzu-submitButton")).toBeVisible();
     await page.waitForTimeout(5000);
-    await page.locator(".dzu-submitButton").click();
+    await page.getByRole("button", { name: "Upload" }).click();
+    await page.waitForTimeout(5000);
 
     await expect(page.getByText("1_export.xml, 15bytes")).not.toBeVisible();
 });

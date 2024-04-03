@@ -44,28 +44,37 @@ test("T2.6 Navbar Test", async ({ page }) => {
     await expect(page.getByRole("link", { name: "FILE UPLOAD" })).toHaveCount(0);
 });
 
-test.describe("T.90 individual Navbar tests from homepage", () => {
+test.describe("T4.90 individual Navbar tests from homepage", () => {
     test("Homepage to File Upload", async ({ page }) => {
         await page.goto("./");
         await page.getByRole("link", { name: "FILE UPLOAD" }).click();
-        await expect(page).toHaveURL("./FileUploadPage");
+        await expect(page).toHaveURL("./file-upload");
     });
 
     test("Homepage to Processed Files", async ({ page }) => {
         await page.goto("./");
         await page.getByRole("link", { name: "PROCESSED FILES" }).click();
-        await expect(page).toHaveURL("./ProcessedDataPage");
+        await expect(page).toHaveURL("./processed-data");
     });
 
     test("Homepage to Predicted Files", async ({ page }) => {
         await page.goto("./");
         await page.getByRole("link", { name: "PREDICTED FILES", exact: true }).click();
-        await expect(page).toHaveURL("./PredictedDataPage");
+        await expect(page).toHaveURL("./predicted-data");
+    });
+
+    test("Homepage to Profile", async ({ page }) => {
+        await page.goto("./");
+        await page.getByTestId("profile").click();
+        await page.getByRole("menuitem", { name: "My account" }).click();
+        await expect(page).toHaveURL("./profile");
     });
 
     test("Homepage to Logout", async ({ page }) => {
         await page.goto("./");
         await page.getByTestId("profile").click();
+        await page.getByRole("menuitem", { name: "Logout" }).click();
+        await expect(page).toHaveURL("./");
         await expect(page.getByRole("link", { name: "profileLogo" })).toHaveCount(0);
     });
 });

@@ -16,7 +16,7 @@ test("T2.9 Processed Files Page Test", async ({ page }) => {
     await expect(page.getByRole("button", { name: "Download File" })).toBeVisible();
 
     await expect(page.getByText("SVM")).toBeVisible();
-    await expect(page.getByText("Random Forest")).toBeVisible();
+    await expect(page.getByLabel("Random Forest")).toBeVisible();
     await expect(page.getByText("Decision Tree")).toBeVisible();
 
     // test the type of ML Algorithms selection

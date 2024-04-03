@@ -6,11 +6,12 @@ import {
     Radio,
     Button,
     Container,
-    Alert,
+    // Alert,
 } from "@mui/material";
 import { DataType, WatchType, DownloadType, FileData } from "shared/api";
 import { ProgressBarType, ProgressBar } from "components/ProgressBar/ProgressBar";
 import ErrorSnackbar from "components/ErrorSnackbar/ErrorSnackbar";
+// import assert from "shared/util/assert";
 import moment from "moment";
 import useDownload from "shared/hooks/useDownload";
 import { useRollbar } from "@rollbar/react";
@@ -102,8 +103,6 @@ const PredictedDataPage = function () {
      */
     const downloadFile = async (event: React.MouseEvent) => {
         event.preventDefault();
-        // make sure a file is selected before you attempt to download it
-        console.assert(currentFile !== undefined, "A file should be selected before downloading");
         if (currentFile) {
             const { id, watch } = currentFile;
             const stringID = id.toString();
@@ -134,7 +133,6 @@ const PredictedDataPage = function () {
      *  Post-conditions: returns a list of formatted html components
      */
     const getRendersOfFiles = () => {
-        console.assert(files.length > 0, "Files array should contain data for rendering");
         renders = files.map((file: PredictedFile) => {
             const date = moment(file.dateTime ?? "");
             let dateString;
@@ -186,13 +184,13 @@ const PredictedDataPage = function () {
                 <ErrorSnackbar error={useDownloadError} />
 
                 <Container className={styles.containerDiv}>
-                    <Alert severity="info" sx={{ marginBottom: 3 }} data-testid="page-info">
+                    {/* <Alert severity="info" sx={{ marginBottom: 3 }} data-testid="page-info">
                         On this page, you can download your new data files with both the raw Apple
                         Watch or Fitbit data, the features we use for our machine learning models,
                         and the predicted activity for each minute of your data. If you want to
                         upload different files, go back to the file upload page. You can also click
                         on individual steps to rerun a different machine learning model.
-                    </Alert>
+                    </Alert> */}
                     <div className={styles.columnDiv}>
                         <div className={styles.listDiv}>
                             <FormControl component="fieldset" className={styles.fileSelectorRad}>

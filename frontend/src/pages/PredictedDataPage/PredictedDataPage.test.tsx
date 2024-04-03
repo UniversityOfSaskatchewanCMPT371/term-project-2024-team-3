@@ -39,9 +39,8 @@ describe("Predicted Data Page", () => {
         });
     });
     it("T5.?? Should properly display the predicted data page and download file", () => {
-        const { getByTestId, getByText } = renderWithProvider(<PredictedDataPage />);
+        const { getByText } = renderWithProvider(<PredictedDataPage />);
 
-        getByTestId("page-info");
         const fitbitFile = getByText("FitBit 987");
 
         userEvent.click(fitbitFile);

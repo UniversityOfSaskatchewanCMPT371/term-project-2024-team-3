@@ -11,13 +11,11 @@ export const login = async (username: string, password: string): Promise<LoginRe
         const { data } = response;
         const { token } = response.headers;
 
-        const mappedData: LoginResponseData = {
+        return {
             userId: Number(data.userID),
             authorities: Array.isArray(data.Authorities) ? data.Authorities : [],
             token: token,
         };
-
-        return mappedData;
     } catch (error) {
         throw new Error(error.response?.data?.message ?? "Login Failed");
     }
@@ -64,7 +62,7 @@ export const getUser = async (): Promise<UserData> => {
         return {
             firstName: response.data.firstName,
             lastName: response.data.lastName,
-            userName: response.data.userName,
+            username: response.data.username,
         };
     } catch (error) {
         throw new Error(error.response?.data?.message ?? "Failed to fetch user details");

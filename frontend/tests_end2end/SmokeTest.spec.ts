@@ -54,7 +54,7 @@ test("smoke test @smoke", async ({ page }) => {
     await expect(page.getByText("Fitbit - 2")).toBeVisible();
     await expect(page.getByText("AppleWatch - 5")).toBeVisible();
     await expect(page.getByTestId("processBtn")).toBeDisabled();
-    await page.getByLabel("Fitbit -").check();
+    await page.getByLabel("Fitbit - 2").check();
     await expect(page.getByTestId("processBtn")).toBeEnabled();
 
     // Processed Files Page

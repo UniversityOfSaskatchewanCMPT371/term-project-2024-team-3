@@ -15,7 +15,6 @@ test("T2.8 File Upload Page Test", async ({ page }) => {
 
     await expect(page.getByText("Select File Type:")).toBeVisible();
     await expect(page.getByLabel("Fitbit", { exact: true })).toBeChecked();
-    //await expect(page.getByLabel("Fitbit")).toBeChecked();
     await expect(page.getByLabel("Apple Watch", { exact: true })).not.toBeChecked();
 
     await expect(page.getByText("Drop items here or Browse Files")).toBeVisible();
@@ -37,12 +36,12 @@ test("T4.8 Test Uploading Fitbit Files", async ({ page }) => {
     await setupLogin(page);
 
     // go to File Upload Page
-    await page.goto("./FileUploadPage");
+    await page.goto("./file-upload");
 
     // Should be default fitbit selector
-    await page.getByLabel("Fitbit").check();
-    await expect(page.getByLabel("Fitbit")).toBeChecked();
-    await expect(page.getByLabel("Apple Watch")).not.toBeChecked();
+    await page.getByLabel("Fitbit", { exact: true }).check();
+    await expect(page.getByLabel("Fitbit", { exact: true })).toBeChecked();
+    await expect(page.getByLabel("Apple Watch", { exact: true })).not.toBeChecked();
 
     await expect(page.getByText("Drop items here or Browse Files")).toBeVisible();
 
@@ -109,17 +108,17 @@ test("T4.9 Test Uploading Applewatch Files", async ({ page }) => {
     await setupLogin(page);
 
     // go to File Upload Page
-    await page.goto("./FileUploadPage");
+    await page.goto("./file-upload");
 
     // Should be default fitbit selector
-    await page.getByLabel("Fitbit").check();
-    await expect(page.getByLabel("Fitbit")).toBeChecked();
-    await expect(page.getByLabel("Apple Watch")).not.toBeChecked();
+    await page.getByLabel("Fitbit", { exact: true }).check();
+    await expect(page.getByLabel("Fitbit", { exact: true })).toBeChecked();
+    await expect(page.getByLabel("Apple Watch", { exact: true })).not.toBeChecked();
 
     // selecting Apple Watch data
-    await page.getByLabel("Apple Watch").check();
-    await expect(page.getByLabel("Fitbit")).not.toBeChecked();
-    await expect(page.getByLabel("Apple Watch")).toBeChecked();
+    await page.getByLabel("Apple Watch", { exact: true }).check();
+    await expect(page.getByLabel("Fitbit", { exact: true })).not.toBeChecked();
+    await expect(page.getByLabel("Apple Watch", { exact: true })).toBeChecked();
 
     // Does not matter what is inside the file!
     const buffer = appleWatchData;

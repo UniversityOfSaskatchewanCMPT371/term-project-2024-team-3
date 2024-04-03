@@ -88,6 +88,7 @@
         flex-direction: row;
         justify-content: center;
         width: 100%;
+        margin-top: 30px;
     }
 
     .navbar a {
@@ -97,6 +98,9 @@
     .navbar-logo {
         width:  30px;
         height: 30px ;
+        position: absolute;
+        margin: right;
+        margin-bottom: 110px;
     }
 
     .navbar .nav-link {

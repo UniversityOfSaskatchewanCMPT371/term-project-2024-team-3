@@ -7,7 +7,7 @@ const onConfirmMock = jest.fn();
 const onCloseMock = jest.fn();
 
 describe("Uploaded Files Page", () => {
-    it("T5.?? should render confirm modal", () => {
+    it("T5.95 should render confirm modal", () => {
         const { getByText } = render(
             <ConfirmModal
                 header="Header"
@@ -23,7 +23,7 @@ describe("Uploaded Files Page", () => {
         getByText("Confirm");
     });
 
-    it("T5.?? should render null when confirm modal is not visible", () => {
+    it("T5.96 should render null when confirm modal is not visible", () => {
         const { queryByText } = render(
             <ConfirmModal
                 header="Header"
@@ -39,7 +39,7 @@ describe("Uploaded Files Page", () => {
         expect(queryByText("Confirm")).not.toBeInTheDocument();
     });
 
-    it("T5.?? should call onClose when cancel button clicked", () => {
+    it("T5.97 should call onClose when cancel button clicked", () => {
         const { getByTestId } = render(
             <ConfirmModal
                 header="Header"
@@ -55,7 +55,7 @@ describe("Uploaded Files Page", () => {
         expect(onConfirmMock).not.toHaveBeenCalled();
     });
 
-    it("T5.?? should call onConfirm when confirm button clicked", () => {
+    it("T5.98 should call onConfirm when confirm button clicked", () => {
         const { getByTestId } = render(
             <ConfirmModal
                 header="Header"
@@ -71,7 +71,7 @@ describe("Uploaded Files Page", () => {
         expect(onConfirmMock).toHaveBeenCalledTimes(1);
     });
 
-    it("should disable the confirm and cancel button when isLoading is true", () => {
+    it("T5.99 should disable the confirm and cancel button when isLoading is true", () => {
         const { getByTestId } = render(
             <ConfirmModal
                 header="Header"

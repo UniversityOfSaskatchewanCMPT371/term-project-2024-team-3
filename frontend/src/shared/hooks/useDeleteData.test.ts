@@ -7,7 +7,7 @@ jest.mock("../api");
 const deleteDataSpy = jest.spyOn(API, "deleteData").mockImplementation(async () => {});
 
 describe("useDeleteData", () => {
-    it("T5.?? should handle delete successfully", async () => {
+    it("T5.118 should handle delete successfully", async () => {
         const { result, waitForNextUpdate } = renderHook(useDeleteData);
 
         act(() => {
@@ -22,7 +22,7 @@ describe("useDeleteData", () => {
         expect(result.current.error).toBe(null);
     });
 
-    it("T5.?? should handle delete when it errors", async () => {
+    it("T5.119 should handle delete when it errors", async () => {
         deleteDataSpy.mockImplementation(async () => {
             throw new Error("Delete data failed");
         });

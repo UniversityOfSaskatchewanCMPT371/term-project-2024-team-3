@@ -16,7 +16,7 @@ describe("useDeleteAccount", () => {
         });
     });
 
-    it("T5.?? should handle delete successfully", async () => {
+    it("T5.115 should handle delete successfully", async () => {
         const { result, waitForNextUpdate } = renderHook(useDeleteAccount);
 
         act(() => {
@@ -31,7 +31,7 @@ describe("useDeleteAccount", () => {
         expect(result.current.error).toBe(null);
     });
 
-    it("T5.?? should handle delete when it errors", async () => {
+    it("T5.116 should handle delete when it errors", async () => {
         deleteDataSpy.mockImplementation(async () => {
             throw new Error("Delete account failed");
         });

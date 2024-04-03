@@ -15,12 +15,6 @@ const texts = [
     // Add more texts here...
 ];
 
-function assert(condition: any, msg?: string): asserts condition {
-    if (!condition) {
-        throw new Error(msg);
-    }
-}
-
 function LoginPage() {
     const rollbar = useRollbar();
     rollbar.debug("Reached Login page");

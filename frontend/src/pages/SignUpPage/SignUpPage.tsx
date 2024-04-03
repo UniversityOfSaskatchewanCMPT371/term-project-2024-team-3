@@ -14,12 +14,6 @@ const texts = [
     // Add more texts here...
 ];
 
-function assert(condition: any, msg?: string): asserts condition {
-    if (!condition) {
-        throw new Error(msg);
-    }
-}
-
 function SignUpPage() {
     const rollbar = useRollbar();
     rollbar.debug("Reached Signup page");

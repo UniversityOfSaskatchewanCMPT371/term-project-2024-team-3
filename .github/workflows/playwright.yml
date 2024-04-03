@@ -22,7 +22,7 @@ jobs:
         run: |
           echo "ROLLBAR_ACCESS_TOKEN=${{ secrets.ROLLBAR_ACCESS_TOKEN }}" > .env
       - name: Build and run tests
-        run: docker-compose -p beapengine-staging -f docker-compose-staging.yml up --build -d
+        run: docker compose -p beapengine-staging -f docker-compose-staging.yml up --build -d
       - name: Install dependencies
         run: |
           cd frontend 
@@ -37,7 +37,7 @@ jobs:
           yarn playwright test
       - name: Clean up containers
         if: always()
-        run: docker-compose -p beapengine-staging -f docker-compose-staging.yml down
+        run: docker compose -p beapengine-staging -f docker-compose-staging.yml down
       - uses: actions/upload-artifact@v3
         if: always()
         with:

@@ -34,7 +34,6 @@ function LoginPage() {
      * Navigates to the sign-up page.
      */
     const handleSignUpClick = () => {
-        assert(typeof navigate === "function", "navigate should be a function");
         navigate("/signup");
     };
 

@@ -13,7 +13,6 @@ const texts = [
     "Help us in our mission to improve the lives of people with disabilities.",
     "Join our community of researchers and developers to make a difference.",
     "We are looking for volunteers to help us with our research project.",
-    // Add more texts here...
 ];
 
 function LoginPage() {

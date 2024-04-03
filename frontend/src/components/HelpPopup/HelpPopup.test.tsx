@@ -46,7 +46,7 @@ test("TID 3.1. Renders HelpPopup component", () => {
             userEvent.click(button);
             expect(getByTestId("Paragraph 0").getAttribute("values")).toEqual("opened");
             getByText(
-                "Step 1: Drag and drop your files into the upload box. Once uploaded your files will appear in the Uploaded Files section on the right. You can select the file you want to process and click the process button. Once you have processed your data it will be saved. You do not need to process it again. Click Go To Processed Files to move to the processed data menu.",
+                "Step 1: Drag and drop your files into the upload box. Once uploaded, your files will appear in the Uploaded Files section on the right. You can select the file you want to process and click the process button. Once you have processed your data it will be saved. You do not need to process it again. Click Go To Processed Files to move to the processed data menu.",
             );
 
             // closing
@@ -62,7 +62,7 @@ test("TID 3.1. Renders HelpPopup component", () => {
             userEvent.click(button);
             expect(getByTestId("Paragraph 1").getAttribute("values")).toEqual("opened");
             getByText(
-                "Step 2 - Data prediction and download: In this step you can either download the.csvof your Apple Watch or Fitbit data or, use our machine learning methods to predict lying, sitting, and walking at difference intensities. Select the file you want to predict, select the machine learning model for the prediction (we recommend Random Forrest) and click the Predict File button. Once prediction is complete, move to the predicted files page.",
+                "Step 2 - Data prediction and download: In this step you can either download the .csv of your Apple Watch or Fitbit data, or use our machine learning methods to predict lying, sitting, and walking at difference intensities. Select the file you want to predict, select the machine learning model for the prediction (we recommend Random Forest) and click the Predict File button. Once prediction is complete, move to the predicted files page.",
             );
 
             // closing
@@ -78,7 +78,7 @@ test("TID 3.1. Renders HelpPopup component", () => {
             expect(getByTestId("Paragraph 2").getAttribute("values")).toEqual("opened");
 
             getByText(
-                "Step 3 - Predicted data files: On this page, you can download your new data files with both the raw Apple Watch or Fitbit data, the features we use for our machine learning models, and the predicted activity for each minute of your data. If you want to upload different files, go back to the file upload page. You can also click on individual steps to rerun a different machine learning model if you want.",
+                "Step 3 - Predicted data files: On this page you can download your new data files with both the raw Apple Watch or Fitbit data, the features we use for our machine learning models, and the predicted activity for each minute of your data. If you want to upload different files, go back to the file upload page. You can also click on individual steps to rerun a different machine learning model as you desire.",
             );
 
             // closing

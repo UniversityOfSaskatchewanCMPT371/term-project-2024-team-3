@@ -500,3 +500,118 @@ p {
         margin-left: 20px;
     }
 }
+
+/* Medium devices (landscape tablets, 769px - 992px) */
+@media only screen and (min-width: 769px) and (max-width: 992px) {
+    .container {
+        flex-direction: row;
+    }
+
+    .right-section,
+    .left-section {
+        width: 50%;
+    }
+
+    .right-section h1,
+    .left-section>h1 {
+        margin-left: 15px;
+    }
+
+    .sign-in {
+        margin-left: 80px;
+    }
+
+    .form-box {
+        width: 450px;
+    }
+
+    .button-container {
+        margin-top: 45px;
+    }
+
+    a[href="/privacy-policy"] {
+        margin-bottom: 35px;
+        margin-top: -110px;
+    }
+
+    .right-section {
+        padding: 25px;
+    }
+
+    .right-section .text-slider .fwd-bck-container {
+        padding-right: 25px;
+    }
+
+    .cta-box {
+        width: 90%;
+        height: 110px;
+        padding: 25px;
+        margin-left: 5%;
+    }
+
+    .sign-up {
+        margin-left: 15px;
+    }
+
+    .right-section .text-slider {
+        margin-left: 25px;
+    }
+}
+
+
+/* Large devices (laptops/desktops, 993px - 1200px) */
+    @media only screen and (min-width: 993px) and (max-width: 1200px) {
+    .container {
+        flex-direction: row;
+    }
+
+    .right-section,
+    .left-section {
+        width: 50%;
+    }
+
+    .right-section h1,
+    .left-section>h1 {
+        margin-left: 20px;
+    }
+
+    .sign-in {
+        margin-left: 90px;
+    }
+
+    .form-box {
+        width: 500px;
+    }
+
+    .button-container {
+        margin-top: 50px;
+    }
+
+    a[href="/privacy-policy"] {
+        margin-bottom: 40px;
+        margin-top: -100px;
+    }
+
+    .right-section {
+        padding: 30px;
+    }
+
+    .right-section .text-slider .fwd-bck-container {
+        padding-right: 30px;
+    }
+
+    .cta-box {
+        width: 80%;
+        height: 120px;
+        padding: 30px;
+        margin-left: 10%;
+    }
+
+    .sign-up {
+        margin-left: 20px;
+    }
+
+    .right-section .text-slider {
+        margin-left: 30px;
+    }
+    }

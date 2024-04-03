@@ -2,6 +2,7 @@ import React, { useState, useEffect, FormEvent } from "react";
 import useSignup from "shared/hooks/useSignup";
 import { useNavigate } from "react-router-dom";
 import { useRollbar } from "@rollbar/react";
+import ErrorSnackbar from "components/ErrorSnackbar/ErrorSnackbar";
 import assert from "shared/util/assert";
 import styles from "./SignUpPage.module.css";
 import leftArrow from "../../assets/left-arrow.png";
@@ -25,7 +26,7 @@ function SignUpPage() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [passwordConfirmation, setPasswordConfirmation] = useState("");
-    const { handleSignup } = useSignup();
+    const { handleSignup, error: signUpError } = useSignup();
     const navigate = useNavigate();
     const [policyChecked, setPolicyChecked] = useState(false);
     const [formSubmitAttempted, setFormSubmitAttempted] = useState(false);
@@ -130,6 +131,7 @@ function SignUpPage() {
 
     return (
         <div className={styles["signup-page"]}>
+            <ErrorSnackbar error={signUpError} />
             <div className={styles.container}>
                 <div className={styles["left-section"]}>
                     <div className={styles["button-container"]}>

@@ -10,8 +10,8 @@ import rightArrow from "../../assets/right-arrow.png";
 
 const texts = [
     "Welcome to BEAPEngine, a research project founded by Dr. Daniel Fuller.",
-    "Help us in our mission to improve the lives of people with disabilities.",
     "Join our community of researchers and developers to make a difference.",
+    "Using technology, help us in our mission to improve the health of millions of people.",
     "We are looking for volunteers to help us with our research project.",
 ];
 
@@ -39,7 +39,7 @@ function LoginPage() {
     useEffect(() => {
         const interval = setInterval(() => {
             setCurrentIndex((currentIndex + 1) % texts.length);
-        }, 3000); // Change text every 3 seconds
+        }, 4000); // Change text every 4 seconds
 
         return () => clearInterval(interval); // Clean up on component unmount
     }, [currentIndex]);

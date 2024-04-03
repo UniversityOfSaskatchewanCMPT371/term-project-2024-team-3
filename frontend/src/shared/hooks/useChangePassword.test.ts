@@ -8,7 +8,7 @@ const deleteDataSpy = jest.spyOn(API, "changePassword").mockImplementation(async
 const password = "123";
 
 describe("useChangePassword", () => {
-    it("T5.?? should handle password change successfully", async () => {
+    it("T5.107 should handle password change successfully", async () => {
         const { result, waitForNextUpdate } = renderHook(useChangePassword);
 
         act(() => {
@@ -23,7 +23,7 @@ describe("useChangePassword", () => {
         expect(result.current.error).toBe(null);
     });
 
-    it("T5.?? should handle password change when it errors", async () => {
+    it("T5.108 should handle password change when it errors", async () => {
         deleteDataSpy.mockImplementation(async () => {
             throw new Error("Password change failed");
         });

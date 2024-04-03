@@ -3,7 +3,7 @@ import { render } from "@testing-library/react";
 import FileIcon from ".";
 
 describe("Icons", () => {
-    it("T5.?? should render file icon", () => {
+    it("T5.109 should render file icon", () => {
         const { getByTestId } = render(<FileIcon />);
         getByTestId("file-icon");
     });

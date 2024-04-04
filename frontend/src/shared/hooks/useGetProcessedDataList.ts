@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
-import { getProcessedDataList } from "../Data/index";
+import { getProcessedDataList } from "../Data";
 import { ProcessedFileData, WatchType } from "../api";
 
 type UseGetProcessedDataList = {
@@ -17,9 +17,10 @@ const useGetProcessedDataList = (watchType: WatchType): UseGetProcessedDataList 
         getProcessedDataList(watchType)
             .then((data: any) => {
                 setUploadedFiles(data.list);
+                setErrorState(null);
             })
             .catch((error: Error) => {
-                setErrorState(`An error occured while getting processed files: ${error.toString}`);
+                setErrorState(`An error occured while getting processed files: ${error.message}`);
             })
             .finally(() => {
                 setIsLoading(false);

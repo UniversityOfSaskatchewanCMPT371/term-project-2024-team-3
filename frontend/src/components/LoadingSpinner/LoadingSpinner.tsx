@@ -8,7 +8,7 @@ interface LoadingSpinnerProps {
 
 function LoadingSpinner({ loading }: LoadingSpinnerProps): React.ReactElement {
     return (
-        <div className="spinner">
+        <div className="spinner" data-testid="spinner">
             <HashLoader color="#017176" loading={loading} size={100} />
         </div>
     );

@@ -1,118 +1,207 @@
 .helpButton {
-  background-color: #5fced3;
-  color: white;
-  border-bottom-left-radius: 10px;
-  float: right;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  padding-left: 20px;
-  padding-right: 20px;
-  border: 0;
-  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-  /* max-width: 40px; */
-  font-size: 15px;
+    background-color: #36bdc4;
+    color: white;
+    border-bottom-left-radius: 10px;
+    float: right;
+    padding-top: 5px;
+    padding-bottom: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    border: 0;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    /* max-width: 40px; */
+    font-size: 15px;
+    animation: bounce 2s ease 0s infinite alternate-reverse backwards;
+    cursor: pointer;
 }
 
 .helpButton:hover {
-  box-shadow:
-    2px 2px 4px rgba(0, 0, 0, 0.2),
-    2px 2px 4px rgba(0, 0, 0, 0.2),
-    -2px -2px 4px rgba(0, 0, 0, 0.2);
-  transition-duration: 500ms;
+    box-shadow:
+        2px 2px 4px rgba(0, 0, 0, 0.2),
+        2px 2px 4px rgba(0, 0, 0, 0.2),
+        -2px -2px 4px rgba(0, 0, 0, 0.2);
+    transition-duration: 500ms;
+    background-color: #2e9ca1;
 }
 
 .helpButton:active {
-  background-color: rgb(88, 195, 202);
-  transition-duration: 0ms;
+    background-color: rgb(88, 195, 202);
+    transition-duration: 0ms;
 }
 
 .popup {
-  display: none;
-  /* visibility: hidden; */
-  position: absolute;
-  right: 0;
-  background-color: #5fced3;
-  width: 800px;
-  float: right;
-  border-bottom-left-radius: 20px;
-  padding-top: 10px;
-  overflow: scroll;
-  z-index: 2147483647;
+    display: none;
+    /* visibility: hidden; */
+    position: absolute;
+    right: 0;
+    background-color: #14b2b9;
+    width: 70%; /* make the popup 70% of the screen width on small screens */
+    max-width: 800px; /* but don't let it get bigger than 800px */
+    float: right;
+    border-bottom-left-radius: 20px;
+    padding-top: 10px;
+    overflow: scroll;
+    z-index: 2147483647;
+    animation: glow 2s infinite;
 }
 
 .textGroup {
-  display: flex;
-  flex-direction: column;
-  margin: 10px;
-  margin-left: 30px;
-  margin-right: 30px;
+    display: flex;
+    flex-direction: column;
+    margin: 10px;
+    margin-left: 30px;
+    margin-right: 30px;
+    cursor: pointer;
 }
 
 .dropDownTitle {
-  background-color: rgb(255, 255, 255, 0.3);
-  width: 100%;
-  color: white;
-  font-weight: bold;
-  padding: 10px;
-  max-height: 25px;
-  text-decoration-line: underline;
+    background-color: #14b2b9;
+    width: 100%;
+    color: white;
+    border: 1px solid whitesmoke;
+    border-radius: 5px;
+    font-weight: bold;
+    padding: 10px;
+    max-height: 40px;
+}
+
+.dropDownTitle:hover {
+    background-color: white;
+    color: #14b2b9;
+    transition-duration: 500ms;
 }
 
 .paragraph {
-  background-color: rgb(255, 255, 255, 0.3);
-  width: 100%;
-  color: white;
-  padding: 10px;
-  overflow-wrap: normal;
-  display: none;
+    background-color: #36bdc4;
+    width: 100%;
+    font-weight: 600;
+    color: white;
+    padding: 10px;
+    overflow-wrap: normal;
+    display: none;
 }
 
 .closePopupButton {
-  background-color: rgb(255, 255, 255, 0.3);
-  border: 0;
-  border-radius: 20px;
-  color: white;
-  font-weight: bolder;
-  font-size: 30px;
-  width: 30px;
-  line-height: 30px;
-  margin: 10px;
+    background-color: rgb(255, 255, 255, 0.3);
+    border: 0;
+    border-radius: 20px;
+    color: white;
+    font-weight: bolder;
+    font-size: 30px;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+    margin-top: 40px;
+    rotate: 10deg;
+    cursor: pointer;
 }
 
 .closePopupButton:hover {
-  background-color: rgb(255, 255, 255, 0.5);
-  transition-duration: 500ms;
+    background-color: rgb(255, 255, 255, 0.5);
+    transition-duration: 500ms;
 }
 
 .closePopupButton:active {
-  background-color: rgb(255, 255, 255, 0.8);
-  transition-duration: 0ms;
+    background-color: rgb(255, 255, 255, 0.8);
+    transition-duration: 0ms;
 }
 
 .dropDownButton {
-  /* background-color: rgb(255, 255, 255, 0.3); */
-  background-color: rgb(255, 255, 255, 0.3);
+    /* background-color: rgb(255, 255, 255, 0.3); */
+    background-color: rgb(255, 255, 255, 0.3);
 
-  /* opacity: 0.5; */
-  border: 0;
-  border-radius: 20px;
-  color: white;
-  font-weight: bold;
-  font-size: 15px;
-  position: relative;
-  width: 20px;
-  height: 20px;
-  margin: 10px;
-  float: right;
-  transform: translate(0, -7px);
+    /* opacity: 0.5; */
+    border: 0;
+    border-radius: 20px;
+    color: white;
+    font-weight: bold;
+    font-size: 15px;
+    position: relative;
+    width: 20px;
+    height: 20px;
+    margin: 10px;
+    float: right;
+    transform: translate(0, -7px);
 }
 
 .dropDownButton:hover {
-  background-color: rgb(255, 255, 255, 0.5);
-  transition-duration: 500ms;
+    background-color: rgb(255, 255, 255, 0.5);
+    transition-duration: 500ms;
 }
 
 .dropDownButton:active {
-  background-color: rgb(255, 255, 255, 0.8);
-  transition-duration: 0ms;
+    background-color: rgb(255, 255, 255, 0.8);
+    transition-duration: 0ms;
 }
+
+@keyframes bounce {
+	0% {
+		animation-timing-function: ease-in;
+		opacity: 1;
+		transform: translateY(7px);
+	}
+
+	24% {
+		opacity: 1;
+	}
+
+	40% {
+		animation-timing-function: ease-in;
+		transform: translateY(5px);
+	}
+
+	65% {
+		animation-timing-function: ease-in;
+		transform: translateY(4px);
+	}
+
+	82% {
+		animation-timing-function: ease-in;
+		transform: translateY(2px);
+	}
+
+	93% {
+		animation-timing-function: ease-in;
+		transform: translateY(1px);
+	}
+
+	25%,
+	55%,
+	75%,
+	87% {
+		animation-timing-function: ease-out;
+		transform: translateY(0px);
+	}
+
+	100% {
+		animation-timing-function: ease-out;
+		opacity: 1;
+		transform: translateY(0px);
+	}
+}
+
+.popup::-webkit-scrollbar {
+    display: none;
+}
+
+.popup {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+@keyframes glow {
+    0% {
+        background-color: #5fced3;
+    }
+    50% {
+        background-color: #36bdc4;
+    }
+    100% {
+        background-color: #5fced3;
+    }
+}
+

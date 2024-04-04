@@ -24,11 +24,14 @@ import java.sql.Timestamp;
 import java.util.*;
 
 /**
- * The UserService service class which implements UserDetailsService interface. The UserDetailsService interface is used to retrieve user-related data. It has one method named loadUserByUsername() which finds a user entity based on the username and can be overridden to customize the process of finding the user.
+ * The UserService service class which implements UserDetailsService interface.
+ * The UserDetailsService interface is used to retrieve user-related data. It
+ * has one method named loadUserByUsername() which finds a user entity based on
+ * the username and can be overridden to customize the process of finding the
+ * user.
  */
 @Service("userService")
 public class UserService implements UserDetailsService {
-
 
     final static Logger logger = LogManager.getLogger(UserService.class.getName());
 
@@ -46,6 +49,7 @@ public class UserService implements UserDetailsService {
 
     /**
      * retrieving a list of type User
+     * 
      * @return List<UserDto>
      */
     public List<UserDto> list() {
@@ -54,12 +58,11 @@ public class UserService implements UserDetailsService {
         return userMapper.model2Dto(userDao.list(), new ArrayList<UserDto>());
     }
 
-
     /**
      * creating a new User
-     * @param userDto
+     * @param userDto: the data transfer object allowing for information encapsulation and transfer
      */
-    public JSONObject save(UserDto userDto)  throws UserAlreadyExistException {
+    public JSONObject save(UserDto userDto) throws UserAlreadyExistException {
         logger.info("in UserService: save");
 
         JSONObject jsonObject = new JSONObject();
@@ -82,23 +85,19 @@ public class UserService implements UserDetailsService {
         return jsonObject;
     }
 
-
-
     /**
      * check to see the username already exists
-     * @param username
-     * @return
+     * @param username : the name of the user being checked to see if the user already exists
+     * @return : a boolean indicating whether the username exists or not
      */
     private boolean usernameExist(String username) {
         User user = userDao.findByUsername(username);
         return user != null;
     }
 
-
-
     /**
      * updating an existing User
-     * @param userDto
+     * @param userDto: the data transfer object providing access to data transfer and encapsulation between system layers
      */
     public void update(UserDto userDto) {
         logger.info("in UserService: Update");
@@ -107,10 +106,22 @@ public class UserService implements UserDetailsService {
         userDao.update(user);
     }
 
+    /**
+     * a new function that updates existing user developed by 371 students
+     * 
+     * @param userDto
+     * @return (Boolean) true if successful
+     */
+    public Boolean newUpdateUser(UserDto userDto) {
+        logger.info("in UserService: newUpdateUser");
+
+        User user = userMapper.dto2Model(userDto, new User());
+        return userDao.newUpdate(user);
+    }
 
     /**
      * retrieving a specific User by its id
-     * @param id
+     * @param id : the id of the user that the method gets
      * @return UserDto
      */
     public UserDto get(String id) {
@@ -118,15 +129,14 @@ public class UserService implements UserDetailsService {
 
         Long uuid = Long.parseLong(id);
         User user = userDao.get(uuid);
-        if(user != null)
+        if (user != null)
             return userMapper.model2Dto(user, new UserDto());
         return null;
     }
 
-
     /**
      * deleting a specific User by its id
-     * @param id
+     * @param id: the id of the user that the method deletes
      */
     public void delete(String id) {
         logger.info("in UserService: delete");
@@ -135,15 +145,13 @@ public class UserService implements UserDetailsService {
         userDao.delete(uuid);
     }
 
-
-
     /**
      * checking the validity of a pair of username and password
-     * @param username
-     * @param password
-     * @return
+     * @param username : the entered username of the user attempting to log in
+     * @param password : the entered password of the user attempting to log in
+     * @return : a json document containing a variety of possible fields such as the status code, a message to the user, user details, user DTO, or user Authorities
      */
-    public JSONObject login(String username, String password){
+    public JSONObject login(String username, String password) {
 
         logger.info("in UserService: login");
 
@@ -164,8 +172,7 @@ public class UserService implements UserDetailsService {
                         incorrectLoginsDto.setIncorrectAttempts(0);
                         incorrectLoginsDto.setLockedDate(null);
                         incorrectLoginsService.update(incorrectLoginsDto);
-                    }
-                    else {
+                    } else {
                         jsonObject.put(BeapEngineConstants.SUCCESS_STR, false);
                         jsonObject.put("status_code", HttpStatus.LOCKED.value());
                         jsonObject.put("message", "Your account is locked for 24 hours.");
@@ -173,8 +180,6 @@ public class UserService implements UserDetailsService {
                     }
                 }
             }
-
-
 
             UserDetails userDetails = loadUserDetails(userDto);
 
@@ -185,8 +190,7 @@ public class UserService implements UserDetailsService {
             jsonObject.put("userDto", userDto);
 
             return jsonObject;
-        }
-        else {
+        } else {
             UserDto userDto = getUserByUsername(username);
 
             if (userDto != null) { // valid username, invalid password
@@ -201,8 +205,7 @@ public class UserService implements UserDetailsService {
                     jsonObject.put("status_code", HttpStatus.UNAUTHORIZED.value());
                     jsonObject.put("message", "invalid username or password");
                     return jsonObject;
-                }
-                else { // existing incorrect login attempts by invalid password
+                } else { // existing incorrect login attempts by invalid password
 
                     if (incorrectLoginsDto.getLocked()) { // account is locked
                         Date currentDate = new Date();
@@ -223,8 +226,7 @@ public class UserService implements UserDetailsService {
                             jsonObject.put("userDto", userDto);
 
                             return jsonObject;
-                        }
-                        else {
+                        } else {
                             jsonObject.put(BeapEngineConstants.SUCCESS_STR, false);
                             jsonObject.put("status_code", HttpStatus.LOCKED.value());
                             jsonObject.put("message", "Your account is locked for 24 hours.");
@@ -254,8 +256,7 @@ public class UserService implements UserDetailsService {
                         return jsonObject;
                     }
                 }
-            }
-            else {
+            } else {
                 jsonObject.put(BeapEngineConstants.SUCCESS_STR, false);
                 jsonObject.put("status_code", HttpStatus.UNAUTHORIZED.value());
                 jsonObject.put("message", "invalid username or password");
@@ -275,16 +276,14 @@ public class UserService implements UserDetailsService {
         return null;
     }
 
-
-
     /**
      * loading UserDetails by its username
-     * @param username
-     * @return
-     * @throws UsernameNotFoundException
+     * @param username : the username of the user who is to be loaded
+     * @return : the details of the loaded user
+     * throws : UsernameNotFoundException
      */
     @Override
-    public UserDetails loadUserByUsername(String username) /*throws UsernameNotFoundException*/ {
+    public UserDetails loadUserByUsername(String username) /* throws UsernameNotFoundException */ {
 
         logger.info("in UserService: loadUserByUsername");
 
@@ -297,20 +296,18 @@ public class UserService implements UserDetailsService {
         boolean accountNonExpired = true;
         boolean credentialsNonExpired = true;
         boolean accountNonLocked = true;
-        return  new org.springframework.security.core.userdetails.User
-                (user.getUsername(),
-                        user.getPassword().toLowerCase(), enabled, accountNonExpired,
-                        credentialsNonExpired, accountNonLocked,
-                        getAuthorities(user.getRoleIDs()));
+        return new org.springframework.security.core.userdetails.User(user.getUsername(),
+                user.getPassword().toLowerCase(), enabled, accountNonExpired,
+                credentialsNonExpired, accountNonLocked,
+                getAuthorities(user.getRoleIDs()));
     }
-
 
     /**
      * loading UserDetails for an input user
-     * @param userDto
-     * @return
+     * @param userDto : the data transfer object of the user whose details are to be loaded
+     * @return : the details of the user
      */
-    public UserDetails loadUserDetails(UserDto userDto){
+    public UserDetails loadUserDetails(UserDto userDto) {
 
         logger.info("in UserService: loadUserDetails");
 
@@ -320,21 +317,44 @@ public class UserService implements UserDetailsService {
         boolean accountNonExpired = true;
         boolean credentialsNonExpired = true;
         boolean accountNonLocked = true;
-        return  new org.springframework.security.core.userdetails.User
-                (user.getUsername(),
-                        user.getPassword().toLowerCase(), enabled, accountNonExpired,
-                        credentialsNonExpired, accountNonLocked,
-                        getAuthorities(user.getRoleIDs()));
+        return new org.springframework.security.core.userdetails.User(user.getUsername(),
+                user.getPassword().toLowerCase(), enabled, accountNonExpired,
+                credentialsNonExpired, accountNonLocked,
+                getAuthorities(user.getRoleIDs()));
     }
 
-
-
-    private static List<GrantedAuthority> getAuthorities (Set<Role> roles) {
+    private static List<GrantedAuthority> getAuthorities(Set<Role> roles) {
         List<GrantedAuthority> authorities = new ArrayList<>();
         for (Role role : roles) {
             authorities.add(new SimpleGrantedAuthority(role.getRoleName()));
         }
         return authorities;
     }
+
+    /***
+     * a method to delete the users account including all information related to them or uploaded by them using the user DAO
+     * @param id where id is the id of the user whose account is to be deleted
+     * @return a boolean indicating whether the delete operation succeeded.
+     */
+    public Boolean deleteUserAccount(Long id){
+        logger.info("in UserService: deleteUserAccount");
+
+        Boolean deleteSuccess = userDao.deleteUserAccount(id);
+        return deleteSuccess;
+
+    }
+
+
+    /***
+     * a method to delete the user's uploaded raw, processed, and predicted data using User DAO
+     * @param id where id is the id of the user whose data is to be deleted
+     */
+    public void deleteUserData(Long id){
+        logger.info("in UserService: deleteUserData");
+        userDao.deleteUserData(id);
+
+    }
+
+
 
 }

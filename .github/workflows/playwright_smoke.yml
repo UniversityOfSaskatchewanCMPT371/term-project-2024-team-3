@@ -1,0 +1,44 @@
+name: playwright_smoke
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+env:
+  CI: true
+jobs:
+  test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Create .env
+        run: |
+          echo "ROLLBAR_ACCESS_TOKEN=${{ secrets.ROLLBAR_ACCESS_TOKEN }}" > .env
+      - name: Build and run tests
+        run: docker compose -p beapengine-staging -f docker-compose-staging.yml up --build -d
+      - name: Install dependencies
+        run: |
+          cd frontend 
+          npm install -g yarn && yarn
+      - name: Install Playwright Browsers
+        run: |
+          cd frontend 
+          yarn playwright install --with-deps
+      - name: Run Playwright tests
+        run: |
+          cd frontend 
+          yarn playwright test -g @smoke
+      - name: Clean up containers
+        if: always()
+        run: docker compose -p beapengine-staging -f docker-compose-staging.yml down
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: playwright-report
+          path: frontend/playwright-report/
+          retention-days: 30

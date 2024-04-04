@@ -1,203 +1,216 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
+    RadioGroup,
+    FormControl,
+    FormControlLabel,
+    Radio,
     Button,
-    Checkbox,
     Container,
-    List,
-    ListItem,
-    ListItemIcon,
-    ListItemText,
+    // Alert,
 } from "@mui/material";
-import { useRollbar } from "@rollbar/react";
-import { FileData, WatchType } from "shared/api";
+import { DataType, WatchType, DownloadType, FileData } from "shared/api";
+import { ProgressBarType, ProgressBar } from "components/ProgressBar/ProgressBar";
+import ErrorSnackbar from "components/ErrorSnackbar/ErrorSnackbar";
+// import assert from "shared/util/assert";
 import moment from "moment";
-import useGetPredictedDataList from "shared/hooks/useGetPredictedDataList";
+import useDownload from "shared/hooks/useDownload";
+import { useRollbar } from "@rollbar/react";
 import styles from "./PredictedDataPage.module.css";
+import useGetPredictedDataList from "../../shared/hooks/useGetPredictedDataList";
 
-type PredictedFileWithType = FileData & { watch: WatchType; name: String; isSelected: boolean };
+type PredictedFile = FileData & {
+    watch: string;
+};
 
 const PredictedDataPage = function () {
     const rollbar = useRollbar();
-    rollbar.info("Reached Predicted Data page");
 
-    // #TODO download selected files
-    // #TODO refresh predicted file list
+    const [currentFile, setCurrentFile] = useState<PredictedFile>();
 
-    const selectedFiles: { [index: number]: PredictedFileWithType } = {};
+    const [progressbar, setProgressbar] = useState<ProgressBarType>({
+        percentage: 0,
+        message: "N/A",
+        isVisible: false,
+    });
 
-    const [checked, setChecked] = useState<Array<Number>>([]);
+    const { handleDownload, error: useDownloadError } = useDownload();
+
+    const { uploadedFiles: fitbitFiles } = useGetPredictedDataList(WatchType.FITBIT);
+
+    const { uploadedFiles: appleWatchFiles } = useGetPredictedDataList(WatchType.APPLE_WATCH);
 
     /**
-     * @param value the index of files in the list of avaliable files
-     * Pre-conditions: There is at least one file in the list of avaliable files
-     * Post-conditions: The selected file is added to the list of checked files
+     * handles progress bar change
+     * @param percentage the percentage for progress bar
+     * @param message the message to display on the progress bar
+     * @param isVisible a boolean for whether the progress bar is visible or not
      */
-    const handleToggle = (value: number) => () => {
-        const currentIndex = checked.indexOf(value);
-        const newChecked = [...checked];
-
-        // adding to checked list
-        if (currentIndex === -1) {
-            newChecked.push(value);
-            selectedFiles[value].isSelected = true;
+    const onProgressChange = (percentage: number, message: string, isVisible: boolean) => {
+        if (percentage >= 100) {
+            setProgressbar({
+                percentage,
+                message,
+                isVisible: true,
+            });
+            setTimeout(() => {
+                setProgressbar({
+                    percentage,
+                    message,
+                    isVisible: false,
+                });
+            }, 2000);
         } else {
-            newChecked.splice(currentIndex, 1);
-            selectedFiles[value].isSelected = false;
+            setProgressbar({
+                percentage,
+                message,
+                isVisible,
+            });
         }
-
-        setChecked(newChecked);
     };
 
-    const { uploadedFiles: fitBitFiles, error: predictedFitbitError } = useGetPredictedDataList(
-        WatchType.FITBIT,
-    );
-    if (predictedFitbitError) {
-        rollbar.error(predictedFitbitError.toString());
-    }
+    useEffect(() => {
+        rollbar.info("Reached Predicted Data page");
 
-    const { uploadedFiles: appleWatchFiles, error: predictedAppleError } = useGetPredictedDataList(
-        WatchType.APPLE_WATCH,
-    );
+        if (useDownloadError && progressbar.isVisible) {
+            onProgressChange(100, `An Error Occured! ${useDownloadError}`, true);
+        }
+    }, [useDownloadError, progressbar]);
 
-    if (predictedAppleError) {
-        rollbar.error(predictedAppleError.toString());
-    }
-
-    // const fitBitFiles = [ //mock data
-    //     {
-    //         id: 123,
-    //         data: new Uint8Array([1, 2]),
-    //         predictionType: null,
-    //         dateTime: new Date(),
-    //     },
-    //     {
-    //         id: 456,
-    //         data: new Uint8Array([5, 6]),
-    //         predictionType: null,
-    //         dateTime: new Date(),
-    //     },
-    // ];
-
-    // const appleWatchFiles = [
-    //     {
-    //         id: 123,
-    //         data: new Uint8Array([1, 2]),
-    //         predictionType: null,
-    //         dateTime: new Date(),
-    //     },
-    //     {
-    //         id: 456,
-    //         data: new Uint8Array([5, 6]),
-    //         predictionType: null,
-    //         dateTime: new Date(),
-    //     },
-    // ];
-
-    const appleWatchPredictedFiles: Array<PredictedFileWithType> =
+    const appleWatchProcessedFiles =
         appleWatchFiles?.length !== 0
             ? appleWatchFiles.map((file: FileData) => ({
                   ...file,
-                  watch: WatchType.APPLE_WATCH,
-                  name: `${WatchType.APPLE_WATCH} ${file.id.toString()}`,
-                  isSelected: false,
+                  watch: DataType.APPLE_WATCH,
               }))
             : [];
 
-    const fitbitPredictedFiles: Array<PredictedFileWithType> =
-        fitBitFiles?.length !== 0
-            ? fitBitFiles.map((file: FileData) => ({
+    const fitbitProcessedFiles =
+        fitbitFiles?.length !== 0
+            ? fitbitFiles.map((file: FileData) => ({
                   ...file,
-                  watch: WatchType.FITBIT,
-                  name: `${WatchType.FITBIT} ${file.id.toString()}`,
-                  isSelected: false,
+                  watch: DataType.FITBIT,
               }))
             : [];
 
-    const availableFiles: Array<PredictedFileWithType> =
-        fitbitPredictedFiles.concat(appleWatchPredictedFiles);
+    const files = fitbitProcessedFiles.concat(appleWatchProcessedFiles);
+
+    // the list of radial selectors for the file list
+    let renders: any;
 
     /**
-     * mapping avaliable files to html components
+     * Pre-conditions: A file is selected
+     * Post-conditions: Downloads the currently selected file to the users computer
      */
-    const availableFilesDisplay =
-        availableFiles.length > 0 ? (
-            availableFiles.map((file, i) => {
-                selectedFiles[i] = file;
-                return (
-                    <ListItem
-                        key={file.id.toString()}
-                        style={{ paddingTop: "0px", paddingBottom: "0px", cursor: "pointer" }}
-                        onClick={handleToggle(i)}
-                        dense
-                    >
-                        <ListItemIcon>
-                            <Checkbox
-                                edge="start"
-                                checked={checked.indexOf(i) !== -1}
-                                tabIndex={-1}
-                                disableRipple
-                            />
-                        </ListItemIcon>
-                        <ListItemText primary={`${file.watch} - ${file.id}`} />
-                        {file.dateTime ? (
-                            <ListItemText
-                                primary={moment(file.dateTime).format(
-                                    "ddd, D MMM YYYY, hh:mm:ss A",
-                                )}
-                            />
-                        ) : (
-                            ""
-                        )}
-                    </ListItem>
-                );
-            })
-        ) : (
-            <li className={styles.list} style={{ marginTop: "15px" }}>
-                No files
-            </li>
-        );
+    const downloadFile = async (event: React.MouseEvent) => {
+        event.preventDefault();
+        if (currentFile) {
+            const { id, watch } = currentFile;
+            const stringID = id.toString();
+            let watchType;
+            if (watch === DataType.APPLE_WATCH) {
+                watchType = WatchType.APPLE_WATCH;
+            } else if (watch === DataType.FITBIT) {
+                watchType = WatchType.FITBIT;
+            }
 
-    return (
-        <div>
-            <Container className={styles.container}>
-                <div className={styles.bannerinfo}>
-                    <strong>Step 3 - Predicted data files: </strong>
-                    <span>
-                        On this page, you can download your new data files with both the raw Apple
-                        Watch or Fitbit data, the features we use for our machine learning models,
-                        and the predicted activity for each minute of your data.
-                    </span>
-                </div>
-                <div className={styles.container}>
-                    <h1>Files: </h1>
-                    <div>
-                        <Button variant="contained" className={styles.downloadBtn}>
-                            Download File(s)
-                        </Button>
-                        <Button
-                            variant="contained"
-                            // onClick={refreshFileList}
-                            className={styles.predictBtn}
-                            // data-testid="Refresh_Button"
-                        >
-                            Refresh List
-                        </Button>
+            if (watchType === undefined) {
+                rollbar.error("Incorrect watch type for download");
+            } else {
+                onProgressChange(30, "Your file is being downloaded.", true);
+                await handleDownload(stringID, DownloadType.PREDICT, watchType);
+                onProgressChange(100, "Your file has been downloaded!", true);
+
+                if (useDownloadError) {
+                    rollbar.error(useDownloadError);
+                }
+            }
+        }
+    };
+
+    /**
+     *  Maps the list of files to a list of radial selectors for the files list
+     *  Pre-conditions: files has at least one file in it
+     *  Post-conditions: returns a list of formatted html components
+     */
+    const getRendersOfFiles = () => {
+        renders = files.map((file: PredictedFile) => {
+            const date = moment(file.dateTime ?? "");
+            let dateString;
+
+            const { id, watch } = file;
+
+            if (date.isValid()) {
+                dateString = date.format("YYYY/MM/DD");
+            } else {
+                dateString = "N/A";
+            }
+
+            return (
+                <div className={styles.fileSelector}>
+                    <FormControlLabel
+                        value={id}
+                        onClick={() => setCurrentFile(file)}
+                        control={
+                            <Radio
+                                color="primary"
+                                sx={{
+                                    "&, &.Mui-checked": {
+                                        color: "#5FCED3",
+                                    },
+                                }}
+                            />
+                        }
+                        label={`${watch} ${id.toString()}`}
+                        labelPlacement="end"
+                    />
+                    <div className={styles.fileTextBox}>
+                        <div className={styles.fileDate}>{dateString}</div>
                     </div>
                 </div>
+            );
+        });
+    };
 
-                {/* Predicted Files List  */}
-                <List className={styles.list}>{availableFilesDisplay}</List>
+    getRendersOfFiles();
 
-                <div className={styles.bannerinfo}>
-                    <span>
-                        If you want to upload different files, go back to the file upload page. You
-                        can also click on individual steps to rerun a different machine learning
-                        model if you want.
-                    </span>
-                </div>
+    return (
+        <>
+            <ProgressBar
+                percentage={progressbar.percentage}
+                message={progressbar.message}
+                isVisible={progressbar.isVisible}
+            />
+            <Container sx={{ marginTop: 6 }}>
+                <ErrorSnackbar error={useDownloadError} />
+
+                <Container className={styles.containerDiv}>
+                    {/* <Alert severity="info" sx={{ marginBottom: 3 }} data-testid="page-info">
+                        On this page, you can download your new data files with both the raw Apple
+                        Watch or Fitbit data, the features we use for our machine learning models,
+                        and the predicted activity for each minute of your data. If you want to
+                        upload different files, go back to the file upload page. You can also click
+                        on individual steps to rerun a different machine learning model.
+                    </Alert> */}
+                    <div className={styles.columnDiv}>
+                        <div className={styles.listDiv}>
+                            <FormControl component="fieldset" className={styles.fileSelectorRad}>
+                                <RadioGroup>{renders}</RadioGroup>
+                            </FormControl>
+                        </div>
+                        <div className={styles.buttonControl}>
+                            <Button
+                                variant="contained"
+                                className={styles.downloadBtn}
+                                onClick={downloadFile}
+                                data-testid="Download_Button"
+                            >
+                                Download File
+                            </Button>
+                        </div>
+                    </div>
+                </Container>
             </Container>
-        </div>
+        </>
     );
 };
-
 export default PredictedDataPage;

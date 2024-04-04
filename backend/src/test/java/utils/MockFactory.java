@@ -2,6 +2,9 @@ package utils;
 
 import com.beaplab.BeaplabEngine.metadata.*;
 import com.beaplab.BeaplabEngine.model.*;
+import com.beaplab.BeaplabEngine.repository.ProcessedDataDao;
+
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,6 +14,65 @@ import java.sql.Timestamp;
 import java.util.*;
 
 public class MockFactory {
+    public static PredictedData mockPredictedData(PredictedData.predictionType predictionType ) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, 2023);
+        cal.set(Calendar.MONTH, Calendar.JANUARY);
+        cal.set(Calendar.DAY_OF_MONTH, 11);
+
+        return new PredictedData(
+                1L,
+                new byte[]{0x01, 0x02, 0x03},
+                predictionType,
+                new Timestamp(cal.getTimeInMillis())
+        );
+    }
+
+    public static PredictedDataDto mockPredictedDataDto(PredictedData.predictionType predictionType) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, 2023);
+        cal.set(Calendar.MONTH, Calendar.JANUARY);
+        cal.set(Calendar.DAY_OF_MONTH, 11);
+
+        return new PredictedDataDto(
+                1L,
+                new byte[]{0x01, 0x02, 0x03},
+                predictionType,
+                new Timestamp(cal.getTimeInMillis())
+        );
+    }
+
+    public static ProcessedData mockProcessedData() {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, 2023);
+        cal.set(Calendar.MONTH, Calendar.JANUARY);
+        cal.set(Calendar.DAY_OF_MONTH, 11);
+
+        return new ProcessedData(
+                1L,
+                new byte[]{0x01, 0x02, 0x03},
+                null,
+                new Timestamp(cal.getTimeInMillis())
+        );
+    }
+
+
+    public static ProcessedDataDto mockProcessedDataDto() {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, 2023);
+        cal.set(Calendar.MONTH, Calendar.JANUARY);
+        cal.set(Calendar.DAY_OF_MONTH, 11);
+
+        return new ProcessedDataDto(
+                1L,
+                new byte[]{0x01, 0x02, 0x03},
+                null,
+                new Timestamp(cal.getTimeInMillis())
+        );
+    }
+
+
+
     public static RawData mockRawData(RawData.dataType watchType) {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, 2023);

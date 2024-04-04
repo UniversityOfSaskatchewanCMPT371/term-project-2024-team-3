@@ -49,8 +49,8 @@ public class AccessGroupDao implements BaseRepository<AccessGroup> {
 
 
     /**
-     * retrieving a list of AccessGroups
-     * @return List<AccessGroup>
+     * retrieving a list of all AccessGroup objects found in system
+     * @return a list of access group objects
      */
     @Override
     @Transactional
@@ -66,8 +66,9 @@ public class AccessGroupDao implements BaseRepository<AccessGroup> {
 
 
     /**
-     * creating an AccessGroup
-     * @param accessGroup
+     * Saving an AccessGroup object to the database, effectively adding the access group to the system
+     * @param accessGroup : the access group to be saved
+     * @return the id of the saved access group object
      */
     @Override
     @Transactional
@@ -81,8 +82,8 @@ public class AccessGroupDao implements BaseRepository<AccessGroup> {
 
 
     /**
-     * updating an existing AccessGroup
-     * @param accessGroup
+     * Updating an existing AccessGroup object
+     * @param accessGroup: the access group to be updated
      */
     @Override
     @Transactional
@@ -94,9 +95,9 @@ public class AccessGroupDao implements BaseRepository<AccessGroup> {
 
 
     /**
-     * retrieving a specific AccessGroup by its id
-     * @param uuid
-     * @return
+     * Retrieving a specific AccessGroup object from the database by its id
+     * @param uuid : the id of the access group to be retrieved
+     * @return : the access group (if found), or null if nothing is found
      */
     @Override
     @Transactional
@@ -120,8 +121,8 @@ public class AccessGroupDao implements BaseRepository<AccessGroup> {
 
 
     /**
-     * deleting a specific AccessGroup by its id
-     * @param id
+     * deleting a specific AccessGroup from the database by its id
+     * @param id : the id of the access group to be deleted
      */
     @Override
     @Transactional

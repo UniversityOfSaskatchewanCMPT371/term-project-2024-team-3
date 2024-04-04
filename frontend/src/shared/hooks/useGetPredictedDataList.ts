@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
-import { getPredictedDataList } from "../Data/index";
+import { getPredictedDataList } from "../Data";
 import { FileData, PredictedFilesData, WatchType } from "../api";
 
 type UseGetPredictedDataList = {
@@ -17,9 +17,10 @@ const useGetPredictedDataList = (watchType: WatchType): UseGetPredictedDataList 
         getPredictedDataList(watchType)
             .then((data: PredictedFilesData) => {
                 setUploadedFiles(data.list);
+                setErrorState(null);
             })
             .catch((error: Error) => {
-                setErrorState(`An error occured while getting predicted files: ${error.toString}`);
+                setErrorState(`An error occured while getting predicted files: ${error.message}`);
             })
             .finally(() => {
                 setIsLoading(false);

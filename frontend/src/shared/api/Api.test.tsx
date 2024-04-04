@@ -1,4 +1,5 @@
-import { login, logout, signUp } from "./Api";
+import { AxiosError } from "axios";
+import { changePassword, deleteAccount, deleteData, getUser, login, logout, signUp } from "./Api";
 import api from "./baseapi";
 
 describe("API Tests", () => {
@@ -30,13 +31,13 @@ describe("API Tests", () => {
     });
 
     it("T3.3 Login: should throw an error upon failed login", async () => {
-        jest.spyOn(api, "post").mockRejectedValueOnce(new Error("Login failed"));
+        jest.spyOn(api, "post").mockRejectedValueOnce(new Error("Login Failed"));
 
         const formData = new FormData();
         formData.append("username", "testUser");
         formData.append("password", "testPassword");
 
-        await expect(login("testUser", "testPassword")).rejects.toThrow("Login failed");
+        await expect(login("testUser", "testPassword")).rejects.toThrow("Login Failed");
 
         expect(api.post).toHaveBeenCalledWith("/loginuser", formData);
     });
@@ -52,9 +53,9 @@ describe("API Tests", () => {
     });
 
     it("T3.5 Logout: should throw an error if fails", async () => {
-        jest.spyOn(api, "get").mockRejectedValueOnce(new Error("Logout failed"));
+        jest.spyOn(api, "get").mockRejectedValueOnce(new AxiosError("Logout Failed"));
 
-        await expect(logout()).rejects.toThrow("Logout failed");
+        await expect(logout()).rejects.toThrow("Logout Failed");
 
         expect(api.get).toHaveBeenCalledWith("/logoutuser");
     });
@@ -90,7 +91,7 @@ describe("API Tests", () => {
     });
 
     it("T3.7 should throw an error if sign up fails", async () => {
-        jest.spyOn(api, "post").mockRejectedValueOnce(new Error("Signup failed"));
+        jest.spyOn(api, "post").mockRejectedValueOnce(new AxiosError("Signup Failed"));
 
         const username = "testuser";
         const password = "testpassword";
@@ -98,7 +99,7 @@ describe("API Tests", () => {
         const lastName = "User";
 
         await expect(signUp(firstName, lastName, username, password)).rejects.toThrow(
-            "Signup failed",
+            "Signup Failed",
         );
         expect(api.post).toHaveBeenCalledWith(
             "/user",
@@ -117,5 +118,78 @@ describe("API Tests", () => {
                 },
             },
         );
+    });
+
+    it("T5.120 should get user successfully", async () => {
+        const expected = {
+            firstName: "hello",
+            lastName: "test",
+            username: "hellotest",
+        };
+        jest.spyOn(api, "get").mockResolvedValueOnce({
+            data: expected,
+        });
+
+        const response = await getUser();
+        expect(api.get).toHaveBeenCalledWith("/user");
+
+        expect(response).toEqual(expected);
+    });
+
+    it("T5.121 should throw an error if get user fails", async () => {
+        jest.spyOn(api, "get").mockRejectedValueOnce(new AxiosError("Failed to fetch user"));
+
+        await expect(getUser()).rejects.toThrow("Failed to fetch user");
+        expect(api.get).toHaveBeenCalledWith("/user");
+    });
+
+    it("T5.122 should delete account successfully", async () => {
+        jest.spyOn(api, "delete").mockResolvedValueOnce({
+            ok: true,
+        });
+
+        await deleteAccount();
+        expect(api.delete).toHaveBeenCalledWith("/delete-Profile");
+    });
+
+    it("T5.123 should throw an error if deleting account fails", async () => {
+        jest.spyOn(api, "delete").mockRejectedValueOnce(new AxiosError("Delete Account Failed"));
+
+        await expect(deleteAccount()).rejects.toThrow("Delete Account Failed");
+        expect(api.delete).toHaveBeenCalledWith("/delete-Profile");
+    });
+
+    it("T5.124 should delete data successfully", async () => {
+        jest.spyOn(api, "delete").mockResolvedValueOnce({
+            ok: true,
+        });
+
+        await deleteData();
+        expect(api.delete).toHaveBeenCalledWith("/delete-User-Data");
+    });
+
+    it("T5.125 should throw an error if deleting data fails", async () => {
+        jest.spyOn(api, "delete").mockRejectedValueOnce(new AxiosError("Delete Data Failed"));
+
+        await expect(deleteData()).rejects.toThrow("Delete Data Failed");
+        expect(api.delete).toHaveBeenCalledWith("/delete-User-Data");
+    });
+
+    it("T5.126 should change password successfully", async () => {
+        const password = "123";
+        jest.spyOn(api, "post").mockResolvedValueOnce({
+            ok: true,
+        });
+
+        await changePassword(password);
+        expect(api.post).toHaveBeenCalledWith("/password", { password });
+    });
+
+    it("T5.127 should throw an error if change password fails", async () => {
+        const password = "123";
+        jest.spyOn(api, "post").mockRejectedValueOnce(new AxiosError("Change Password Failed"));
+
+        await expect(changePassword(password)).rejects.toThrow("Change Password Failed");
+        expect(api.post).toHaveBeenCalledWith("/password", { password });
     });
 });

@@ -3,7 +3,7 @@
 import { Page } from "playwright";
 
 const setupLogin = async (page: Page): Promise<void> => {
-    await page.waitForTimeout(5000);
+    await page.waitForTimeout(1000);
     await page.goto("./login");
 
     await page.fill("#username", "hello");

@@ -1,20 +1,18 @@
-import React, { useState, FormEvent } from "react";
-import { GoogleLogin } from "react-google-login";
+import React, { useState, useEffect, FormEvent } from "react";
 import useLogin from "shared/hooks/useLogin";
 import { useNavigate } from "react-router-dom";
 import { useRollbar } from "@rollbar/react";
+import ErrorSnackbar from "components/ErrorSnackbar/ErrorSnackbar";
+import assert from "shared/util/assert";
 import styles from "./LoginPage.module.css";
 import leftArrow from "../../assets/left-arrow.png";
 import rightArrow from "../../assets/right-arrow.png";
 
-const CLIENT_ID = "827529413912-celsdkun_YOUR_API_KEY_lsn28.apps.googleusercontent.com";
-
 const texts = [
     "Welcome to BEAPEngine, a research project founded by Dr. Daniel Fuller.",
-    "Help us in our mission to improve the lives of people with disabilities.",
     "Join our community of researchers and developers to make a difference.",
+    "Using technology, help us in our mission to improve the health of millions of people.",
     "We are looking for volunteers to help us with our research project.",
-    // Add more texts here...
 ];
 
 function LoginPage() {
@@ -24,7 +22,8 @@ function LoginPage() {
     const [userType, setUserType] = useState("researcher");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const { handleLogin } = useLogin();
+    const { handleLogin, error: loginError } = useLogin();
+
     const navigate = useNavigate();
 
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -37,6 +36,14 @@ function LoginPage() {
         navigate("/signup");
     };
 
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentIndex((currentIndex + 1) % texts.length);
+        }, 4000); // Change text every 4 seconds
+
+        return () => clearInterval(interval); // Clean up on component unmount
+    }, [currentIndex]);
+
     /**
      * Handles the click event to navigate to the next text.
      * Ensures that the texts array is not empty.
@@ -45,7 +52,7 @@ function LoginPage() {
      */
     const handleNext = () => {
         // Ensure texts array is not empty
-        console.assert(texts.length > 0, "texts array should not be empty");
+        assert(texts.length > 0, "texts array should not be empty", rollbar);
         if (!(texts.length > 0)) {
             rollbar.error("Assertion failed: text display array is empty");
         }
@@ -60,50 +67,24 @@ function LoginPage() {
      */
     const handlePrevious = () => {
         // Ensure texts array is not empty
-        console.assert(texts.length > 0, "texts array should not be empty");
+        assert(texts.length > 0, "texts array should not be empty", rollbar);
         if (!(texts.length > 0)) {
             rollbar.error("Assertion failed: text display array is empty");
         }
         setCurrentIndex((currentIndex - 1 + texts.length) % texts.length);
     };
 
-    /**
-     * Success handler for Google login response.
-     * Logs user information to the console.
-     * @param response - Response object containing user profile information
-     */
-    const responseGoogleSuccess = (response: any) => {
-        const userInfo = {
-            name: response.profileObj.name,
-            emailId: response.profileObj.email,
-        };
-        console.log(userInfo);
-    };
-
-    /**
-     * Error handler for Google login response.
-     * Logs the error response to the console and Rollbar.
-     * @param response - Error response object
-     */
-    const responseGoogleError = (response: any) => {
-        console.error(response);
-        rollbar.error(response);
-    };
-
-    /**
-     * Handles form submission for login.
-     * Validates username and password before attempting login.
-     * @param event - Form submission event
-     */
     const handleSubmit = async (event: FormEvent) => {
         event.preventDefault();
-        console.assert(
+        assert(
             typeof username === "string" && username !== "",
             "username should be a non-null string",
+            rollbar,
         );
-        console.assert(
+        assert(
             typeof password === "string" && password !== "",
             "password should be a non-null string",
+            rollbar,
         );
         // Log to Rollbar if the assertion fails
         if (typeof username !== "string" || username === "") {
@@ -112,36 +93,29 @@ function LoginPage() {
         if (typeof password !== "string" || password === "") {
             rollbar.error("Assertion failed: password should be a non-null string");
         }
+
         await handleLogin(username, password);
     };
 
     return (
         <div className={styles["login-page"]}>
+            <ErrorSnackbar error={loginError} />
             <div className={styles.container}>
                 <div className={styles["left-section"]}>
+                    <div className={styles["button-container"]}>
+                        <button
+                            data-testid="homeButton"
+                            type="button"
+                            className={`${styles.button} ${styles["go-home"]}`}
+                            onClick={() => navigate("/")}
+                        >
+                            Back To Homepage
+                        </button>
+                    </div>
                     <h1 className={styles["signin-text"]}>Sign In</h1>
                     <p className={styles["login-text"]}>
                         Log into your existing BEAPENGINE account
                     </p>
-                    <GoogleLogin
-                        clientId={CLIENT_ID}
-                        buttonText="Login with Google"
-                        onSuccess={responseGoogleSuccess}
-                        onFailure={responseGoogleError}
-                        isSignedIn
-                        cookiePolicy="single_host_origin"
-                        render={(renderProps) => (
-                            <button
-                                type="button"
-                                onClick={renderProps.onClick}
-                                disabled={renderProps.disabled}
-                                className={styles["google-login"]}
-                            >
-                                Login with Google
-                            </button>
-                        )}
-                    />
-                    <p>OR</p>
                     <form onSubmit={handleSubmit} className={styles["form-box"]}>
                         <div className={styles.tabs}>
                             <button
@@ -180,7 +154,6 @@ function LoginPage() {
                             />
                         </div>
                         <div className={styles["button-container"]}>
-                            <p className={styles["forgot-password"]}>Forgot password?</p>
                             <button
                                 data-testid="submitButton"
                                 type="submit"
@@ -190,6 +163,9 @@ function LoginPage() {
                             </button>
                         </div>
                     </form>
+                    <a href="/privacy-policy" target="_blank">
+                        Privacy Policy
+                    </a>
                 </div>
                 <div className={styles["right-section"]}>
                     <h1>

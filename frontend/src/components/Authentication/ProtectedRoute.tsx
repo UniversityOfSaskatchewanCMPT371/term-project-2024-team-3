@@ -11,7 +11,7 @@ function ProtectedRoute(props: ProtectedRouteProps): React.ReactElement {
     const { isAuthenticated } = useAuth();
 
     if (!isAuthenticated) {
-        return <Navigate to="/login" />;
+        return <Navigate to="/" />;
     }
 
     // eslint-disable-next-line react/jsx-no-useless-fragment

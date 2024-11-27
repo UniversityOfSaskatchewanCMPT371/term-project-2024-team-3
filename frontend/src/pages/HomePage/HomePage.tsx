@@ -25,6 +25,7 @@ function HomePage(): ReactElement {
     /**
      * Handles the sign-up click event.
      * Navigates to the sign-up page.
+     * Hello
      */
     const handleSignUpClick = () => {
         try {

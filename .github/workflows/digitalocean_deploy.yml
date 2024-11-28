@@ -13,6 +13,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Create .env
         run: |
           echo "POSTGRESQL_URL=${{ secrets.POSTGRESQL_URL }}" > .env
@@ -21,7 +22,14 @@ jobs:
           echo "REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}" >> .env
           cd frontend
           echo "REACT_APP_ROLLBAR_ACCESS_TOKEN=${{ secrets.ROLLBAR_ACCESS_TOKEN }}" > .env
+
+      - name: Fix permissions
+        run: |
+          sudo chmod -R 755 /home/autodeploy/actions-runner/_work/term-project-2024-team-3/term-project-2024-team-3/services/ml-service/applewatch/data
+          sudo chown -R autodeploy:autodeploy /home/autodeploy/actions-runner/_work/term-project-2024-team-3/term-project-2024-team-3/services/ml-service/applewatch/data
+
       - name: Build containers
         run: docker compose -f docker-compose-prod.yml build
+
       - name: Run app
         run: docker compose -f docker-compose-prod.yml up -d

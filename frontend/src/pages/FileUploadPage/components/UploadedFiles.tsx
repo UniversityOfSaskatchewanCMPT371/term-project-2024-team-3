@@ -71,7 +71,6 @@ function UploadedFiles({ refetch, onProgressChange }: Props) {
                   watch: WatchType.FITBIT,
               }))
             : [];
-
     const files = fitbitProcessedFiles
         .concat(appleWatchProcessedFiles)
         .filter((file) => !removedFiles.has(file.id.toString()))

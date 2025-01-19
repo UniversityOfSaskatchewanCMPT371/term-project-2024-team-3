@@ -9,6 +9,7 @@
     height: '100vh';
 }
 
+
 .buttonControl {
     flex-direction: column;
     justify-content: space-between;
@@ -16,8 +17,11 @@
   }
   
   .buttonControl > .proccessBtn {
+    font-family: 'Inter', sans-serif;
     color: #fff;
+    font-weight: 800;
     background-color: #ffd172;
+    margin-left: 110px;
     margin-bottom: 10px;
     filter: drop-shadow(0px 2px 2px gainsboro);
   }
@@ -25,3 +29,30 @@
   .buttonControl > .proccessBtn:hover {
     background-color: #d1aa5d;
   }
+  
+.buttonControl > .deleteBtn {
+    font-family: 'Inter', sans-serif;
+    background-color: #FF7572;
+    font-weight: 800;
+    color: white;
+    border: none;
+    margin: 4px 100px 10px;
+    margin-right: 60px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.buttonControl > .deleteBtn:hover {
+	background-color: darkred;
+}
+
+.buttonControl > .confirmBtn {
+    background-color: FF7572;
+    color: white;
+}
+
+.buttonControl > .cancelBtn {
+    background-color: white;
+    color: blue;
+}
+

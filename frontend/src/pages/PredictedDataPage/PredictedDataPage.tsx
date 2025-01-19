@@ -6,6 +6,11 @@ import {
     Radio,
     Button,
     Container,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
     // Alert,
 } from "@mui/material";
 import { DataType, WatchType, DownloadType, FileData } from "shared/api";
@@ -26,6 +31,8 @@ const PredictedDataPage = function () {
     const rollbar = useRollbar();
 
     const [currentFile, setCurrentFile] = useState<PredictedFile>();
+    const [removedFiles, setRemovedFiles] = useState<Set<string>>(new Set());
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
     const [progressbar, setProgressbar] = useState<ProgressBarType>({
         percentage: 0,
@@ -38,6 +45,13 @@ const PredictedDataPage = function () {
     const { uploadedFiles: fitbitFiles } = useGetPredictedDataList(WatchType.FITBIT);
 
     const { uploadedFiles: appleWatchFiles } = useGetPredictedDataList(WatchType.APPLE_WATCH);
+    useEffect(() => {
+        // Retrieve deleted files from localStorage
+        const storedRemovedFiles = localStorage.getItem("removedFiles");
+        if (storedRemovedFiles) {
+            setRemovedFiles(new Set(JSON.parse(storedRemovedFiles)));
+        }
+    }, []);
 
     /**
      * handles progress bar change
@@ -91,8 +105,9 @@ const PredictedDataPage = function () {
                   watch: DataType.FITBIT,
               }))
             : [];
-
-    const files = fitbitProcessedFiles.concat(appleWatchProcessedFiles);
+    const files = fitbitProcessedFiles
+        .concat(appleWatchProcessedFiles)
+        .filter((file) => !removedFiles.has(file.id.toString())); // Convert file.id to string
 
     // the list of radial selectors for the file list
     let renders: any;
@@ -172,6 +187,37 @@ const PredictedDataPage = function () {
     };
 
     getRendersOfFiles();
+    const deleteFile = () => {
+        if (currentFile) {
+            const { id } = currentFile;
+
+            // Update local state
+            setRemovedFiles((prev) => {
+                const updatedSet = new Set(prev).add(id.toString());
+
+                // Persist the updated set to localStorage
+                localStorage.setItem("removedFiles", JSON.stringify(Array.from(updatedSet)));
+
+                return updatedSet;
+            });
+
+            // Deselect the current file
+            setCurrentFile(undefined);
+        }
+    };
+
+    const handleDelete = () => {
+        setDeleteDialogOpen(true);
+    };
+
+    const confirmDelete = () => {
+        deleteFile();
+        setDeleteDialogOpen(false);
+    };
+
+    const cancelDelete = () => {
+        setDeleteDialogOpen(false);
+    };
 
     return (
         <>
@@ -206,9 +252,43 @@ const PredictedDataPage = function () {
                             >
                                 Download File
                             </Button>
+                            <Button
+                                variant="contained"
+                                className={styles.deleteBtn}
+                                onClick={handleDelete}
+                                data-testid="Delete_Button"
+                            >
+                                Delete File
+                            </Button>
                         </div>
                     </div>
                 </Container>
+                {/* Confirmation Dialog */}
+                <Dialog open={deleteDialogOpen} onClose={cancelDelete}>
+                    <DialogTitle>Confirm Deletion</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            Are you sure you want to permanently delete the selected files?
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button
+                            className={`${styles.cancelBtn}`}
+                            onClick={cancelDelete}
+                            data-testid="cancelBtn"
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            onClick={confirmDelete}
+                            className={`${styles.confirmBtn}`}
+                            autoFocus
+                            data-testid="confirmBtn"
+                        >
+                            Confirm
+                        </Button>
+                    </DialogActions>
+                </Dialog>
             </Container>
         </>
     );

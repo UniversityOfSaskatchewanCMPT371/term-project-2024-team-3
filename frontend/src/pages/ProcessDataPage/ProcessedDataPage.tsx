@@ -1,5 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { RadioGroup, FormControl, FormControlLabel, Radio, Button, Container } from "@mui/material";
+import {
+    RadioGroup,
+    FormControl,
+    FormControlLabel,
+    Radio,
+    Button,
+    Container,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogContentText,
+    DialogActions,
+} from "@mui/material";
 import { DataType, PredictionType, ProcessedFileData, WatchType, DownloadType } from "shared/api";
 import { ProgressBarType, ProgressBar } from "components/ProgressBar/ProgressBar";
 import ErrorSnackbar from "components/ErrorSnackbar/ErrorSnackbar";
@@ -19,6 +31,7 @@ const ProcessedDataPage = function () {
     const rollbar = useRollbar();
 
     const [currentFile, setCurrentFile] = useState<ProcessedFile>();
+    const [removedFiles, setRemovedFiles] = useState<Set<Number>>(new Set());
     const [selectedModel, setSelectedModel] = useState<PredictionType>(PredictionType.SVM);
 
     const [progressbar, setProgressbar] = useState<ProgressBarType>({
@@ -29,6 +42,7 @@ const ProcessedDataPage = function () {
 
     const { handlePredict, error: usePredictError } = usePredictFile();
     const { handleDownload, error: useDownloadError } = useDownload();
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
     const { uploadedFiles: fitbitFiles, error: fitBitListError } = useGetProcessedDataList(
         WatchType.FITBIT,
@@ -78,6 +92,14 @@ const ProcessedDataPage = function () {
         }
     }, [useDownloadError, usePredictError, progressbar]);
 
+    useEffect(() => {
+        // Retrieve deleted files from localStorage
+        const storedRemovedFiles = localStorage.getItem("removedFiles");
+        if (storedRemovedFiles) {
+            setRemovedFiles(new Set(JSON.parse(storedRemovedFiles)));
+        }
+    }, []);
+
     const handleModelChange = (model: PredictionType) => {
         // ensure that the selected model belongs to one of the acceptable types
         assert(
@@ -106,7 +128,9 @@ const ProcessedDataPage = function () {
               }))
             : [];
 
-    const files = fitbitProcessedFiles.concat(appleWatchProcessedFiles);
+    const files = fitbitProcessedFiles
+        .concat(appleWatchProcessedFiles)
+        .filter((file) => !removedFiles.has(file.id)); // Filter out removed files
 
     // the list of radial selectors for the file list
     let renders: any;
@@ -166,6 +190,38 @@ const ProcessedDataPage = function () {
                 }
             }
         }
+    };
+
+    const deleteFile = () => {
+        if (currentFile) {
+            const { id } = currentFile;
+
+            // Update local state
+            setRemovedFiles((prev) => {
+                const updatedSet = new Set(prev).add(id);
+
+                // Persist the updated set to localStorage
+                localStorage.setItem("removedFiles", JSON.stringify(Array.from(updatedSet)));
+
+                return updatedSet;
+            });
+
+            // Deselect the current file
+            setCurrentFile(undefined);
+        }
+    };
+
+    const handleDelete = () => {
+        setDeleteDialogOpen(true);
+    };
+
+    const confirmDelete = () => {
+        deleteFile();
+        setDeleteDialogOpen(false);
+    };
+
+    const cancelDelete = () => {
+        setDeleteDialogOpen(false);
     };
 
     /**
@@ -308,9 +364,43 @@ const ProcessedDataPage = function () {
                         >
                             Download File
                         </Button>
+                        <Button
+                            variant="contained"
+                            className={styles.deleteBtn}
+                            onClick={handleDelete}
+                            data-testid="Delete_Button"
+                        >
+                            Delete File
+                        </Button>
                     </div>
                 </div>
             </Container>
+            {/* Confirmation Dialog */}
+            <Dialog open={deleteDialogOpen} onClose={cancelDelete}>
+                <DialogTitle>Confirm Deletion</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Are you sure you want to permanently delete the selected files?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        className={`${styles.cancelBtn}`}
+                        onClick={cancelDelete}
+                        data-testid="cancelBtn"
+                    >
+                        Cancel
+                    </Button>
+                    <Button
+                        onClick={confirmDelete}
+                        className={`${styles.confirmBtn}`}
+                        autoFocus
+                        data-testid="confirmBtn"
+                    >
+                        Confirm
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </div>
     );
 };

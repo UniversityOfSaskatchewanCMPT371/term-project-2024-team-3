@@ -76,6 +76,18 @@ left: 10%; */
   background-color: #2e9ca1;
 }
 
+.buttonControl > .deleteBtn {
+    color: #fff;
+    background-color: #FF7572;
+    margin-left: 15px;
+    margin-bottom: 10px;
+    filter: drop-shadow(0px 2px 2px gainsboro);
+}
+
+.buttonControl > .deleteBtn:hover {
+    background-color: darkred;
+}
+
 .buttonControl > .goToPredicted {
   background-color: #ff7572;
   margin-left: 15px;

@@ -55,7 +55,6 @@ function UploadedFiles({ refetch, onProgressChange }: Props) {
                   watch: WatchType.FITBIT,
               }))
             : [];
-
     const files = fitbitProcessedFiles
         .concat(appleWatchProcessedFiles)
         .sort((a: RawFileData, b: RawFileData) => {

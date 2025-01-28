@@ -23,7 +23,7 @@ jobs:
         run: |
           sudo add-apt-repository universe -y
           sudo apt-get update -y
-          sudo apt-get install -y libasound2t64 libasound2-dev libnss3 libffi-dev libx264-dev libicu-dev libgbm-dev libvpx7 libgl1
+          sudo apt-get install -y libasound2 libasound2-dev libnss3 libffi-dev libx264-dev libicu-dev libgbm-dev libvpx-dev libgl1
       - name: Build and run tests
         run: docker compose -p beapengine-staging -f docker-compose-staging.yml up --build -d
       - name: Install dependencies

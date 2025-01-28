@@ -21,8 +21,8 @@ jobs:
           echo "ROLLBAR_ACCESS_TOKEN=${{ secrets.ROLLBAR_ACCESS_TOKEN }}" > .env
       - name: Install required system dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y libasound2 libasound2-dev libffi-dev libx264-dev libicu-dev
+          sudo apt-get update -y
+          sudo apt-get install -y libasound2t64 libasound2-dev libnss3 libffi7 libffi-dev libx264-163 libx264-dev libicu72 libicu-dev
       - name: Build and run tests
         run: docker compose -p beapengine-staging -f docker-compose-staging.yml up --build -d
       - name: Install dependencies

@@ -55,7 +55,6 @@ function UploadedFiles({ refetch, onProgressChange }: Props) {
         }
     }, []);
 
-    
     const appleWatchProcessedFiles =
         appleWatchFiles?.length !== 0
             ? appleWatchFiles.map((file: RawFileData) => ({
@@ -123,8 +122,6 @@ function UploadedFiles({ refetch, onProgressChange }: Props) {
         setCheckedItems({});
         setDeleteDialogOpen(false);
     };
-
-
 
     const cancelDelete = () => {
         setDeleteDialogOpen(false);

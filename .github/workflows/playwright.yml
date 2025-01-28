@@ -12,7 +12,7 @@ env:
 jobs:
   test:
     timeout-minutes: 60
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v3
@@ -23,6 +23,11 @@ jobs:
           echo "ROLLBAR_ACCESS_TOKEN=${{ secrets.ROLLBAR_ACCESS_TOKEN }}" > .env
       - name: Build and run tests
         run: docker compose -p beapengine-staging -f docker-compose-staging.yml up --build -d
+      - name: Install required system dependencies
+        run: |
+          sudo add-apt-repository universe -y
+          sudo apt-get update -y
+          sudo apt-get install -y libasound2 libasound2-dev libnss3 libffi-dev libx264-dev libicu-dev libgbm-dev libvpx-dev libgl1
       - name: Install dependencies
         run: |
           cd frontend 

@@ -20,7 +20,15 @@ import HelpPopup from "./components/HelpPopup/HelpPopup";
 import { AuthProvider } from "./components/Authentication/useAuth";
 import LoginPage from "./pages/LoginPage/LoginPage";
 
+import MaintanancePage from "./pages/Maintanance/MaintenancePage";
+
 function App(): React.ReactElement<typeof Router> {
+    const isMaintenance = true;
+
+    if (isMaintenance) {
+      return <MaintanancePage />;
+    }
+    
     return (
         <Provider config={rollbarConfig}>
             <AuthProvider>

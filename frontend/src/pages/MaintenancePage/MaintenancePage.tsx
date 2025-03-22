@@ -14,7 +14,10 @@ function MaintenancePage(): ReactElement {
                     spacing={2}
                 >
                     <div className={styles.message}>
-                        <p>We’re currently performing some updates to improve your experience.</p>
+                        <p>
+                            We are currently doing major upgrades to the BeapEngine to accommodate
+                            changes to the data format for Fitbit devices
+                        </p>
                         <p>Please check back soon!</p>
                     </div>
                 </Stack>

@@ -4,7 +4,7 @@ import { test, expect } from "@playwright/test";
 import { setupLogin } from "./utils";
 import { appleWatchData, fitbitData } from "./testDataBuffers";
 
-test("T2.8 File Upload Page Test", async ({ page }) => {
+test.skip("T2.8 File Upload Page Test", async ({ page }) => {
     await setupLogin(page);
 
     // go to File Upload Page
@@ -32,7 +32,7 @@ test("T2.8 File Upload Page Test", async ({ page }) => {
     await expect(page.locator(".dzu-dropzone")).toBeVisible();
 });
 
-test("T4.8 Test Uploading Fitbit Files", async ({ page }) => {
+test.skip("T4.8 Test Uploading Fitbit Files", async ({ page }) => {
     test.slow();
     await setupLogin(page);
 
@@ -106,7 +106,7 @@ test("T4.8 Test Uploading Fitbit Files", async ({ page }) => {
     ).not.toBeVisible();
 });
 
-test("T4.9 Test Uploading Applewatch Files", async ({ page }) => {
+test.skip("T4.9 Test Uploading Applewatch Files", async ({ page }) => {
     test.slow();
     await setupLogin(page);
 

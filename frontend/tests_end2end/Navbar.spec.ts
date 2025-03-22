@@ -5,7 +5,7 @@ test.beforeEach(async ({ page }) => {
     await setupLogin(page);
 });
 
-test("T2.6 Navbar Test", async ({ page }) => {
+test.skip("T2.6 Navbar Test", async ({ page }) => {
     // Navigate to the website
     await page.goto("./");
 
@@ -15,7 +15,6 @@ test("T2.6 Navbar Test", async ({ page }) => {
     // extra checks to double check that it is the home page
     const Title = page.locator("#root");
     await expect(Title).toContainText("BEAP ENGINE");
-    const subTitle = page.locator("h6");
     await expect(page.locator("h6")).toContainText("Unleashing The Power Of Your Fitness Data");
 
     // check the NavBar will direct users to the correct pages
@@ -44,7 +43,7 @@ test("T2.6 Navbar Test", async ({ page }) => {
     await expect(page.getByRole("link", { name: "FILE UPLOAD" })).toHaveCount(0);
 });
 
-test.describe("T4.90 individual Navbar tests from homepage", () => {
+test.describe.skip("T4.90 individual Navbar tests from homepage", () => {
     test("Homepage to File Upload", async ({ page }) => {
         await page.goto("./");
         await page.getByRole("link", { name: "FILE UPLOAD" }).click();

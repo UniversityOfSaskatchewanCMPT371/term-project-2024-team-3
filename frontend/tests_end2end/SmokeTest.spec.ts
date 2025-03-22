@@ -2,16 +2,19 @@ import { test, expect } from "@playwright/test";
 import { setupLogin } from "./utils";
 
 test("smoke test @smoke", async ({ page }) => {
-    // start at homepage (landing page) and check expected elements are visible
+    // Navigate to the root page
     await page.goto("./");
 
     const rootText = await page.locator("#root").innerText();
     if (rootText.includes("Website Under Maintenance")) {
         await expect(page.locator("h3")).toContainText("Website Under Maintenance");
-        await expect(page.locator(".message")).toContainText(
+
+        // Use a locator that matches the div with a class containing 'message'
+        const messageLocator = page.locator("div[class*='message']");
+        await expect(messageLocator).toContainText(
             "We are currently doing major upgrades to the BeapEngine to accommodate changes to the data format for Fitbit devices",
         );
-        await expect(page.locator(".message")).toContainText("Please check back soon!");
+        await expect(messageLocator).toContainText("Please check back soon!");
     } else {
         await expect(page.locator("#root")).toContainText("BEAP ENGINE");
         await expect(page.locator("h6")).toContainText("Unleashing The Power Of Your Fitness Data");
@@ -40,7 +43,7 @@ test("smoke test @smoke", async ({ page }) => {
         await page.getByTestId("signupNavigate").click();
         await expect(page.locator("#root")).toContainText("Sign Up");
 
-        // check that login button is can be pressed from homepage
+        // check that login button can be pressed from homepage
         await page.goto("./");
         await page.getByRole("button", { name: "Login" }).click();
         await expect(page.locator("#root")).toContainText("Sign In");
@@ -48,7 +51,7 @@ test("smoke test @smoke", async ({ page }) => {
             "Log into your existing BEAPENGINE account",
         );
 
-        // Preform Login
+        // Perform Login
         await setupLogin(page);
 
         // navigate to the homepage
@@ -85,7 +88,7 @@ test("smoke test @smoke", async ({ page }) => {
         await expect(page.getByRole("radiogroup")).toContainText("FitBit 8");
         await expect(page.getByRole("radiogroup")).toContainText("AppleWatch 9");
 
-        // go to
+        // go to profile
         await expect(page.getByRole("button", { name: "profileLogo" })).toBeVisible();
         await page.getByRole("button", { name: "profileLogo" }).click();
         await expect(page.getByRole("menuitem", { name: "My account" })).toBeVisible();

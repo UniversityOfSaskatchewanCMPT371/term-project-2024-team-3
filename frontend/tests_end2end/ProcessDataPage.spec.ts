@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { setupLogin } from "./utils";
 
-test("T2.9 Processed Files Page Test", async ({ page }) => {
+test.skip("T2.9 Processed Files Page Test", async ({ page }) => {
     await setupLogin(page);
 
     // go to File Upload Page

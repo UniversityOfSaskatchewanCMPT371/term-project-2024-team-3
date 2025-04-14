@@ -28,6 +28,9 @@ python3 parser.py
   - Steps
   - Distance
 - The extracted data is saved in the `output/` directory as CSV files with the labels `heartrate.csv`, `calories.csv`, `steps.csv`, and `distance.csv`.
+- CSV Merging: After parsing, the data from all categories is merged into a single fitbit_data.csv that contains all extracted data.
+-	Error Handling: The parser now handles file path errors and data validation, ensuring robustness in case of missing or corrupt files.
+- Progress Bar: A tqdm progress bar is added to visually track the progress while parsing files.
 
 ---
 
@@ -46,11 +49,6 @@ python3 parser.py
        ```
      - The R script will then proceed to merge and process the data just like before.
 
-2. **What Will Be Fixed Next:**
-   - The **CSV merging** functionality to combine all the CSV files into a single `fitbit_data.csv` that contains all extracted data.
-   - Handle **file path errors** and **data validation** to ensure robustness in case of incomplete or corrupt data files.
-   - Add a **progress bar** with `tqdm` to visually track the progress during parsing.
-
-3. **Future Improvements:**
+2. **Future Updates:**
    - **More Data Categories**: Add support for other Fitbit/Google Pixel Watch data files such as **sleep data**, **exercise sessions**, or **active minutes**.
    - Improve **performance** for large datasets by leveraging parallel processing for file parsing.

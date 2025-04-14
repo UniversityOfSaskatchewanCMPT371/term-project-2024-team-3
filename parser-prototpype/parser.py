@@ -44,7 +44,7 @@ def parse_fitbit_directory(data_dir, output_dir):
     for label, (pattern, value_key) in patterns.items():
         files = glob(os.path.join(data_dir, pattern))
         if not files:
-            print(f"⚠️ No files found for {label}")
+            print(f"No files found for {label}")
             continue
 
         all_records = []
